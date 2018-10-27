@@ -132,7 +132,7 @@ script:
 
   # Check style
   - if [ "$CHECK_STYLE" == "ON" ]; then
-      make check-style
+      make check-style;
     fi
 
   # make -j brings 'virtual memory exhausted: Cannot allocate memory' message
