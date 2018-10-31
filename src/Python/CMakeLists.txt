@@ -21,6 +21,7 @@ if (NOT NPM)
 else()
     message(STATUS "npm found at: ${NPM}. Jupyter support will be disabled.")
 endif()
+set(JUPYTER_ENABLED OFF)
 message(STATUS "JUPYTER_ENABLED is set to ${JUPYTER_ENABLED}")
 
 # We need to get python version to configure some meta files
