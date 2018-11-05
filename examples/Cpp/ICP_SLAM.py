@@ -54,9 +54,9 @@ if __name__ == '__main__':
 
     file_list = os.listdir(data_dir_path)
     file_list = sorted(file_list)
+    print(file_list)
     print(len(file_list))
 
-    pc_map = open3d.PointCloud()
     pc_map = open3d.read_point_cloud(data_dir_path + file_list[0])
     i = 1
 

@@ -25,6 +25,7 @@ std::vector<std::string> get_file_paths(const std::string& dir_name)
         }
     }
     closedir(dirp);
+    std::sort(file_paths.begin(), file_paths.end());
     return file_paths;
 }
 
@@ -88,7 +89,7 @@ int main() {
                 printf("Time for down sampling = %ldms\n", clock() - time);
                 time = clock();
                 open3d::EstimateNormals(*target_down, Search_para);
-                printf("Time for Normal Estimation = %ldms\n", clock() - time);
+
                 i++;
                 printf("Time for all is %ldms\n", clock() - timetime);
                 return true;
@@ -96,7 +97,7 @@ int main() {
                 return false;
             }
         },
-        "Result");
+        "Result", 1000, 600);
 
     return 1;
 }
