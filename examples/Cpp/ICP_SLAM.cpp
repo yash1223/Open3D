@@ -28,7 +28,7 @@ std::vector<std::string> get_file_names(const std::string& dir_name)
 int main() {
     std::string dir_name = "point_cloud";
     std::vector<std::string> recordfilename = get_file_names(dir_name);
-    printf("There are %d files.\n", recordfilename.size());
+    printf("There are %ld files.\n", recordfilename.size());
 
     auto target = std::make_shared<open3d::PointCloud>();
     auto target_down = std::make_shared<open3d::PointCloud>();
@@ -49,44 +49,44 @@ int main() {
 
             if (open3d::ReadPointCloud(recordfilename[i], *source_down)) {
                 int timetime = clock();
-                printf("Time for reading file = %dms\n", clock() - time);
+                printf("Time for reading file = %ldms\n", clock() - time);
                 time = clock();
                 source_down->points_ =
                     open3d::VoxelDownSample(*source_down, vox_s)->points_;
-                printf("Time for down sampling = %dms\n", clock() - time);
+                printf("Time for down sampling = %ldms\n", clock() - time);
                 time = clock();
                 source_down->Transform(current_transformation);
-                printf("Time for transformation = %dms\n", clock() - time);
+                printf("Time for transformation = %ldms\n", clock() - time);
                 time = clock();
                 open3d::EstimateNormals(*source_down, Search_para);
-                printf("Time for Normal Estimation = %dms\n", clock() - time);
+                printf("Time for Normal Estimation = %ldms\n", clock() - time);
                 time = clock();
                 open3d::RegistrationResult result_icp = open3d::RegistrationICP(
                     *source_down, *target_down, max_d,
                     Eigen::Matrix4d::Identity(),
                     open3d::TransformationEstimationPointToPlane());
-                printf("Time for ICP = %dms\n", clock() - time);
+                printf("Time for ICP = %ldms\n", clock() - time);
                 time = clock();
                 current_transformation =
                     result_icp.transformation_ * current_transformation;
                 mesh->Transform(result_icp.transformation_);
-                printf("Time for Matrix * Matrix = %dms\n", clock() - time);
+                printf("Time for Matrix * Matrix = %ldms\n", clock() - time);
                 time = clock();
                 source_down->Transform(result_icp.transformation_);
-                printf("Time for transformation 2 = %dms\n", clock() - time);
+                printf("Time for transformation 2 = %ldms\n", clock() - time);
                 time = clock();
                 for (int k = 0; k < source_down->points_.size(); k++)
                     target_down->points_.push_back(source_down->points_[k]);
-                printf("Time for push_back = %dms\n", clock() - time);
+                printf("Time for push_back = %ldms\n", clock() - time);
                 time = clock();
                 target_down->points_ =
                     open3d::VoxelDownSample(*target_down, vox_s)->points_;
-                printf("Time for down sampling = %dms\n", clock() - time);
+                printf("Time for down sampling = %ldms\n", clock() - time);
                 time = clock();
                 open3d::EstimateNormals(*target_down, Search_para);
-                printf("Time for Normal Estimation = %dms\n", clock() - time);
+                printf("Time for Normal Estimation = %ldms\n", clock() - time);
                 i++;
-                printf("Time for all is %dms\n", clock() - timetime);
+                printf("Time for all is %ldms\n", clock() - timetime);
                 return true;
             } else {
                 return false;
