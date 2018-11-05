@@ -5,23 +5,6 @@ import open3d
 import time
 import math
 
-data_dir_path = 'point_cloud/'  #Path of the *.pcd files
-
-file_list = os.listdir(data_dir_path)
-file_list = sorted(file_list)
-print(len(file_list))
-
-pc_map = open3d.PointCloud()
-pc_map = open3d.read_point_cloud(data_dir_path + file_list[0])
-i = 1
-
-voxel_size = 0.5
-threshold = 0.5
-search_param = open3d.KDTreeSearchParamHybrid(radius=voxel_size * 2, max_nn=30)
-transform = np.eye(4)
-
-trajectory = open3d.PointCloud()
-
 
 def visualize_callback(v):
     timera = time.time()
@@ -66,8 +49,27 @@ def visualize_callback(v):
     return True
 
 
-mesh = open3d.create_mesh_coordinate_frame(size=5)
-open3d.draw_geometries_with_animation_callback([pc_map, mesh, trajectory],
-                                               visualize_callback,
-                                               width=1000,
-                                               height=600)
+if __name__ == '__main__':
+    data_dir_path = 'point_cloud/'
+
+    file_list = os.listdir(data_dir_path)
+    file_list = sorted(file_list)
+    print(len(file_list))
+
+    pc_map = open3d.PointCloud()
+    pc_map = open3d.read_point_cloud(data_dir_path + file_list[0])
+    i = 1
+
+    voxel_size = 0.5
+    threshold = 0.5
+    search_param = open3d.KDTreeSearchParamHybrid(
+        radius=voxel_size * 2, max_nn=30)
+    transform = np.eye(4)
+
+    trajectory = open3d.PointCloud()
+
+    mesh = open3d.create_mesh_coordinate_frame(size=5)
+    open3d.draw_geometries_with_animation_callback([pc_map, mesh, trajectory],
+                                                   visualize_callback,
+                                                   width=1000,
+                                                   height=600)

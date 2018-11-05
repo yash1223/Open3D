@@ -12,22 +12,26 @@ double vox_s = 0.50;
 double max_d = 0.50;
 int i = 1;
 
-std::vector<std::string> get_file_names(const std::string& dir_name)
+std::vector<std::string> get_file_paths(const std::string& dir_name)
 {
-    std::vector<std::string> file_names;
+    std::vector<std::string> file_paths;
     DIR* dirp = opendir(dir_name.c_str());
     struct dirent * dp;
     while ((dp = readdir(dirp)) != NULL) {
-        file_names.push_back(dp->d_name);
+        std::string file_name(dp->d_name);
+        if (file_name.size() >= 3 &&
+            file_name.substr(file_name.size() - 4, 4) == ".pcd") {
+                file_paths.push_back(dir_name + file_name);
+        }
     }
     closedir(dirp);
-    return file_names;
+    return file_paths;
 }
 
 
 int main() {
-    std::string dir_name = "point_cloud";
-    std::vector<std::string> recordfilename = get_file_names(dir_name);
+    std::string dir_name = "../../../examples/Cpp/point_cloud/";
+    std::vector<std::string> recordfilename = get_file_paths(dir_name);
     printf("There are %ld files.\n", recordfilename.size());
 
     auto target = std::make_shared<open3d::PointCloud>();
