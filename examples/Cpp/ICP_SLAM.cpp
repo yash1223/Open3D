@@ -19,7 +19,7 @@ std::vector<std::string> get_file_paths(const std::string& dir_name)
     struct dirent * dp;
     while ((dp = readdir(dirp)) != NULL) {
         std::string file_name(dp->d_name);
-        if (file_name.size() >= 3 &&
+        if (file_name.size() >= 4 &&
             file_name.substr(file_name.size() - 4, 4) == ".pcd") {
                 file_paths.push_back(dir_name + file_name);
         }
