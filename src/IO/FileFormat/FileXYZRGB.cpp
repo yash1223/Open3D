@@ -41,11 +41,15 @@ bool ReadPointCloudFromXYZRGB(const std::string &filename,
     }
 
     char line_buffer[DEFAULT_IO_BUFFER_SIZE];
-    double x, y, z, r, g, b;
+    double x, y, z, i, r, g, b;
     pointcloud.Clear();
 
     while (fgets(line_buffer, DEFAULT_IO_BUFFER_SIZE, file)) {
         if (sscanf(line_buffer, "%lf %lf %lf %lf %lf %lf",
+                &x, &y, &z, &i, &r, &g, &b) == 7) {
+            pointcloud.points_.push_back(Eigen::Vector3d(x, y, z));
+            pointcloud.colors_.push_back(Eigen::Vector3d(r, g, b));
+        } else if (sscanf(line_buffer, "%lf %lf %lf %lf %lf %lf",
                 &x, &y, &z, &r, &g, &b) == 6) {
             pointcloud.points_.push_back(Eigen::Vector3d(x, y, z));
             pointcloud.colors_.push_back(Eigen::Vector3d(r, g, b));
