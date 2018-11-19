@@ -36,14 +36,16 @@ endif(WIN32)
 if (Open3D_FOUND)
     message(STATUS "Found Open3D ${Open3D_VERSION}")
 
+    add_library(Open3DInterface INTERFACE)
+    target_include_directories(Open3DInterface INTERFACE ${Open3D_INCLUDE_DIRS})
+    target_link_libraries(Open3DInterface INTERFACE ${Open3D_LIBRARIES})
+
     # link_directories must be before add_executable
     link_directories(${Open3D_LIBRARY_DIRS})
 
     add_executable(TestVisualizer TestVisualizer.cpp)
 
-    target_link_libraries(TestVisualizer ${Open3D_LIBRARIES})
-
-    target_include_directories(TestVisualizer PUBLIC ${Open3D_INCLUDE_DIRS})
+    target_link_libraries(TestVisualizer Open3DInterface)
 
     # Hot fix windows dll not found issue, assumming we're using the Release build
     option(BUILD_SHARED_LIBS "Whether Open3D was build as shared library" OFF)
