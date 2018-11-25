@@ -29,6 +29,7 @@
 
 #include <unordered_map>
 #include <numeric>
+#include <iostream>
 
 #include <Core/Utility/Helper.h>
 #include <Core/Utility/Console.h>
@@ -329,6 +330,12 @@ std::tuple<std::shared_ptr<PointCloud>,Eigen::MatrixXi> VoxelDownSampleAndTrace(
                 cid += cid_temp[c];
             }
         }
+        if (voxel_index(0) == 15 && voxel_index(1) == 31 && voxel_index(2) == 32) {
+            std::cout << "[(15, 31, 32) add " << i << "] "
+                      << input.points_[i](0) << " "
+                      << input.points_[i](1) << " "
+                      << input.points_[i](2) << std::endl;
+        }
         voxelindex_to_accpoint[voxel_index].AddPoint(
                 input, i, cid, approximate_class);
     }
@@ -337,7 +344,18 @@ std::tuple<std::shared_ptr<PointCloud>,Eigen::MatrixXi> VoxelDownSampleAndTrace(
     int cnt = 0;
     cubic_id.resize(voxelindex_to_accpoint.size(),8);
     cubic_id.setConstant(-1);
+    bool printed = false;
     for (auto accpoint : voxelindex_to_accpoint) {
+        if (! printed) {
+            std::cout << "GetAveragePoint" << std::endl;
+            auto voxel_index = accpoint.first;
+            std::cout << "voxel_index: " << voxel_index(0) << " "
+                      << voxel_index(1) << " " << voxel_index(2) << std::endl;
+            auto avg_point = accpoint.second.GetAveragePoint();
+            std::cout << "avg_point: " << avg_point(0) << " "
+                      << avg_point(1) << " " << avg_point(2) << std::endl;
+            printed = true;
+        }
         output->points_.push_back(
                 accpoint.second.GetAveragePoint());
         if (has_normals) {
