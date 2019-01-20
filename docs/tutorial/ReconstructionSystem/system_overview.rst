@@ -3,7 +3,7 @@
 System overview
 -----------------------------------
 
-The system has three main steps:
+The system has four main steps:
 
 **Step 1**. :ref:`reconstruction_system_make_fragments`: build local geometric surfaces (referred to as
 fragments) from short subsequences of the input RGBD sequence. This part uses :ref:`rgbd_odometry`, :ref:`multiway_registration`, and :ref:`rgbd_integration`.
@@ -12,7 +12,7 @@ fragments) from short subsequences of the input RGBD sequence. This part uses :r
 
 **Step 3**. :ref:`reconstruction_system_refine_registration`: the rough alignments are aligned more tightly. This part uses :ref:`icp_registration`, and :ref:`multiway_registration`.
 
-**Step 3**. :ref:`reconstruction_system_integrate_scene`: integrate RGB-D images to generate a mesh model for
+**Step 4**. :ref:`reconstruction_system_integrate_scene`: integrate RGB-D images to generate a mesh model for
 the scene. This part uses :ref:`rgbd_integration`.
 
 .. _reconstruction_system_dataset:
