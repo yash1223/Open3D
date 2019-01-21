@@ -1,5 +1,5 @@
 # ******************************************************************************
-# Adpated from
+# Reference:
 # https://github.com/NervanaSystems/ngraph/blob/master/cmake/Modules/style_check.cmake
 #
 # Copyright 2017-2019 Intel Corporation
