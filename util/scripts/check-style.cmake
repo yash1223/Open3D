@@ -1,4 +1,7 @@
 # ******************************************************************************
+# Adpated from
+# https://github.com/NervanaSystems/ngraph/blob/master/cmake/Modules/style_check.cmake
+#
 # Copyright 2017-2019 Intel Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,14 +20,14 @@
 set(CLANG_FORMAT_EXEC clang-format)
 find_program(CLANG_FORMAT ${CLANG_FORMAT_EXEC} PATHS ENV PATH)
 
-macro(style_check_file PATH)
+macro(style_check_file FILE)
     execute_process(
-        COMMAND ${CLANG_FORMAT} -style=file -output-replacements-xml ${PATH}
+        COMMAND ${CLANG_FORMAT} -style=file -output-replacements-xml ${FILE}
         OUTPUT_VARIABLE STYLE_CHECK_RESULT
     )
     if("${STYLE_CHECK_RESULT}" MATCHES ".*<replacement .*")
-        message(STATUS "Style error: ${PATH}")
-        list(APPEND ERROR_LIST ${PATH})
+        message(STATUS "Style error: ${FILE}")
+        list(APPEND ERROR_LIST ${FILE})
     endif()
 endmacro()
 
@@ -38,8 +41,8 @@ if (CLANG_FORMAT)
     foreach(DIRECTORY ${DIRECTORIES_OF_INTEREST})
         set(CPP_GLOB "${PROJECT_SOURCE_DIR}/${DIRECTORY}/*.cpp")
         set(H_GLOB "${PROJECT_SOURCE_DIR}/${DIRECTORY}/*.h")
-        file(GLOB_RECURSE SRC_FILES ${CPP_GLOB} ${H_GLOB})
-        foreach(FILE ${SRC_FILES})
+        file(GLOB_RECURSE FILES ${CPP_GLOB} ${H_GLOB})
+        foreach(FILE ${FILES})
             style_check_file(${FILE})
         endforeach(FILE)
     endforeach(DIRECTORY)
