@@ -41,3 +41,9 @@ EXAMPLE_CPP(ViewDistances             ${CMAKE_PROJECT_NAME})
 EXAMPLE_CPP(ViewPCDMatch              ${CMAKE_PROJECT_NAME})
 EXAMPLE_CPP(Visualizer                ${CMAKE_PROJECT_NAME})
 EXAMPLE_CPP(Voxelization              ${CMAKE_PROJECT_NAME})
+
+add_executable(Open3DVisualizer "Open3DVisualizer.cpp")
+target_link_libraries(Open3DVisualizer ${CMAKE_PROJECT_NAME})
+set_target_properties(Open3DVisualizer PROPERTIES
+        FOLDER "examples/Cpp/"
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/examples")
