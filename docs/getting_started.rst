@@ -17,11 +17,12 @@ Supported Python versions:
 * 2.7
 * 3.5
 * 3.6
+* 3.7
 
 Supported operating systems:
 
-* Ubuntu (tested on 16.04, should work on other modern versions)
-* MacOS
+* Ubuntu (tested on 14.04, 16.04 and 18.04)
+* macOS
 * Windows 10 (32-bit and 64-bit)
 
 PyPI
@@ -55,7 +56,7 @@ Conda
 Note: Open3D prebuilt binaries for Conda (Anaconda/Miniconda) can be found at
 `open3d <https://anaconda.org/open3d-admin/open3d>`_. Currently, the ``open3d``
 package is distributed under the ``open3d-admin`` channel. To setup Conda,
-please see `the official documentations <https://conda.io/docs/user-guide/install/index.html>`_.
+please see `the Conda documentations <https://conda.io/docs/user-guide/install/index.html>`_.
 
 
 Try it
