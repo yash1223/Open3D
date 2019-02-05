@@ -27,6 +27,7 @@
 #include "ColorMapOptimization.h"
 
 #include <Eigen/Dense>
+#include <iostream>
 
 #include <Core/Utility/Console.h>
 #include <Core/Geometry/Image.h>
@@ -65,8 +66,14 @@ public:
     Eigen::Vector2d QueryFlow(int i, int j) const {
         int baseidx = (i + j * anchor_w_) * 2;
         // exceptional case: quried anchor index is out of pre-defined space
-        if (baseidx < 0 || baseidx > anchor_w_ * anchor_h_ * 2)
+        if (baseidx < 0 || baseidx >= anchor_w_ * anchor_h_ * 2) {
+            std::cout << "i: " << i << std::endl;
+            std::cout << "j: " << j << std::endl;
+            std::cout << "baseidx: " << baseidx << std::endl;
+            std::cout << "anchor_w_: " << anchor_w_ << std::endl;
+            std::cout << "anchor_h_: " << anchor_h_ << std::endl;
             return Eigen::Vector2d(0.0, 0.0);
+        }
         else
             return Eigen::Vector2d(flow_(baseidx), flow_(baseidx + 1));
     }
@@ -119,35 +126,52 @@ std::tuple<std::vector<std::vector<int>>, std::vector<std::vector<int>>>
     std::vector<std::vector<int>> visiblity_image_to_vertex;
     visiblity_vertex_to_image.resize(n_vertex);
     visiblity_image_to_vertex.resize(n_camera);
-#ifdef _OPENMP
-#pragma omp parallel for schedule(static)
-#endif
+// #ifdef _OPENMP
+// #pragma omp parallel for schedule(static)
+// #endif
     for (int c = 0; c < n_camera; c++) {
         int viscnt = 0;
+        size_t num_reject_image_boundary = 0;
+        size_t num_reject_max_allowable_depth = 0;
+        size_t num_reject_255 = 0;
+        size_t num_reject_depth_threshold_for_visiblity_check = 0;
         for (int vertex_id = 0; vertex_id < n_vertex; vertex_id++) {
             Eigen::Vector3d X = mesh.vertices_[vertex_id];
             float u, v, d;
             std::tie(u, v, d) = Project3DPointAndGetUVDepth(X, camera, c);
             int u_d = int(round(u)), v_d = int(round(v));
-            if (d < 0.0 || !images_rgbd[c].depth_.TestImageBoundary(u_d, v_d))
+            if (d < 0.0 || !images_rgbd[c].depth_.TestImageBoundary(u_d, v_d)) {
+                num_reject_image_boundary++;
                 continue;
+            }
             float d_sensor = *PointerAt<float>(images_rgbd[c].depth_, u_d, v_d);
-            if (d_sensor > option.maximum_allowable_depth_)
+            if (d_sensor > option.maximum_allowable_depth_) {
+                num_reject_max_allowable_depth++;
                 continue;
-            if (*PointerAt<unsigned char>(images_mask[c], u_d, v_d) == 255)
+            }
+            if (*PointerAt<unsigned char>(images_mask[c], u_d, v_d) == 255) {
+                num_reject_255++;
                 continue;
-            if (std::fabs(d - d_sensor) <
+            }
+            if (std::fabs(d - d_sensor) >=
                     option.depth_threshold_for_visiblity_check_) {
-#ifdef _OPENMP
-#pragma omp critical
-#endif
+                num_reject_depth_threshold_for_visiblity_check++;
+                continue;
+            }
+// #ifdef _OPENMP
+// #pragma omp cr
+// #endif
                 {
                     visiblity_vertex_to_image[vertex_id].push_back(c);
                     visiblity_image_to_vertex[c].push_back(vertex_id);
                     viscnt++;
                 }
-            }
         }
+        std::cout <<
+            "num_reject_image_boundary: " << num_reject_image_boundary << ", "
+            "num_reject_max_allowable_depth: " << num_reject_max_allowable_depth << ", "
+            "num_reject_255: " << num_reject_255 << ", "
+            "num_reject_depth_threshold_for_visiblity_check: " << num_reject_depth_threshold_for_visiblity_check << ", " << std::endl;
         PrintDebug("[cam %d] %.5f percents are visible\n",
                 c, double(viscnt) / n_vertex * 100); fflush(stdout);
     }
@@ -303,14 +327,15 @@ void OptimizeImageCoorNonrigid(
         double residual = 0.0;
         double residual_reg = 0.0;
         int total_num_ = 0;
-#ifdef _OPENMP
-#pragma omp parallel for schedule(static)
-#endif
+// #ifdef _OPENMP
+// #pragma omp parallel for schedule(static)
+// #endif
         for (int i = 0; i < n_camera; i++) {
             int nonrigidval = warping_fields[i].anchor_w_ *
                     warping_fields[i].anchor_h_ * 2;
             Eigen::MatrixXd JJ = Eigen::MatrixXd::Zero(
                     6 + nonrigidval, 6 + nonrigidval);
+            std::cout << "JJ.size: " << 6 + nonrigidval << "-d square matrix" << std::endl;
             Eigen::VectorXd Jb = Eigen::VectorXd::Zero(6 + nonrigidval);
             double rr = 0.0;
             double rr_reg = 0.0;
@@ -327,8 +352,11 @@ void OptimizeImageCoorNonrigid(
 
             double anchor_step = warping_fields[i].anchor_step_;
             int anchor_w = warping_fields[i].anchor_w_;
+
+            std::cout << "visiblity_image_to_vertex[i].size(): " << visiblity_image_to_vertex[i].size() << std::endl;
             for (auto iter = 0; iter < visiblity_image_to_vertex[i].size();
                     iter++) {
+                // std::cout << "iter: " << iter << std::endl;
                 int j = visiblity_image_to_vertex[i][iter];
                 Eigen::Vector3d V = mesh.vertices_[j];
                 Eigen::Vector4d G = pose * Eigen::Vector4d(V(0), V(1), V(2), 1);
@@ -401,6 +429,16 @@ void OptimizeImageCoorNonrigid(
                 idx[13] = 6 + ((ii + 1) + (jj + 1) * anchor_w) * 2 + 1;
                 for (int x = 0; x < 14; x++) {
                     for (int y = 0; y < 14; y++) {
+                        if (idx[x] < 0 || idx[x] >= 6 + nonrigidval ||
+                            idx[y] < 0 || idx[y] >= 6 + nonrigidval) {
+                            std::cout << "x: " << x << std::endl;
+                            std::cout << "idx[x]: " << idx[x] << std::endl;
+                            std::cout << "y: " << y << std::endl;
+                            std::cout << "idx[y]: " << idx[y] << std::endl;
+                            std::cout << "ii: " << ii << std::endl;
+                            std::cout << "jj: " << jj << std::endl;
+                            std::cout << "anchor_w: " << anchor_w << std::endl;
+                        }
                         JJ(idx[x], idx[y]) += C[x] * C[y];
                     }
                 }
@@ -422,9 +460,9 @@ void OptimizeImageCoorNonrigid(
                 Jb(6 + j) += weight * r;
                 rr_reg += r * r;
             }
-#ifdef _OPENMP
-#pragma omp critical
-#endif
+// #ifdef _OPENMP
+// #pragma omp critical
+// #endif
             {
                 bool success = false;
                 Eigen::VectorXd result;
