@@ -91,6 +91,11 @@ int main(int argc, char *argv[])
 
     auto extrinsic = camera_params.parameters_[0].extrinsic_;
     std::cout << "PinholeCameraTrajectory loaded" << std::endl;
+    std::cout << "extrinsic:" << std::endl;
     std::cout << extrinsic << std::endl;
+
+    auto camera_center = camera_params.parameters_[0].GetCameraCenter();
+    std::cout << "camera_center:" << std::endl;
+    std::cout << camera_center << std::endl;
     return 0;
 }
