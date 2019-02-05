@@ -85,51 +85,12 @@ protected:
 int main(int argc, char *argv[])
 {
     SetVerbosityLevel(VerbosityLevel::VerboseAlways);
-    if (argc < 2) {
-        PrintOpen3DVersion();
-        PrintInfo("Usage:\n");
-        PrintInfo("    > DepthCapture  [filename]\n");
-        return 1;
-    }
+    std::string cameras_path = "/home/ylao/repo/intelstudios/code/colmap_results/colormap/result_20190205_0200/T1S16_0480_camera_trajectory.json";
+    PinholeCameraTrajectory camera_params;
+    ReadIJsonConvertible(cameras_path, camera_params);
 
-    auto mesh_ptr = CreateMeshFromFile(argv[1]);
-    mesh_ptr->ComputeVertexNormals();
-    PrintWarning("Press S to capture a depth image.\n");
-    VisualizerWithDepthCapture visualizer;
-    visualizer.CreateVisualizerWindow("Depth Capture", 640, 480, 200, 200);
-    visualizer.AddGeometry(mesh_ptr);
-    visualizer.Run();
-    visualizer.DestroyVisualizerWindow();
-
-    if (!filesystem::FileExists("depth.png") ||
-            !filesystem::FileExists("camera.json")) {
-        PrintWarning("Depth has not been captured.\n");
-        return 1;
-    }
-
-    auto image_ptr = CreateImageFromFile("depth.png");
-    DrawGeometries({image_ptr});
-
-    PinholeCameraTrajectory camera;
-    ReadIJsonConvertible("camera.json", camera);
-    auto pointcloud_ptr = CreatePointCloudFromDepthImage(*image_ptr,
-            camera.parameters_[0].intrinsic_,
-            camera.parameters_[0].extrinsic_);
-    VisualizerWithDepthCapture visualizer1;
-    visualizer1.CreateVisualizerWindow("Depth Validation", 640, 480, 200, 200);
-    visualizer1.AddGeometry(pointcloud_ptr);
-    visualizer1.Run();
-    visualizer1.DestroyVisualizerWindow();
-
-    PrintWarning("Press L to validate the depth image.\n");
-    PrintWarning("Press P to load the capturing camera pose.\n");
-    VisualizerWithDepthCapture visualizer2;
-    visualizer2.CreateVisualizerWindow("Depth Validation", 640, 480, 200, 200);
-    visualizer2.AddGeometry(mesh_ptr);
-    visualizer2.Run();
-    visualizer2.DestroyVisualizerWindow();
-
-    PrintInfo("End of the test.\n");
-
+    auto extrinsic = camera_params.parameters_[0].extrinsic_;
+    std::cout << "PinholeCameraTrajectory loaded" << std::endl;
+    std::cout << extrinsic << std::endl;
     return 0;
 }

@@ -664,6 +664,12 @@ void SetGeometryColorAverage(TriangleMesh& mesh,
             float r = (float)r_temp / 255.0f;
             float g = (float)g_temp / 255.0f;
             float b = (float)b_temp / 255.0f;
+
+            // Compute weights
+            // i: vertex index
+            // iter: camera index
+
+
             if (valid) {
                 mesh.vertex_colors_[i] += Eigen::Vector3d(r, g, b);
                 sum += 1.0;
