@@ -335,7 +335,7 @@ void OptimizeImageCoorNonrigid(
                     warping_fields[i].anchor_h_ * 2;
             Eigen::MatrixXd JJ = Eigen::MatrixXd::Zero(
                     6 + nonrigidval, 6 + nonrigidval);
-            std::cout << "JJ.size: " << 6 + nonrigidval << "-d square matrix" << std::endl;
+            // std::cout << "JJ.size: " << 6 + nonrigidval << "-d square matrix" << std::endl;
             Eigen::VectorXd Jb = Eigen::VectorXd::Zero(6 + nonrigidval);
             double rr = 0.0;
             double rr_reg = 0.0;
@@ -353,7 +353,7 @@ void OptimizeImageCoorNonrigid(
             double anchor_step = warping_fields[i].anchor_step_;
             int anchor_w = warping_fields[i].anchor_w_;
 
-            std::cout << "visiblity_image_to_vertex[i].size(): " << visiblity_image_to_vertex[i].size() << std::endl;
+            // std::cout << "visiblity_image_to_vertex[i].size(): " << visiblity_image_to_vertex[i].size() << std::endl;
             for (auto iter = 0; iter < visiblity_image_to_vertex[i].size();
                     iter++) {
                 // std::cout << "iter: " << iter << std::endl;
@@ -645,6 +645,7 @@ void SetGeometryColorAverage(TriangleMesh& mesh,
     auto n_vertex = mesh.vertices_.size();
     mesh.vertex_colors_.clear();
     mesh.vertex_colors_.resize(n_vertex);
+    mesh.ComputeVertexNormals();
 #pragma omp parallel for schedule(static)
     for (int i = 0; i < n_vertex; i++) {
         mesh.vertex_colors_[i] = Eigen::Vector3d::Zero();
