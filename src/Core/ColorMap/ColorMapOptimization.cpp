@@ -668,7 +668,7 @@ void SetGeometryColorAverage(TriangleMesh& mesh,
             // Compute weights
             // i: vertex index
             // iter: camera index
-
+            Eigen::Vector3d camera_center = camera.parameters_[iter].GetCameraCenter();
 
             if (valid) {
                 mesh.vertex_colors_[i] += Eigen::Vector3d(r, g, b);

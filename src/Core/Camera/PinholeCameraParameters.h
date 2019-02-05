@@ -44,7 +44,7 @@ public:
     bool ConvertFromJsonValue(const Json::Value &value) override;
 
 public:
-    Eigen::Vector3d GetCameraCenter();
+    Eigen::Vector3d GetCameraCenter() const;
     PinholeCameraIntrinsic intrinsic_;
     Eigen::Matrix4d extrinsic_;
 };

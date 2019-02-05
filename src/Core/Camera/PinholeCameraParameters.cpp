@@ -76,15 +76,15 @@ bool PinholeCameraParameters::ConvertFromJsonValue(const Json::Value &value)
     return true;
 }
 
-Eigen::Vector3d PinholeCameraParameters::GetCameraCenter()
+Eigen::Vector3d PinholeCameraParameters::GetCameraCenter() const
 {
     Eigen::Vector3d camera_center(0, 0, 0);
-    Eigen::Map<Eigen::Matrix3d, 0, Eigen::OuterStride<>> R(
+    Eigen::Map<const Eigen::Matrix3d, 0, Eigen::OuterStride<>> R(
         extrinsic_.data(), 3, 3, Eigen::OuterStride<>(extrinsic_.outerStride())
     );
     // std::cout << "R:" << std::endl;
     // std::cout << R << std::endl;
-    Eigen::Map<Eigen::Vector3d, 0, Eigen::OuterStride<>> t(
+    Eigen::Map<const Eigen::Vector3d, 0, Eigen::OuterStride<>> t(
         extrinsic_.data() + 12, 3, 1, Eigen::OuterStride<>(extrinsic_.outerStride())
     );
     // std::cout << "t:" << std::endl;
