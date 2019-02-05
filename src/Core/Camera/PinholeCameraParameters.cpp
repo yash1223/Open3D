@@ -82,13 +82,13 @@ Eigen::Vector3d PinholeCameraParameters::GetCameraCenter()
     Eigen::Map<Eigen::Matrix3d, 0, Eigen::OuterStride<>> R(
         extrinsic_.data(), 3, 3, Eigen::OuterStride<>(extrinsic_.outerStride())
     );
-    std::cout << "R:" << std::endl;
-    std::cout << R << std::endl;
+    // std::cout << "R:" << std::endl;
+    // std::cout << R << std::endl;
     Eigen::Map<Eigen::Vector3d, 0, Eigen::OuterStride<>> t(
         extrinsic_.data() + 12, 3, 1, Eigen::OuterStride<>(extrinsic_.outerStride())
     );
-    std::cout << "t:" << std::endl;
-    std::cout << t << std::endl;
+    // std::cout << "t:" << std::endl;
+    // std::cout << t << std::endl;
     camera_center = - R.transpose() * t;
     return camera_center;
 }
