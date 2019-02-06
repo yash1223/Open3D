@@ -30,6 +30,7 @@
 #include <Core/ColorMap/EigenHelperForNonRigidOptimization.h>
 #include <Core/Geometry/Image.h>
 #include <Core/Geometry/TriangleMesh.h>
+#include <iostream>
 
 namespace open3d {
 
@@ -92,7 +93,7 @@ void ColorMapOptimizationJacobian::ComputeJacobianAndResidualNonRigid(
     J_r.setZero();
     pattern.setZero();
     int anchor_w = warping_fields.anchor_w_;
-    int anchor_step = warping_fields.anchor_step_;
+    double anchor_step = warping_fields.anchor_step_;
     int vid = visable_vertex_indices[row];
     Eigen::Vector3d V = mesh.vertices_[vid];
     Eigen::Vector4d G = extrinsic * Eigen::Vector4d(V(0), V(1), V(2), 1);
@@ -156,6 +157,61 @@ void ColorMapOptimizationJacobian::ComputeJacobianAndResidualNonRigid(
     J_r(11) = dIdf(1) * (p) * (1 - q);
     J_r(12) = dIdf(0) * (p) * (q);
     J_r(13) = dIdf(1) * (p) * (q);
+    if (row == 0) {
+        std::cout << "u" << std::endl;
+        std::cout << u << std::endl;
+
+        std::cout << "v" << std::endl;
+        std::cout << v << std::endl;
+
+        std::cout << "ii" << std::endl;
+        std::cout << ii << std::endl;
+
+        std::cout << "jj" << std::endl;
+        std::cout << jj << std::endl;
+
+        std::cout << "anchor_step" << std::endl;
+        std::cout << anchor_step << std::endl;
+
+        std::cout << "p" << std::endl;
+        std::cout << p << std::endl;
+
+        std::cout << "q" << std::endl;
+        std::cout << q << std::endl;
+
+        std::cout << "dIdfx" << std::endl;
+        std::cout << dIdfx << std::endl;
+
+        std::cout << "dIdfy" << std::endl;
+        std::cout << dIdfy << std::endl;
+
+        std::cout << "uu" << std::endl;
+        std::cout << uu << std::endl;
+
+        std::cout << "vv" << std::endl;
+        std::cout << vv << std::endl;
+
+        std::cout << "dIdf" << std::endl;
+        std::cout << dIdf << std::endl;
+
+        std::cout << "G" << std::endl;
+        std::cout << G << std::endl;
+
+        std::cout << "v0" << std::endl;
+        std::cout << v0 << std::endl;
+
+        std::cout << "v1" << std::endl;
+        std::cout << v1 << std::endl;
+
+        std::cout << "v2" << std::endl;
+        std::cout << v2 << std::endl;
+
+        std::cout << "C or J_r" << std::endl;
+        for (size_t i = 0; i < 14; ++i) {
+            std::cout << J_r[i] << " ";
+        }
+        std::cout << std::endl;
+    }
     pattern(0) = 0;
     pattern(1) = 1;
     pattern(2) = 2;
