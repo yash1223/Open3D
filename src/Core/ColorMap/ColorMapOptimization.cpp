@@ -439,6 +439,63 @@ void OptimizeImageCoorNonrigid(
                 idx[11] = 6 + ((ii + 1) + jj * anchor_w) * 2 + 1;
                 idx[12] = 6 + ((ii + 1) + (jj + 1) * anchor_w) * 2;
                 idx[13] = 6 + ((ii + 1) + (jj + 1) * anchor_w) * 2 + 1;
+
+                if (iter == 0) {
+                    std::cout << "u" << std::endl;
+                    std::cout << u << std::endl;
+
+                    std::cout << "v" << std::endl;
+                    std::cout << v << std::endl;
+
+                    std::cout << "ii" << std::endl;
+                    std::cout << ii << std::endl;
+
+                    std::cout << "jj" << std::endl;
+                    std::cout << jj << std::endl;
+
+                    std::cout << "anchor_step" << std::endl;
+                    std::cout << anchor_step << std::endl;
+
+                    std::cout << "p" << std::endl;
+                    std::cout << p << std::endl;
+
+                    std::cout << "q" << std::endl;
+                    std::cout << q << std::endl;
+
+                    std::cout << "dIdfx" << std::endl;
+                    std::cout << dIdfx << std::endl;
+
+                    std::cout << "dIdfy" << std::endl;
+                    std::cout << dIdfy << std::endl;
+
+                    std::cout << "uu" << std::endl;
+                    std::cout << uu << std::endl;
+
+                    std::cout << "vv" << std::endl;
+                    std::cout << vv << std::endl;
+
+                    std::cout << "dIdf" << std::endl;
+                    std::cout << dIdf << std::endl;
+
+                    std::cout << "G" << std::endl;
+                    std::cout << G << std::endl;
+
+                    std::cout << "v0" << std::endl;
+                    std::cout << v0 << std::endl;
+
+                    std::cout << "v1" << std::endl;
+                    std::cout << v1 << std::endl;
+
+                    std::cout << "v2" << std::endl;
+                    std::cout << v2 << std::endl;
+
+                    std::cout << "C or J_r" << std::endl;
+                    for (size_t i = 0; i < 14; ++i) {
+                        std::cout << C[i] << " ";
+                    }
+                    std::cout << std::endl;
+                }
+
                 for (int x = 0; x < 14; x++) {
                     for (int y = 0; y < 14; y++) {
                         if (idx[x] < 0 || idx[x] >= 6 + nonrigidval ||
