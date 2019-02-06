@@ -58,9 +58,9 @@ std::tuple<MatOutType, VecOutType, double> ComputeJTJandJTr(
         VecInTypeDouble J_r;
         VecInTypeInt pattern;
         double r;
-        // #ifdef _OPENMP
-        // #pragma omp for nowait
-        // #endif
+#ifdef _OPENMP
+#pragma omp for nowait
+#endif
         for (int i = 0; i < vertex_num; i++) {
             f(i, J_r, r, pattern);
             for (auto x = 0; x < J_r.size(); x++) {
@@ -76,7 +76,7 @@ std::tuple<MatOutType, VecOutType, double> ComputeJTJandJTr(
                 }
             }
             for (auto x = 0; x < J_r.size(); x++) {
-                JTr_private(pattern(x)) += r * J_r(x);
+                JTr_private(pattern(x)) -= r * J_r(x);
             }
             r2_sum_private += r * r;
         }
