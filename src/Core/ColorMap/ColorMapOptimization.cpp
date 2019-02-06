@@ -331,12 +331,14 @@ void OptimizeImageCoorNonrigid(
         double residual = 0.0;
         double residual_reg = 0.0;
         int total_num_ = 0;
-#ifdef _OPENMP
-#pragma omp parallel for schedule(static)
-#endif
+        // #ifdef _OPENMP
+        // #pragma omp parallel for schedule(static)
+        // #endif
         for (int i = 0; i < n_camera; i++) {
             int nonrigidval = warping_fields[i].anchor_w_ *
                               warping_fields[i].anchor_h_ * 2;
+            std::cout << "nonrigidval " << nonrigidval << std::endl;
+
             Eigen::MatrixXd JJ =
                     Eigen::MatrixXd::Zero(6 + nonrigidval, 6 + nonrigidval);
             // std::cout << "JJ.size: " << 6 + nonrigidval << "-d square matrix"
@@ -474,11 +476,11 @@ void OptimizeImageCoorNonrigid(
                 Jb(6 + j) += weight * r;
                 rr_reg += r * r;
             }
-                // END assign weights //////////////////////////////////////]
+            // END assign weights //////////////////////////////////////]
 
-#ifdef _OPENMP
-#pragma omp critical
-#endif
+            // #ifdef _OPENMP
+            // #pragma omp critical
+            // #endif
             {
                 bool success = false;
                 Eigen::VectorXd result;
