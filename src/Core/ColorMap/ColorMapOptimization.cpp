@@ -26,6 +26,7 @@
 
 #include "ColorMapOptimization.h"
 #include <Eigen/Dense>
+#include <iostream>
 
 #include <Core/Camera/PinholeCameraTrajectory.h>
 #include <Core/ColorMap/ColorMapOptimizationJacobian.h>
@@ -106,6 +107,20 @@ void OptimizeImageCoorNonrigid(
                             f_lambda, visiblity_image_to_vertex[c].size(),
                             nonrigidval, false);
             // END Compute JTJ, JTr, r2 //////////////////////////////////
+            if (c == 0) {
+                std::cout << "JJ" << std::endl;
+                for (size_t row_idx = 0; row_idx < 6; ++row_idx) {
+                    for (size_t col_idx = 0; col_idx < 6; ++col_idx) {
+                        std::cout << JTJ(row_idx, col_idx) << " ";
+                    }
+                    std::cout << std::endl;
+                }
+                // std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" <<
+                // std::endl; std::cout << "JTr" << std::endl; std::cout << JTr
+                // << std::endl; std::cout <<
+                // "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl; std::cout
+                // << "r2" << std::endl; std::cout << r2 << std::endl;
+            }
 
             // BEGIN assign weights //////////////////////////////////////
             double weight = option.non_rigid_anchor_point_weight_ *

@@ -46,57 +46,57 @@ std::tuple<MatOutType, VecOutType, double> ComputeJTJandJTr(
     double r2_sum = 0.0;
     JTJ.setZero();
     JTr.setZero();
-#ifdef _OPENMP
-#pragma omp parallel
-    {
-#endif
-        MatOutType JTJ_private(6 + nonrigidval, 6 + nonrigidval);
-        VecOutType JTr_private(6 + nonrigidval);
-        double r2_sum_private = 0.0;
-        JTJ_private.setZero();
-        JTr_private.setZero();
-        VecInTypeDouble J_r;
-        VecInTypeInt pattern;
-        double r;
-#ifdef _OPENMP
-#pragma omp for nowait
-#endif
-        for (int i = 0; i < vertex_num; i++) {
-            f(i, J_r, r, pattern);
-            for (auto x = 0; x < J_r.size(); x++) {
-                for (auto y = 0; y < J_r.size(); y++) {
-                    if (pattern(x) >= 6 + nonrigidval ||
-                        pattern(y) >= 6 + nonrigidval) {
-                        std::cout << "pattern(x): " << pattern(x) << std::endl;
-                        std::cout << "pattern(y): " << pattern(y) << std::endl;
-                        std::cout << "6 + nonrigidval: " << 6 + nonrigidval
-                                  << std::endl;
-                    }
-                    JTJ_private(pattern(x), pattern(y)) += J_r(x) * J_r(y);
+    // #ifdef _OPENMP
+    // #pragma omp parallel
+    //     {
+    // #endif
+    MatOutType JTJ_private(6 + nonrigidval, 6 + nonrigidval);
+    VecOutType JTr_private(6 + nonrigidval);
+    double r2_sum_private = 0.0;
+    JTJ_private.setZero();
+    JTr_private.setZero();
+    VecInTypeDouble J_r;
+    VecInTypeInt pattern;
+    double r;
+    // #ifdef _OPENMP
+    // #pragma omp for nowait
+    // #endif
+    for (int i = 0; i < vertex_num; i++) {
+        f(i, J_r, r, pattern);
+        for (auto x = 0; x < J_r.size(); x++) {
+            for (auto y = 0; y < J_r.size(); y++) {
+                if (pattern(x) >= 6 + nonrigidval ||
+                    pattern(y) >= 6 + nonrigidval) {
+                    std::cout << "pattern(x): " << pattern(x) << std::endl;
+                    std::cout << "pattern(y): " << pattern(y) << std::endl;
+                    std::cout << "6 + nonrigidval: " << 6 + nonrigidval
+                              << std::endl;
                 }
+                JTJ_private(pattern(x), pattern(y)) += J_r(x) * J_r(y);
             }
-            for (auto x = 0; x < J_r.size(); x++) {
-                JTr_private(pattern(x)) += r * J_r(x);
-            }
-            r2_sum_private += r * r;
         }
-#ifdef _OPENMP
-#pragma omp critical
-        {
-#endif
-            JTJ += JTJ_private;
-            JTr += JTr_private;
-            r2_sum += r2_sum_private;
-#ifdef _OPENMP
+        for (auto x = 0; x < J_r.size(); x++) {
+            JTr_private(pattern(x)) += r * J_r(x);
         }
+        r2_sum_private += r * r;
     }
-#endif
+    // #ifdef _OPENMP
+    // #pragma omp critical
+    //     {
+    // #endif
+    JTJ += JTJ_private;
+    JTr += JTr_private;
+    r2_sum += r2_sum_private;
+    // #ifdef _OPENMP
+    // }
+    // }  // namespace open3d
+    // #endif
     if (verbose) {
         PrintDebug("Residual : %.2e (# of elements : %d)\n",
                    r2_sum / (double)vertex_num, vertex_num);
     }
     return std::make_tuple(std::move(JTJ), std::move(JTr), r2_sum);
-}
+}  // namespace open3d
 
 template std::tuple<Eigen::MatrixXd, Eigen::VectorXd, double> ComputeJTJandJTr(
         std::function<
