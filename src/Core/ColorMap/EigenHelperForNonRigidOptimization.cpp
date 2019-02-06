@@ -58,9 +58,9 @@ std::tuple<MatOutType, VecOutType, double> ComputeJTJandJTr(
         VecInTypeDouble J_r;
         VecInTypeInt pattern;
         double r;
-// #ifdef _OPENMP
-// #pragma omp for nowait
-// #endif
+        // #ifdef _OPENMP
+        // #pragma omp for nowait
+        // #endif
         for (int i = 0; i < iteration_num; i++) {
             f(i, J_r, r, pattern);
             for (auto x = 0; x < J_r.size(); x++) {
@@ -69,7 +69,8 @@ std::tuple<MatOutType, VecOutType, double> ComputeJTJandJTr(
                         pattern(y) >= 6 + nonrigidval) {
                         std::cout << "pattern(x): " << pattern(x) << std::endl;
                         std::cout << "pattern(y): " << pattern(y) << std::endl;
-                        std::cout << "6 + nonrigidval: " << 6 + nonrigidval << std::endl;
+                        std::cout << "6 + nonrigidval: " << 6 + nonrigidval
+                                  << std::endl;
                     }
                     JTJ_private(pattern(x), pattern(y)) += J_r(x) * J_r(y);
                 }

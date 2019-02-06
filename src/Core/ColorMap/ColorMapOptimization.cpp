@@ -25,6 +25,7 @@
 // ----------------------------------------------------------------------------
 
 #include "ColorMapOptimization.h"
+#include <Eigen/Dense>
 
 #include <Core/Camera/PinholeCameraTrajectory.h>
 #include <Core/ColorMap/ColorMapOptimizationJacobian.h>
@@ -67,6 +68,10 @@ void OptimizeImageCoorNonrigid(
 #pragma omp parallel for schedule(static)
 #endif
         for (int c = 0; c < n_camera; c++) {
+            if (visiblity_image_to_vertex[c].size() == 0) {
+                continue;
+            }
+
             int nonrigidval = warping_fields[c].anchor_w_ *
                               warping_fields[c].anchor_h_ * 2;
             double rr_reg = 0.0;
@@ -81,6 +86,7 @@ void OptimizeImageCoorNonrigid(
             intr.block<3, 3>(0, 0) = intrinsic;
             intr(3, 3) = 1.0;
 
+            // Compute JTJ, JTr, r2 //////////////////////////////////////
             auto f_lambda = [&](int i, Eigen::Vector14d& J_r, double& r,
                                 Eigen::Vector14i& pattern) {
                 jac.ComputeJacobianAndResidualNonRigid(
@@ -98,7 +104,9 @@ void OptimizeImageCoorNonrigid(
                                      Eigen::MatrixXd, Eigen::VectorXd>(
                             f_lambda, visiblity_image_to_vertex[c].size(),
                             nonrigidval, false);
+            // END Compute JTJ, JTr, r2 //////////////////////////////////
 
+            // BEGIN assign weights //////////////////////////////////////
             double weight = option.non_rigid_anchor_point_weight_ *
                             visiblity_image_to_vertex[c].size() / n_vertex;
             for (int j = 0; j < nonrigidval; j++) {
@@ -108,14 +116,21 @@ void OptimizeImageCoorNonrigid(
                 JTr(6 + j) += weight * r;
                 rr_reg += r * r;
             }
+            // END assign weights //////////////////////////////////////
 
             bool success;
             Eigen::VectorXd result;
             std::tie(success, result) = SolveLinearSystem(JTJ, -JTr, false);
-            Eigen::Vector6d result_pose;
-            result_pose << result.block(0, 0, 6, 1);
-            auto delta = TransformVector6dToMatrix4d(result_pose);
-            pose = delta * pose;
+
+            Eigen::Affine3d aff_mat;
+            aff_mat.linear() =
+                    (Eigen::Matrix3d)Eigen::AngleAxisd(
+                            result(2), Eigen::Vector3d::UnitZ()) *
+                    Eigen::AngleAxisd(result(1), Eigen::Vector3d::UnitY()) *
+                    Eigen::AngleAxisd(result(0), Eigen::Vector3d::UnitX());
+            aff_mat.translation() =
+                    Eigen::Vector3d(result(3), result(4), result(5));
+            pose = aff_mat.matrix() * pose;
 
             for (int j = 0; j < nonrigidval; j++) {
                 warping_fields[c].flow_(j) += result(6 + j);
