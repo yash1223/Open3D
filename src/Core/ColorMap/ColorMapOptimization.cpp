@@ -96,8 +96,9 @@ void OptimizeImageCoorNonrigid(
                         extrinsic, visiblity_image_to_vertex[c],
                         option.image_boundary_margin_);
             };
-            Eigen::MatrixXd JTJ;
-            Eigen::VectorXd JTr;
+            Eigen::MatrixXd JTJ =
+                    Eigen::MatrixXd::Zero(6 + nonrigidval, 6 + nonrigidval);
+            Eigen::VectorXd JTr = Eigen::VectorXd::Zero(6 + nonrigidval);
             double r2;
             std::tie(JTJ, JTr, r2) =
                     ComputeJTJandJTr<Eigen::Vector14d, Eigen::Vector14i,
