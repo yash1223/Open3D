@@ -350,6 +350,8 @@ void OptimizeImageCoorNonrigid(
             intr.block<3, 3>(0, 0) =
                     camera.parameters_[i].intrinsic_.intrinsic_matrix_;
             intr(3, 3) = 1.0;
+
+            // Compute JTJ, JTr, r2 //////////////////////////////////////
             double fx = intr(0, 0);
             double fy = intr(1, 1);
             Eigen::Matrix4d pose;
@@ -456,7 +458,12 @@ void OptimizeImageCoorNonrigid(
                 }
                 rr += r * r;
                 this_num++;
-            }
+            }  // end for iter < isiblity_image_to_vertex[i].size()
+               // looping all vertex visible by image[i]
+               // this_num == num vertex visable from image[i]
+            // END Compute JTJ, JTr, r2 //////////////////////////////////
+
+            // BEGIN assign weights //////////////////////////////////////
             if (this_num == 0) continue;
             double weight =
                     option.non_rigid_anchor_point_weight_ * this_num / n_vertex;
@@ -467,6 +474,8 @@ void OptimizeImageCoorNonrigid(
                 Jb(6 + j) += weight * r;
                 rr_reg += r * r;
             }
+                // END assign weights //////////////////////////////////////]
+
 #ifdef _OPENMP
 #pragma omp critical
 #endif
@@ -474,6 +483,7 @@ void OptimizeImageCoorNonrigid(
                 bool success = false;
                 Eigen::VectorXd result;
                 std::tie(success, result) = SolveLinearSystem(JJ, -Jb, false);
+
                 Eigen::Affine3d aff_mat;
                 aff_mat.linear() =
                         (Eigen::Matrix3d)Eigen::AngleAxisd(
@@ -483,6 +493,7 @@ void OptimizeImageCoorNonrigid(
                 aff_mat.translation() =
                         Eigen::Vector3d(result(3), result(4), result(5));
                 pose = aff_mat.matrix() * pose;
+
                 for (int j = 0; j < nonrigidval; j++) {
                     warping_fields[i].flow_(j) += result(6 + j);
                 }
