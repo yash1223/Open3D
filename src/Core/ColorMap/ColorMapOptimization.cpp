@@ -464,6 +464,20 @@ void OptimizeImageCoorNonrigid(
                // looping all vertex visible by image[i]
                // this_num == num vertex visable from image[i]
             // END Compute JTJ, JTr, r2 //////////////////////////////////
+            if (i == 0) {
+                std::cout << "JJ" << std::endl;
+                for (size_t row_idx = 0; row_idx < 6; ++row_idx) {
+                    for (size_t col_idx = 0; col_idx < 6; ++col_idx) {
+                        std::cout << JJ(row_idx, col_idx) << " ";
+                    }
+                    std::cout << std::endl;
+                }
+                // std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" <<
+                // std::endl; std::cout << "JTr" << std::endl; std::cout << Jb
+                // << std::endl; std::cout <<
+                // "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl; std::cout
+                // << "r2" << std::endl; std::cout << rr << std::endl;
+            }
 
             // BEGIN assign weights //////////////////////////////////////
             if (this_num == 0) continue;
