@@ -76,7 +76,7 @@ std::tuple<MatOutType, VecOutType, double> ComputeJTJandJTr(
                 }
             }
             for (auto x = 0; x < J_r.size(); x++) {
-                JTr_private(pattern(x)) -= r * J_r(x);
+                JTr_private(pattern(x)) += r * J_r(x);
             }
             r2_sum_private += r * r;
         }

@@ -47,7 +47,6 @@ void ColorMapOptimizationJacobian::ComputeJacobianAndResidualRigid(
         const std::vector<int>& visiblity_image_to_vertex,
         const int image_boundary_margin) {
     J_r.setZero();
-    r = 0;
     int vid = visiblity_image_to_vertex[row];
     Eigen::Vector3d x = mesh.vertices_[vid];
     Eigen::Vector4d g = extrinsic * Eigen::Vector4d(x(0), x(1), x(2), 1);
@@ -92,7 +91,6 @@ void ColorMapOptimizationJacobian::ComputeJacobianAndResidualNonRigid(
         const int image_boundary_margin) {
     J_r.setZero();
     pattern.setZero();
-    r = 0;
     int anchor_w = warping_fields.anchor_w_;
     int anchor_step = warping_fields.anchor_step_;
     int vid = visiblity_image_to_vertex[row];
