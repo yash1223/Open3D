@@ -81,6 +81,7 @@ void OptimizeImageCoorNonrigid(
 
             auto intrinsic = camera.parameters_[c].intrinsic_.intrinsic_matrix_;
             auto extrinsic = camera.parameters_[c].extrinsic_;
+            ColorMapOptimizationJacobian jac;
             Eigen::Matrix4d intr = Eigen::Matrix4d::Zero();
             intr.block<3, 3>(0, 0) = intrinsic;
             intr(3, 3) = 1.0;
@@ -88,7 +89,6 @@ void OptimizeImageCoorNonrigid(
             // Compute JTJ, JTr, r2 //////////////////////////////////////
             auto f_lambda = [&](int i, Eigen::Vector14d& J_r, double& r,
                                 Eigen::Vector14i& pattern) {
-                ColorMapOptimizationJacobian jac;
                 jac.ComputeJacobianAndResidualNonRigid(
                         i, J_r, r, pattern, mesh, proxy_intensity,
                         images_gray[c], images_dx[c], images_dy[c],
