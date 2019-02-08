@@ -177,7 +177,7 @@ void ColorMapOptimizationJacobian::ComputeJacobianAndResidualNonRigid(
 
 void ColorMapOptimizationJacobian::ComputeJacobianAndResidualNonRigidSparse(
         int row,
-        Eigen::SparseVector<double>& J_r_sparse,
+        Eigen::SparseMatrix<double>& J_sparse,
         double& r,
         const TriangleMesh& mesh,
         const std::vector<double>& proxy_intensity,
@@ -198,9 +198,9 @@ void ColorMapOptimizationJacobian::ComputeJacobianAndResidualNonRigidSparse(
             extrinsic, visiblity_image_to_vertex, image_boundary_margin);
 
     // J_r_sparse is of size 6 + 2 * anchor_w * anchor_h
-    J_r_sparse.setZero();
+    // J_sparse is of size (num_visable_vertex, 6 + 2 * anchor_w * anchor_h)
     for (size_t i = 0; i < J_r.size(); ++i) {
-        J_r_sparse.insert(pattern(i)) = J_r(i);
+        J_sparse.insert(row, pattern(i)) = J_r(i);
     }
 }
 

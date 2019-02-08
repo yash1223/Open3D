@@ -29,6 +29,7 @@
 #include <tuple>
 #include <vector>
 #include <Eigen/Core>
+#include <Eigen/SparseCore>
 
 namespace Eigen {
 
@@ -47,9 +48,9 @@ namespace open3d {
 /// Utility/Eigen.h/cpp, but this function takes additional multiplication
 /// pattern that can produce JTJ having hundreds of rows and columns.
 std::tuple<Eigen::MatrixXd, Eigen::VectorXd, double> ComputeJTJandJTr(
-        std::function<
-                void(int, Eigen::Vector14d &, double &, Eigen::Vector14i &)>
-                f_jacobian_and_residual,
+        std::function<void(int i,
+                           Eigen::SparseMatrix<double>& J_sparse,
+                           double& r)> f_jacobian_and_residual,
         int num_visable_vertex,
         int nonrigidval,
         bool verbose = true);

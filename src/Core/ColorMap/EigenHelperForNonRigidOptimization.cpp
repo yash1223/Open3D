@@ -26,14 +26,15 @@
 
 #include "EigenHelperForNonRigidOptimization.h"
 
+#include <Eigen/SparseCore>
 #include <Core/Utility/Console.h>
 
 namespace open3d {
 
 std::tuple<Eigen::MatrixXd, Eigen::VectorXd, double> ComputeJTJandJTr(
-        std::function<
-                void(int, Eigen::Vector14d &, double &, Eigen::Vector14i &)>
-                f_jacobian_and_residual,
+        std::function<void(int i,
+                           Eigen::SparseMatrix<double>& J_sparse,
+                           double& r)> f_jacobian_and_residual,
         int num_visable_vertex,
         int nonrigidval,
         bool verbose /*=true*/) {
@@ -43,22 +44,15 @@ std::tuple<Eigen::MatrixXd, Eigen::VectorXd, double> ComputeJTJandJTr(
     JTJ.setZero();
     JTr.setZero();
 
-    Eigen::Vector14d J_r;
-    Eigen::Vector14i pattern;
+    Eigen::SparseMatrix<double> J_sparse(num_visable_vertex, 6 + nonrigidval);
     double r;
 
     for (int i = 0; i < num_visable_vertex; i++) {
-        f_jacobian_and_residual(i, J_r, r, pattern);
-        for (auto x = 0; x < J_r.size(); x++) {
-            for (auto y = 0; y < J_r.size(); y++) {
-                JTJ(pattern(x), pattern(y)) += J_r(x) * J_r(y);
-            }
-        }
-        for (auto x = 0; x < J_r.size(); x++) {
-            JTr(pattern(x)) += r * J_r(x);
-        }
+        f_jacobian_and_residual(i, J_sparse, r);
+        JTr += r * J_sparse.row(i);
         r2_sum += r * r;
     }
+    JTJ = Eigen::MatrixXd(J_sparse.transpose() * J_sparse);
 
     if (verbose) {
         PrintDebug("Residual : %.2e (# of elements : %d)\n",
