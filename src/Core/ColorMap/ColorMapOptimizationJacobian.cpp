@@ -196,6 +196,12 @@ void ColorMapOptimizationJacobian::ComputeJacobianAndResidualNonRigidSparse(
             row, J_r, r, pattern, mesh, proxy_intensity, images_gray, images_dx,
             images_dy, warping_fields, warping_fields_init, intrinsic,
             extrinsic, visiblity_image_to_vertex, image_boundary_margin);
+
+    // J_r_sparse is of size 6 + 2 * anchor_w * anchor_h
+    J_r_sparse.setZero();
+    for (size_t i = 0; i < J_r.size(); ++i) {
+        J_r_sparse.insert(pattern(i)) = J_r(i);
+    }
 }
 
 }  // namespace open3d
