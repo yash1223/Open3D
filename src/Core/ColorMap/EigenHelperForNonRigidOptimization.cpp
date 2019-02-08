@@ -28,6 +28,8 @@
 
 #include <Eigen/SparseCore>
 #include <Core/Utility/Console.h>
+#include <iostream>
+// #include <fstream>
 
 namespace open3d {
 
@@ -56,6 +58,10 @@ std::tuple<Eigen::MatrixXd, Eigen::VectorXd, double> ComputeJTJandJTr(
         JTr += r * J_sparse.row(i);
         r2_sum += r * r;
     }
+    // std::ofstream f;
+    // f.open("out.txt");
+    // f << Eigen::MatrixXd(J_sparse) << std::endl;
+    // f.close();
     JTJ = Eigen::MatrixXd(J_sparse.transpose() * J_sparse);
 
     if (verbose) {

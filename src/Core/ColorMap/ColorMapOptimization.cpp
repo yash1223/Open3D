@@ -120,10 +120,10 @@ void OptimizeImageCoorNonrigid(
             Eigen::VectorXd result;
 
             // This one might or might not fail
-            std::tie(success, result) = SolveLinearSystemPSD(
-                    JTJ, -JTr, /*prefer_sparse=*/false,
-                    /*check_symmetric=*/true,
-                    /*check_det=*/true, /*check_psd=*/true);
+            //     std::tie(success, result) = SolveLinearSystemPSD(
+            //             JTJ, -JTr, /*prefer_sparse=*/false,
+            //             /*check_symmetric=*/true,
+            //             /*check_det=*/true, /*check_psd=*/true);
 
             // Ignore warnings and just get a result
             std::tie(success, result) = SolveLinearSystemPSD(
