@@ -33,9 +33,10 @@
 namespace open3d {
 
 std::tuple<Eigen::MatrixXd, Eigen::VectorXd, double> ComputeJTJandJTr(
-        std::function<void(int i,
-                           Eigen::SparseMatrix<double>& J_sparse,
-                           double& r)> f_jacobian_and_residual,
+        std::function<
+                void(int i,
+                     Eigen::SparseMatrix<double, Eigen::RowMajor>& J_sparse,
+                     double& r)> f_jacobian_and_residual,
         int num_visable_vertex,
         int nonrigidval,
         bool verbose /*=true*/) {
@@ -45,8 +46,10 @@ std::tuple<Eigen::MatrixXd, Eigen::VectorXd, double> ComputeJTJandJTr(
     JTJ.setZero();
     JTr.setZero();
 
-    Eigen::SparseMatrix<double> J_sparse(num_visable_vertex, 6 + nonrigidval);
-    J_sparse.reserve(num_visable_vertex * 14);  // number of non-zero elements
+    Eigen::SparseMatrix<double, Eigen::RowMajor> J_sparse(num_visable_vertex,
+                                                          6 + nonrigidval);
+    J_sparse.reserve(Eigen::VectorXi::Constant(
+            num_visable_vertex, 14));  // number of non-zero elements
     double r;
 
     time_t start, end;

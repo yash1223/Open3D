@@ -49,7 +49,7 @@ namespace open3d {
 /// pattern that can produce JTJ having hundreds of rows and columns.
 std::tuple<Eigen::MatrixXd, Eigen::VectorXd, double> ComputeJTJandJTr(
         std::function<void(int i,
-                           Eigen::SparseMatrix<double>& J_sparse,
+                           Eigen::SparseMatrix<double, Eigen::RowMajor>& J_sparse,
                            double& r)> f_jacobian_and_residual,
         int num_visable_vertex,
         int nonrigidval,

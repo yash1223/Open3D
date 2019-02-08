@@ -82,15 +82,17 @@ void OptimizeImageCoorNonrigid(
             intr.block<3, 3>(0, 0) = intrinsic;
             intr(3, 3) = 1.0;
 
-            auto f_lambda = [&](int i, Eigen::SparseMatrix<double>& J_sparse,
-                                double& r) {
-                jac.ComputeJacobianAndResidualNonRigidSparse(
-                        i, J_sparse, r, mesh, proxy_intensity, images_gray[c],
-                        images_dx[c], images_dy[c], warping_fields[c],
-                        warping_fields_init[c], intr, extrinsic,
-                        visiblity_image_to_vertex[c],
-                        option.image_boundary_margin_);
-            };
+            auto f_lambda =
+                    [&](int i,
+                        Eigen::SparseMatrix<double, Eigen::RowMajor>& J_sparse,
+                        double& r) {
+                        jac.ComputeJacobianAndResidualNonRigidSparse(
+                                i, J_sparse, r, mesh, proxy_intensity,
+                                images_gray[c], images_dx[c], images_dy[c],
+                                warping_fields[c], warping_fields_init[c], intr,
+                                extrinsic, visiblity_image_to_vertex[c],
+                                option.image_boundary_margin_);
+                    };
             Eigen::MatrixXd JTJ;
             Eigen::VectorXd JTr;
             double r2;

@@ -87,7 +87,7 @@ public:
 
     void ComputeJacobianAndResidualNonRigidSparse(
             int row,
-            Eigen::SparseMatrix<double>& J_sparse,
+            Eigen::SparseMatrix<double, Eigen::RowMajor>& J_sparse,
             double& r,
             const TriangleMesh& mesh,
             const std::vector<double>& proxy_intensity,
