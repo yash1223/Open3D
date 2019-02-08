@@ -175,9 +175,9 @@ void ColorMapOptimizationJacobian::ComputeJacobianAndResidualNonRigid(
     r = (gray - proxy_intensity[vid]);
 }
 
-void ComputeJacobianAndResidualNonRigidSparse(
+void ColorMapOptimizationJacobian::ComputeJacobianAndResidualNonRigidSparse(
         int row,
-        Eigen::SparseVector<double>& J_r,
+        Eigen::SparseVector<double>& J_r_sparse,
         double& r,
         const TriangleMesh& mesh,
         const std::vector<double>& proxy_intensity,
@@ -189,6 +189,13 @@ void ComputeJacobianAndResidualNonRigidSparse(
         const Eigen::Matrix4d& intrinsic,
         const Eigen::Matrix4d& extrinsic,
         const std::vector<int>& visiblity_image_to_vertex,
-        const int image_boundary_margin) {}
+        const int image_boundary_margin) {
+    Eigen::Vector14d J_r;
+    Eigen::Vector14i pattern;
+    this->ComputeJacobianAndResidualNonRigid(
+            row, J_r, r, pattern, mesh, proxy_intensity, images_gray, images_dx,
+            images_dy, warping_fields, warping_fields_init, intrinsic,
+            extrinsic, visiblity_image_to_vertex, image_boundary_margin);
+}
 
 }  // namespace open3d
