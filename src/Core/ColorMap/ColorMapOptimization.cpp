@@ -25,6 +25,7 @@
 // ----------------------------------------------------------------------------
 
 #include "ColorMapOptimization.h"
+#include <iostream>
 
 #include <Core/Camera/PinholeCameraTrajectory.h>
 #include <Core/ColorMap/ColorMapOptimizationJacobian.h>
@@ -63,9 +64,9 @@ void OptimizeImageCoorNonrigid(
         PrintDebug("[Iteration %04d] ", itr + 1);
         double residual = 0.0;
         double residual_reg = 0.0;
-#ifdef _OPENMP
-#pragma omp parallel for schedule(static)
-#endif
+        // #ifdef _OPENMP
+        // #pragma omp parallel for schedule(static)
+        // #endif
         for (int c = 0; c < n_camera; c++) {
             int nonrigidval = warping_fields[c].anchor_w_ *
                               warping_fields[c].anchor_h_ * 2;
@@ -101,6 +102,9 @@ void OptimizeImageCoorNonrigid(
 
             double weight = option.non_rigid_anchor_point_weight_ *
                             visiblity_image_to_vertex[c].size() / n_vertex;
+            std::cout << "weight: " << weight << std::endl;
+            std::cout << "non_rigid_anchor_point_weight_: "
+                      << option.non_rigid_anchor_point_weight_ << std::endl;
             for (int j = 0; j < nonrigidval; j++) {
                 double r = weight * (warping_fields[c].flow_(j) -
                                      warping_fields_init[c].flow_(j));
@@ -108,13 +112,16 @@ void OptimizeImageCoorNonrigid(
                 JTr(6 + j) += weight * r;
                 rr_reg += r * r;
             }
+            std::cout << "######################################" << std::endl;
+            std::cout << "Camera: " << c << std::endl;
+            std::cout << JTJ << std::endl;
 
             bool success;
             Eigen::VectorXd result;
             std::tie(success, result) = SolveLinearSystemPSD(
                     JTJ, -JTr, /*prefer_sparse=*/false,
-                    /*check_symmetric=*/false,
-                    /*check_det=*/false, /*check_psd=*/false);
+                    /*check_symmetric=*/true,
+                    /*check_det=*/true, /*check_psd=*/true);
             Eigen::Vector6d result_pose;
             result_pose << result.block(0, 0, 6, 1);
             auto delta = TransformVector6dToMatrix4d(result_pose);
@@ -125,9 +132,9 @@ void OptimizeImageCoorNonrigid(
             }
             camera.parameters_[c].extrinsic_ = pose;
 
-#ifdef _OPENMP
-#pragma omp critical
-#endif
+            // #ifdef _OPENMP
+            // #pragma omp critical
+            // #endif
             {
                 residual += r2;
                 residual_reg += rr_reg;
