@@ -46,6 +46,7 @@ std::tuple<Eigen::MatrixXd, Eigen::VectorXd, double> ComputeJTJandJTr(
     JTr.setZero();
 
     Eigen::SparseMatrix<double> J_sparse(num_visable_vertex, 6 + nonrigidval);
+    J_sparse.reserve(num_visable_vertex * 14);  // number of non-zero elements
     double r;
 
     time_t start, end;
