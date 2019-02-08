@@ -199,6 +199,9 @@ void ColorMapOptimizationJacobian::ComputeJacobianAndResidualNonRigidSparse(
 
     // J_r_sparse is of size 6 + 2 * anchor_w * anchor_h
     // J_sparse is of size (num_visable_vertex, 6 + 2 * anchor_w * anchor_h)
+    //
+    // TODO:
+    // use sparse vector instead of sparse matrix
     for (size_t i = 0; i < J_r.size(); ++i) {
         J_sparse.insert(row, pattern(i)) = J_r(i);
     }
