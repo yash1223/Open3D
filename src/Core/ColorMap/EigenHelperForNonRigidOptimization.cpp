@@ -30,24 +30,21 @@
 
 namespace open3d {
 
-template <typename VecInTypeDouble,
-          typename VecInTypeInt,
-          typename MatOutType,
-          typename VecOutType>
-std::tuple<MatOutType, VecOutType, double> ComputeJTJandJTr(
-        std::function<void(int, VecInTypeDouble &, double &, VecInTypeInt &)>
+std::tuple<Eigen::MatrixXd, Eigen::VectorXd, double> ComputeJTJandJTr(
+        std::function<
+                void(int, Eigen::Vector14d &, double &, Eigen::Vector14i &)>
                 f_jacobian_and_residual,
         int num_visable_vertex,
         int nonrigidval,
         bool verbose /*=true*/) {
-    MatOutType JTJ(6 + nonrigidval, 6 + nonrigidval);
-    VecOutType JTr(6 + nonrigidval);
+    Eigen::MatrixXd JTJ(6 + nonrigidval, 6 + nonrigidval);
+    Eigen::VectorXd JTr(6 + nonrigidval);
     double r2_sum = 0.0;
     JTJ.setZero();
     JTr.setZero();
 
-    VecInTypeDouble J_r;
-    VecInTypeInt pattern;
+    Eigen::Vector14d J_r;
+    Eigen::Vector14i pattern;
     double r;
 
     for (int i = 0; i < num_visable_vertex; i++) {
@@ -69,12 +66,5 @@ std::tuple<MatOutType, VecOutType, double> ComputeJTJandJTr(
     }
     return std::make_tuple(std::move(JTJ), std::move(JTr), r2_sum);
 }
-
-template std::tuple<Eigen::MatrixXd, Eigen::VectorXd, double> ComputeJTJandJTr(
-        std::function<
-                void(int, Eigen::Vector14d &, double &, Eigen::Vector14i &)> f,
-        int num_visable_vertex,
-        int nonrigidval,
-        bool verbose);
 
 }  // namespace open3d

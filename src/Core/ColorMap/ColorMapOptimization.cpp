@@ -94,11 +94,9 @@ void OptimizeImageCoorNonrigid(
             Eigen::MatrixXd JTJ;
             Eigen::VectorXd JTr;
             double r2;
-            std::tie(JTJ, JTr, r2) =
-                    ComputeJTJandJTr<Eigen::Vector14d, Eigen::Vector14i,
-                                     Eigen::MatrixXd, Eigen::VectorXd>(
-                            f_lambda, visiblity_image_to_vertex[c].size(),
-                            nonrigidval, false);
+            std::tie(JTJ, JTr, r2) = ComputeJTJandJTr(
+                    f_lambda, visiblity_image_to_vertex[c].size(), nonrigidval,
+                    false);
 
             double weight = option.non_rigid_anchor_point_weight_ *
                             visiblity_image_to_vertex[c].size() / n_vertex;
