@@ -114,14 +114,23 @@ void OptimizeImageCoorNonrigid(
             }
             std::cout << "######################################" << std::endl;
             std::cout << "Camera: " << c << std::endl;
-            std::cout << JTJ << std::endl;
+            // std::cout << JTJ << std::endl;
 
             bool success;
             Eigen::VectorXd result;
+
+            // This one might or might not fail
             std::tie(success, result) = SolveLinearSystemPSD(
                     JTJ, -JTr, /*prefer_sparse=*/false,
                     /*check_symmetric=*/true,
                     /*check_det=*/true, /*check_psd=*/true);
+
+            // Ignore warnings and just get a result
+            std::tie(success, result) = SolveLinearSystemPSD(
+                    JTJ, -JTr, /*prefer_sparse=*/false,
+                    /*check_symmetric=*/false,
+                    /*check_det=*/false, /*check_psd=*/false);
+
             Eigen::Vector6d result_pose;
             result_pose << result.block(0, 0, 6, 1);
             auto delta = TransformVector6dToMatrix4d(result_pose);
