@@ -28,7 +28,6 @@
 
 #include <Eigen/SparseCore>
 #include <Core/Utility/Console.h>
-#include <time.h>
 
 namespace open3d {
 
@@ -46,32 +45,18 @@ std::tuple<Eigen::MatrixXd, Eigen::VectorXd, double> ComputeJTJandJTr(
     JTJ.setZero();
     JTr.setZero();
 
+    // The pre-allocation must match the number of non-zero elements each row
     Eigen::SparseMatrix<double, Eigen::RowMajor> J_sparse(num_visable_vertex,
                                                           6 + nonrigidval);
-    J_sparse.reserve(Eigen::VectorXi::Constant(
-            num_visable_vertex, 14));  // number of non-zero elements
-    double r;
+    J_sparse.reserve(Eigen::VectorXi::Constant(num_visable_vertex, 14));
 
-    time_t start, end;
-    time(&start);
+    double r;
     for (int i = 0; i < num_visable_vertex; i++) {
         f_jacobian_and_residual(i, J_sparse, r);
         JTr += r * J_sparse.row(i);
         r2_sum += r * r;
     }
-    time(&end);
-    PrintDebug("f_jacobian_and_residual: %.2lf seconds.\n",
-               difftime(end, start));
-
-    time(&start);
-    auto JTJ_sparse = J_sparse.transpose() * J_sparse;
-    time(&end);
-    PrintDebug("JTJ_sparse matmul: %.2lf seconds.\n", difftime(end, start));
-
-    time(&start);
-    JTJ = Eigen::MatrixXd(JTJ_sparse);
-    time(&end);
-    PrintDebug("Sparse to dense: %.2lf seconds.\n", difftime(end, start));
+    JTJ = Eigen::MatrixXd(J_sparse.transpose() * J_sparse);
 
     if (verbose) {
         PrintDebug("Residual : %.2e (# of elements : %d)\n",
