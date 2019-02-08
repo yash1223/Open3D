@@ -51,7 +51,8 @@ template <typename VecInTypeDouble,
           typename MatOutType,
           typename VecOutType>
 std::tuple<MatOutType, VecOutType, double> ComputeJTJandJTr(
-        std::function<void(int, VecInTypeDouble &, double &, VecInTypeInt &)> f,
+        std::function<void(int, VecInTypeDouble &, double &, VecInTypeInt &)>
+                f_jacobian_and_residual,
         int num_visable_vertex,
         int nonrigidval,
         bool verbose = true);

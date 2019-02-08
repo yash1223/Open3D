@@ -35,7 +35,8 @@ template <typename VecInTypeDouble,
           typename MatOutType,
           typename VecOutType>
 std::tuple<MatOutType, VecOutType, double> ComputeJTJandJTr(
-        std::function<void(int, VecInTypeDouble &, double &, VecInTypeInt &)> f,
+        std::function<void(int, VecInTypeDouble &, double &, VecInTypeInt &)>
+                f_jacobian_and_residual,
         int num_visable_vertex,
         int nonrigidval,
         bool verbose /*=true*/) {
@@ -50,7 +51,7 @@ std::tuple<MatOutType, VecOutType, double> ComputeJTJandJTr(
     double r;
 
     for (int i = 0; i < num_visable_vertex; i++) {
-        f(i, J_r, r, pattern);
+        f_jacobian_and_residual(i, J_r, r, pattern);
         for (auto x = 0; x < J_r.size(); x++) {
             for (auto y = 0; y < J_r.size(); y++) {
                 JTJ(pattern(x), pattern(y)) += J_r(x) * J_r(y);
