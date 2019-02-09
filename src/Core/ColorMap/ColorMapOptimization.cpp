@@ -95,8 +95,9 @@ void OptimizeImageCoorNonrigid(
                     };
             Eigen::MatrixXd JTJ;
             Eigen::VectorXd JTr;
+            Eigen::SparseMatrix<double, Eigen::RowMajor> J_sparse;
             double r2;
-            std::tie(JTJ, JTr, r2) = ComputeJTJandJTr(
+            std::tie(J_sparse, JTJ, JTr, r2) = ComputeJTJandJTr(
                     f_lambda, visiblity_image_to_vertex[c].size(), nonrigidval,
                     false);
 

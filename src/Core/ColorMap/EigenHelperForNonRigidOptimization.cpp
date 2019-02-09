@@ -33,14 +33,17 @@
 
 namespace open3d {
 
-std::tuple<Eigen::MatrixXd, Eigen::VectorXd, double> ComputeJTJandJTr(
-        std::function<
-                void(int i,
-                     Eigen::SparseMatrix<double, Eigen::RowMajor>& J_sparse,
-                     double& r)> f_jacobian_and_residual,
-        int num_visable_vertex,
-        int nonrigidval,
-        bool verbose /*=true*/) {
+std::tuple<Eigen::SparseMatrix<double, Eigen::RowMajor>,
+           Eigen::MatrixXd,
+           Eigen::VectorXd,
+           double>
+ComputeJTJandJTr(std::function<void(
+                         int i,
+                         Eigen::SparseMatrix<double, Eigen::RowMajor>& J_sparse,
+                         double& r)> f_jacobian_and_residual,
+                 int num_visable_vertex,
+                 int nonrigidval,
+                 bool verbose /*=true*/) {
     Eigen::MatrixXd JTJ(6 + nonrigidval, 6 + nonrigidval);
     Eigen::VectorXd JTr(6 + nonrigidval);
     double r2_sum = 0.0;
@@ -68,7 +71,8 @@ std::tuple<Eigen::MatrixXd, Eigen::VectorXd, double> ComputeJTJandJTr(
         PrintDebug("Residual : %.2e (# of elements : %d)\n",
                    r2_sum / (double)num_visable_vertex, num_visable_vertex);
     }
-    return std::make_tuple(std::move(JTJ), std::move(JTr), r2_sum);
+    return std::make_tuple(std::move(J_sparse), std::move(JTJ), std::move(JTr),
+                           r2_sum);
 }
 
 }  // namespace open3d
