@@ -34,7 +34,6 @@
 namespace open3d {
 
 std::tuple<Eigen::SparseMatrix<double, Eigen::RowMajor>,
-           Eigen::MatrixXd,
            Eigen::VectorXd,
            double>
 ComputeJTJandJTr(std::function<void(
@@ -44,15 +43,14 @@ ComputeJTJandJTr(std::function<void(
                  int num_visable_vertex,
                  int nonrigidval,
                  bool verbose /*=true*/) {
-    Eigen::MatrixXd JTJ(6 + nonrigidval, 6 + nonrigidval);
     Eigen::VectorXd JTr(6 + nonrigidval);
     double r2_sum = 0.0;
-    JTJ.setZero();
     JTr.setZero();
 
-    // The pre-allocation must match the number of non-zero elements each row
     Eigen::SparseMatrix<double, Eigen::RowMajor> J_sparse(num_visable_vertex,
                                                           6 + nonrigidval);
+
+    // The pre-allocation must be >= the number of non-zero elements each row
     J_sparse.reserve(Eigen::VectorXi::Constant(num_visable_vertex, 14));
 
     double r;
@@ -65,14 +63,12 @@ ComputeJTJandJTr(std::function<void(
     // f.open("out.txt");
     // f << Eigen::MatrixXd(J_sparse) << std::endl;
     // f.close();
-    JTJ = Eigen::MatrixXd(J_sparse.transpose() * J_sparse);
 
     if (verbose) {
         PrintDebug("Residual : %.2e (# of elements : %d)\n",
                    r2_sum / (double)num_visable_vertex, num_visable_vertex);
     }
-    return std::make_tuple(std::move(J_sparse), std::move(JTJ), std::move(JTr),
-                           r2_sum);
+    return std::make_tuple(std::move(J_sparse), std::move(JTr), r2_sum);
 }
 
 }  // namespace open3d

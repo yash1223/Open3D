@@ -93,13 +93,14 @@ void OptimizeImageCoorNonrigid(
                                 extrinsic, visiblity_image_to_vertex[c],
                                 option.image_boundary_margin_);
                     };
-            Eigen::MatrixXd JTJ;
+            Eigen::MatrixXd JTJ(6 + nonrigidval, 6 + nonrigidval);
             Eigen::VectorXd JTr;
             Eigen::SparseMatrix<double, Eigen::RowMajor> J_sparse;
             double r2;
-            std::tie(J_sparse, JTJ, JTr, r2) = ComputeJTJandJTr(
+            std::tie(J_sparse, JTr, r2) = ComputeJTJandJTr(
                     f_lambda, visiblity_image_to_vertex[c].size(), nonrigidval,
                     false);
+            JTJ = Eigen::MatrixXd(J_sparse.transpose() * J_sparse);
 
             double weight = option.non_rigid_anchor_point_weight_ *
                             visiblity_image_to_vertex[c].size() / n_vertex;

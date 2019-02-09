@@ -48,7 +48,6 @@ namespace open3d {
 /// Utility/Eigen.h/cpp, but this function takes additional multiplication
 /// pattern that can produce JTJ having hundreds of rows and columns.
 std::tuple<Eigen::SparseMatrix<double, Eigen::RowMajor>,
-           Eigen::MatrixXd,
            Eigen::VectorXd,
            double>
 ComputeJTJandJTr(std::function<void(
