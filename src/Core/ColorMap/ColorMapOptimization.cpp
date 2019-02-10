@@ -27,6 +27,7 @@
 #include "ColorMapOptimization.h"
 #include <iostream>
 #include <unordered_map>
+#include <ctime>
 
 #include <Core/Camera/PinholeCameraTrajectory.h>
 #include <Core/ColorMap/ColorMapOptimizationJacobian.h>
@@ -63,6 +64,7 @@ void OptimizeImageCoorNonrigid(
                                option.image_boundary_margin_);
     for (int itr = 0; itr < option.maximum_iteration_; itr++) {
         PrintDebug("[Iteration %04d] ", itr + 1);
+        clock_t iter_start_time = clock();
         double residual = 0.0;
         double residual_reg = 0.0;
 #ifdef _OPENMP
@@ -206,8 +208,9 @@ void OptimizeImageCoorNonrigid(
                 residual_reg += rr_reg;
             }
         }
-        PrintDebug("Residual error : %.6f, reg : %.6f\n", residual,
-                   residual_reg);
+        double iter_time = (clock() - iter_start_time) / (double)CLOCKS_PER_SEC;
+        PrintDebug("Residual error : %.6f, reg : %.6f, time: %.2f\n", residual,
+                   residual_reg, iter_time);
         SetProxyIntensityForVertex(mesh, images_gray, warping_fields, camera,
                                    visiblity_vertex_to_image, proxy_intensity,
                                    option.image_boundary_margin_);
