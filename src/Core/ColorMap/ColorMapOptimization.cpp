@@ -107,6 +107,28 @@ void OptimizeImageCoorNonrigid(
             // Method 2: some efficient eigen method
             Eigen::SparseMatrix<double, Eigen::ColMajor> J_sparse_col_major(
                     J_sparse);
+            std::cout << "num_rows: " << J_sparse_col_major.rows() << std::endl;
+            std::cout << "num_cols: " << J_sparse_col_major.cols() << std::endl;
+
+            // J_sparse_col_major.outerSize() == J_sparse_col_major.cols()
+            std::vector<bool> cols_have_value;
+            for (size_t c = 0; c < J_sparse_col_major.outerSize(); ++c) {
+                bool col_has_value = false;
+                for (Eigen::SparseMatrix<double>::InnerIterator it(
+                             J_sparse_col_major, c);
+                     it; ++it) {
+                    col_has_value = true;
+                    break;
+                    // std::cout << "(" << it.row() << ",";  // row index
+                    // std::cout << it.col()
+                    //           << ")\t";  // col index (here it is equal to k)
+                }
+                cols_have_value.push_back(col_has_value);
+            }
+            for (bool val : cols_have_value) {
+                std::cout << val << " ";
+            }
+            std::cout << std::endl;
 
             // JTJ = Eigen::MatrixXd(J_sparse.transpose() * J_sparse);
             JTJ = Eigen::MatrixXd(J_sparse_col_major.transpose() *
