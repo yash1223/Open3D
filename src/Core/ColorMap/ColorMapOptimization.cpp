@@ -182,7 +182,7 @@ void OptimizeImageCoorNonrigid(
 
             // Ignore warnings and just get a result
             std::tie(success, result) = SolveLinearSystemPSD(
-                    JTJ, -JTr, /*prefer_sparse=*/false,
+                    JTJ, -JTr, /*prefer_sparse=*/true,
                     /*check_symmetric=*/false,
                     /*check_det=*/false, /*check_psd=*/false);
 
