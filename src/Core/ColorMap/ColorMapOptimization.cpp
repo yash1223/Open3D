@@ -119,9 +119,6 @@ void OptimizeImageCoorNonrigid(
                      it; ++it) {
                     col_has_value = true;
                     break;
-                    // std::cout << "(" << it.row() << ",";  // row index
-                    // std::cout << it.col()
-                    //           << ")\t";  // col index (here it is equal to k)
                 }
                 cols_have_value.push_back(col_has_value);
             }
