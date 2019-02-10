@@ -62,9 +62,10 @@ ComputeJTJandJTr(std::function<void(
         JTr += r * J_sparse.row(i);
         r2_sum += r * r;
     }
-    std::cout << "Build J takes "
-              << (clock() - start_time) / (double)CLOCKS_PER_SEC << " seconds"
-              << std::endl;
+    // std::cout << "Build J takes "
+    //           << (clock() - start_time) / (double)CLOCKS_PER_SEC << "
+    //           seconds"
+    //           << std::endl;
     // std::ofstream f;
     // f.open("out.txt");
     // f << Eigen::MatrixXd(J_sparse) << std::endl;

@@ -98,7 +98,7 @@ void OptimizeImageCoorNonrigid(
             Eigen::VectorXd JTr_dense;
             Eigen::SparseMatrix<double, Eigen::RowMajor> J_sparse;
             double r2;
-            std::cout << "Camera: " << c << std::endl;
+            // std::cout << "Camera: " << c << std::endl;
             std::tie(J_sparse, JTr_dense, r2) = ComputeJTJandJTr(
                     f_lambda, visiblity_image_to_vertex[c].size(), nonrigidval,
                     false);
@@ -108,8 +108,9 @@ void OptimizeImageCoorNonrigid(
             // Method 2: some efficient eigen method
             Eigen::SparseMatrix<double, Eigen::ColMajor> J_sparse_col_major(
                     J_sparse);
-            std::cout << "num_rows: " << J_sparse_col_major.rows() << std::endl;
-            std::cout << "num_cols: " << J_sparse_col_major.cols() << std::endl;
+            // std::cout << "num_rows: " << J_sparse_col_major.rows() <<
+            // std::endl; std::cout << "num_cols: " << J_sparse_col_major.cols()
+            // << std::endl;
 
             // J_sparse_col_major.outerSize() == J_sparse_col_major.cols()
             std::unordered_map<size_t, size_t> map_col_to_selected_col;
@@ -131,7 +132,8 @@ void OptimizeImageCoorNonrigid(
                 }
             }
             size_t num_selected_cols = selected_col;
-            std::cout << "num_selected_cols " << num_selected_cols << std::endl;
+            // std::cout << "num_selected_cols " << num_selected_cols <<
+            // std::endl;
 
             // col_selection_matrix is used to map columns to selected columns
             Eigen::SparseMatrix<double> col_selection_matrix(num_cols,
