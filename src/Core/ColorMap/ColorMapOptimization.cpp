@@ -26,6 +26,7 @@
 
 #include "ColorMapOptimization.h"
 #include <iostream>
+#include <unordered_map>
 
 #include <Core/Camera/PinholeCameraTrajectory.h>
 #include <Core/ColorMap/ColorMapOptimizationJacobian.h>
@@ -93,7 +94,7 @@ void OptimizeImageCoorNonrigid(
                                 extrinsic, visiblity_image_to_vertex[c],
                                 option.image_boundary_margin_);
                     };
-            Eigen::MatrixXd JTJ(6 + nonrigidval, 6 + nonrigidval);
+            Eigen::MatrixXd JTJ;
             Eigen::VectorXd JTr;
             Eigen::SparseMatrix<double, Eigen::RowMajor> J_sparse;
             double r2;
@@ -111,43 +112,58 @@ void OptimizeImageCoorNonrigid(
             std::cout << "num_cols: " << J_sparse_col_major.cols() << std::endl;
 
             // J_sparse_col_major.outerSize() == J_sparse_col_major.cols()
-            // col_masks = [1, 1, ..., 0, ...] where 1 is selected
-            std::vector<bool> col_masks;
-            size_t num_selected_cols = 0;
-            for (size_t c = 0; c < J_sparse_col_major.outerSize(); ++c) {
+            std::unordered_map<size_t, size_t> map_col_to_selected_col;
+            std::unordered_map<size_t, size_t> map_selected_col_to_col;
+            size_t num_cols = J_sparse_col_major.cols();
+            size_t selected_col = 0;
+            for (size_t col = 0; col < J_sparse_col_major.outerSize(); ++col) {
                 bool col_has_value = false;
                 for (Eigen::SparseMatrix<double>::InnerIterator it(
-                             J_sparse_col_major, c);
+                             J_sparse_col_major, col);
                      it; ++it) {
                     col_has_value = true;
                     break;
                 }
-                num_selected_cols += col_has_value ? 1 : 0;
-                col_masks.push_back(col_has_value);
+                if (col_has_value) {
+                    map_col_to_selected_col[col] = selected_col;
+                    map_selected_col_to_col[selected_col] = col;
+                    selected_col++;
+                }
             }
-            // for (bool val : col_masks) {
-            //     std::cout << val << " ";
-            // }
-            // std::cout << std::endl;
+            size_t num_selected_cols = selected_col;
             std::cout << "num_selected_cols " << num_selected_cols << std::endl;
 
-            // JTJ = Eigen::MatrixXd(J_sparse.transpose() * J_sparse);
-            JTJ = Eigen::MatrixXd(J_sparse_col_major.transpose() *
-                                  J_sparse_col_major);
+            // col_selection_matrix is used to map columns to selected columns
+            Eigen::SparseMatrix<double> col_selection_matrix(num_cols,
+                                                             num_selected_cols);
+            col_selection_matrix.reserve(
+                    Eigen::VectorXi::Constant(num_selected_cols, 1));
+            size_t col_idx = 0;
+            for (size_t selected_col = 0; selected_col < num_selected_cols;
+                 ++selected_col) {
+                size_t col = map_selected_col_to_col[selected_col];
+                col_selection_matrix.insert(col, selected_col) = 1;
+            }
+
+            // We remove J's empty column before computing JTJ
+            Eigen::SparseMatrix<double> J_selected =
+                    J_sparse_col_major * col_selection_matrix;
+            JTJ = Eigen::MatrixXd(J_selected.transpose() * J_selected);
 
             double weight = option.non_rigid_anchor_point_weight_ *
                             visiblity_image_to_vertex[c].size() / n_vertex;
-            // std::cout << "weight: " << weight << std::endl;
-            // std::cout << "non_rigid_anchor_point_weight_: "
-            //           << option.non_rigid_anchor_point_weight_ << std::endl;
-            for (int j = 0; j < nonrigidval; j++) {
-                double r = weight * (warping_fields[c].flow_(j) -
-                                     warping_fields_init[c].flow_(j));
-                JTJ(6 + j, 6 + j) += weight * weight;
-                JTr(6 + j) += weight * r;
-                rr_reg += r * r;
+            for (size_t j = 0; j < nonrigidval; j++) {
+                size_t col = 6 + j;
+                if (map_col_to_selected_col.find(col) !=
+                    map_col_to_selected_col.end()) {
+                    double r = weight * (warping_fields[c].flow_(j) -
+                                         warping_fields_init[c].flow_(j));
+                    size_t selected_col = map_col_to_selected_col[col];
+                    JTJ(selected_col, selected_col) += weight * weight;
+                    JTr(selected_col) += weight * r;
+                    rr_reg += r * r;
+                }
             }
-            // std::cout << JTJ << std::endl;
 
             bool success;
             Eigen::VectorXd result;
@@ -169,8 +185,13 @@ void OptimizeImageCoorNonrigid(
             auto delta = TransformVector6dToMatrix4d(result_pose);
             pose = delta * pose;
 
-            for (int j = 0; j < nonrigidval; j++) {
-                warping_fields[c].flow_(j) += result(6 + j);
+            for (size_t j = 0; j < nonrigidval; j++) {
+                size_t col = 6 + j;
+                if (map_col_to_selected_col.find(col) !=
+                    map_col_to_selected_col.end()) {
+                    size_t selected_col = map_col_to_selected_col[col];
+                    warping_fields[c].flow_(j) += result(selected_col);
+                }
             }
             camera.parameters_[c].extrinsic_ = pose;
 
@@ -187,8 +208,8 @@ void OptimizeImageCoorNonrigid(
         SetProxyIntensityForVertex(mesh, images_gray, warping_fields, camera,
                                    visiblity_vertex_to_image, proxy_intensity,
                                    option.image_boundary_margin_);
-    }
-}
+    }  // namespace
+}  // namespace
 
 void OptimizeImageCoorRigid(
         const TriangleMesh& mesh,
@@ -318,7 +339,7 @@ std::vector<ImageWarpingField> CreateWarpingFields(
     return std::move(fields);
 }
 
-}  // unnamed namespace
+}  // namespace
 
 void ColorMapOptimization(
         TriangleMesh& mesh,
