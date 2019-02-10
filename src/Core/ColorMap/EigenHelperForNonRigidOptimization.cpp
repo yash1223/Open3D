@@ -30,6 +30,7 @@
 #include <Core/Utility/Console.h>
 #include <iostream>
 // #include <fstream>
+#include <ctime>
 
 namespace open3d {
 
@@ -51,14 +52,19 @@ ComputeJTJandJTr(std::function<void(
                                                           6 + nonrigidval);
 
     // The pre-allocation must be >= the number of non-zero elements each row
+    // https://stackoverflow.com/questions/17877243/filling-sparse-matrix-in-eigen-is-very-slow
     J_sparse.reserve(Eigen::VectorXi::Constant(num_visable_vertex, 14));
 
+    clock_t start_time = clock();
     double r;
     for (int i = 0; i < num_visable_vertex; i++) {
         f_jacobian_and_residual(i, J_sparse, r);
         JTr += r * J_sparse.row(i);
         r2_sum += r * r;
     }
+    std::cout << "Build J takes "
+              << (clock() - start_time) / (double)CLOCKS_PER_SEC << " seconds"
+              << std::endl;
     // std::ofstream f;
     // f.open("out.txt");
     // f << Eigen::MatrixXd(J_sparse) << std::endl;

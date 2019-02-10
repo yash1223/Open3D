@@ -97,16 +97,22 @@ void OptimizeImageCoorNonrigid(
             Eigen::VectorXd JTr;
             Eigen::SparseMatrix<double, Eigen::RowMajor> J_sparse;
             double r2;
+            std::cout << "Camera: " << c << std::endl;
             std::tie(J_sparse, JTr, r2) = ComputeJTJandJTr(
                     f_lambda, visiblity_image_to_vertex[c].size(), nonrigidval,
                     false);
+
+            // Prune zero columns
+            // Method 1: keep track of non-zero columns at J matrix creation
+            // Method 2: some efficient eigen method
+
             JTJ = Eigen::MatrixXd(J_sparse.transpose() * J_sparse);
 
             double weight = option.non_rigid_anchor_point_weight_ *
                             visiblity_image_to_vertex[c].size() / n_vertex;
-            std::cout << "weight: " << weight << std::endl;
-            std::cout << "non_rigid_anchor_point_weight_: "
-                      << option.non_rigid_anchor_point_weight_ << std::endl;
+            // std::cout << "weight: " << weight << std::endl;
+            // std::cout << "non_rigid_anchor_point_weight_: "
+            //           << option.non_rigid_anchor_point_weight_ << std::endl;
             for (int j = 0; j < nonrigidval; j++) {
                 double r = weight * (warping_fields[c].flow_(j) -
                                      warping_fields_init[c].flow_(j));
@@ -114,8 +120,6 @@ void OptimizeImageCoorNonrigid(
                 JTr(6 + j) += weight * r;
                 rr_reg += r * r;
             }
-            std::cout << "######################################" << std::endl;
-            std::cout << "Camera: " << c << std::endl;
             // std::cout << JTJ << std::endl;
 
             bool success;
