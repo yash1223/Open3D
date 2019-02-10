@@ -65,9 +65,9 @@ void OptimizeImageCoorNonrigid(
         PrintDebug("[Iteration %04d] ", itr + 1);
         double residual = 0.0;
         double residual_reg = 0.0;
-        // #ifdef _OPENMP
-        // #pragma omp parallel for schedule(static)
-        // #endif
+#ifdef _OPENMP
+#pragma omp parallel for schedule(static)
+#endif
         for (int c = 0; c < n_camera; c++) {
             int nonrigidval = warping_fields[c].anchor_w_ *
                               warping_fields[c].anchor_h_ * 2;
@@ -198,9 +198,9 @@ void OptimizeImageCoorNonrigid(
             }
             camera.parameters_[c].extrinsic_ = pose;
 
-            // #ifdef _OPENMP
-            // #pragma omp critical
-            // #endif
+#ifdef _OPENMP
+#pragma omp critical
+#endif
             {
                 residual += r2;
                 residual_reg += rr_reg;
