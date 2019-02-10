@@ -95,11 +95,11 @@ void OptimizeImageCoorNonrigid(
                                 option.image_boundary_margin_);
                     };
             Eigen::MatrixXd JTJ;
-            Eigen::VectorXd JTr;
+            Eigen::VectorXd JTr_dense;
             Eigen::SparseMatrix<double, Eigen::RowMajor> J_sparse;
             double r2;
             std::cout << "Camera: " << c << std::endl;
-            std::tie(J_sparse, JTr, r2) = ComputeJTJandJTr(
+            std::tie(J_sparse, JTr_dense, r2) = ComputeJTJandJTr(
                     f_lambda, visiblity_image_to_vertex[c].size(), nonrigidval,
                     false);
 
@@ -149,6 +149,7 @@ void OptimizeImageCoorNonrigid(
             Eigen::SparseMatrix<double> J_selected =
                     J_sparse_col_major * col_selection_matrix;
             JTJ = Eigen::MatrixXd(J_selected.transpose() * J_selected);
+            Eigen::VectorXd JTr = JTr_dense.transpose() * col_selection_matrix;
 
             double weight = option.non_rigid_anchor_point_weight_ *
                             visiblity_image_to_vertex[c].size() / n_vertex;
