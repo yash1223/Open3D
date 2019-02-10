@@ -105,8 +105,12 @@ void OptimizeImageCoorNonrigid(
             // Prune zero columns
             // Method 1: keep track of non-zero columns at J matrix creation
             // Method 2: some efficient eigen method
+            Eigen::SparseMatrix<double, Eigen::ColMajor> J_sparse_col_major(
+                    J_sparse);
 
-            JTJ = Eigen::MatrixXd(J_sparse.transpose() * J_sparse);
+            // JTJ = Eigen::MatrixXd(J_sparse.transpose() * J_sparse);
+            JTJ = Eigen::MatrixXd(J_sparse_col_major.transpose() *
+                                  J_sparse_col_major);
 
             double weight = option.non_rigid_anchor_point_weight_ *
                             visiblity_image_to_vertex[c].size() / n_vertex;
