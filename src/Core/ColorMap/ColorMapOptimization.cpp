@@ -111,7 +111,9 @@ void OptimizeImageCoorNonrigid(
             std::cout << "num_cols: " << J_sparse_col_major.cols() << std::endl;
 
             // J_sparse_col_major.outerSize() == J_sparse_col_major.cols()
-            std::vector<bool> cols_have_value;
+            // col_masks = [1, 1, ..., 0, ...] where 1 is selected
+            std::vector<bool> col_masks;
+            size_t num_selected_cols = 0;
             for (size_t c = 0; c < J_sparse_col_major.outerSize(); ++c) {
                 bool col_has_value = false;
                 for (Eigen::SparseMatrix<double>::InnerIterator it(
@@ -120,12 +122,14 @@ void OptimizeImageCoorNonrigid(
                     col_has_value = true;
                     break;
                 }
-                cols_have_value.push_back(col_has_value);
+                num_selected_cols += col_has_value ? 1 : 0;
+                col_masks.push_back(col_has_value);
             }
-            for (bool val : cols_have_value) {
-                std::cout << val << " ";
-            }
-            std::cout << std::endl;
+            // for (bool val : col_masks) {
+            //     std::cout << val << " ";
+            // }
+            // std::cout << std::endl;
+            std::cout << "num_selected_cols " << num_selected_cols << std::endl;
 
             // JTJ = Eigen::MatrixXd(J_sparse.transpose() * J_sparse);
             JTJ = Eigen::MatrixXd(J_sparse_col_major.transpose() *
