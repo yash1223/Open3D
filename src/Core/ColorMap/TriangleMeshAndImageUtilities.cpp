@@ -264,6 +264,20 @@ void SetGeometryColorAverage(
     }
 }
 
+double get_median(std::vector<double> scores) {
+    size_t size = scores.size();
+    if (size == 0) {
+        return 0;  // Undefined, really.
+    } else {
+        sort(scores.begin(), scores.end());
+        if (size % 2 == 0) {
+            return (scores[size / 2 - 1] + scores[size / 2]) / 2;
+        } else {
+            return scores[size / 2];
+        }
+    }
+}
+
 void SetGeometryColorAverage(
         TriangleMesh& mesh,
         const std::vector<std::shared_ptr<Image>>& images_color,
@@ -280,6 +294,9 @@ void SetGeometryColorAverage(
     for (int i = 0; i < n_vertex; i++) {
         mesh.vertex_colors_[i] = Eigen::Vector3d::Zero();
         double sum = 0.0;
+        std::vector<double> rs;
+        std::vector<double> gs;
+        std::vector<double> bs;
         for (auto iter = 0; iter < visiblity_vertex_to_image[i].size();
              iter++) {
             int j = visiblity_vertex_to_image[i][iter];
@@ -299,11 +316,15 @@ void SetGeometryColorAverage(
             float b = (float)b_temp / 255.0f;
             if (valid) {
                 mesh.vertex_colors_[i] += Eigen::Vector3d(r, g, b);
+                rs.push_back(r);
+                gs.push_back(g);
+                bs.push_back(b);
                 sum += 1.0;
             }
         }
         if (sum > 0.0) {
-            mesh.vertex_colors_[i] /= sum;
+            mesh.vertex_colors_[i] = Eigen::Vector3d(
+                    get_median(rs), get_median(gs), get_median(bs));
         }
     }
 }
