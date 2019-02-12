@@ -63,6 +63,14 @@ void OptimizeImageCoorNonrigid(
     SetProxyIntensityForVertex(mesh, images_gray, warping_fields, camera,
                                visiblity_vertex_to_image, proxy_intensity,
                                option.image_boundary_margin_);
+    if (mesh.vertex_colors_.size() == mesh.vertices_.size()) {
+        for (size_t i = 0; i < proxy_intensity.size(); ++i) {
+            proxy_intensity[i] = 0.2990f * mesh.vertex_colors_[i][0] +
+                                 0.5870f * mesh.vertex_colors_[i][1] +
+                                 0.1140f * mesh.vertex_colors_[i][2];
+        }
+        PrintDebug("[OptimizeImageCoorNonrigid] Injected mesh's color\n");
+    }
     for (int itr = 0; itr < option.maximum_iteration_; itr++) {
         PrintDebug("[Iteration %04d] ", itr + 1);
         double iter_start_time = omp_get_wtime();
@@ -233,6 +241,14 @@ void OptimizeImageCoorRigid(
     SetProxyIntensityForVertex(mesh, images_gray, camera,
                                visiblity_vertex_to_image, proxy_intensity,
                                option.image_boundary_margin_);
+    if (mesh.vertex_colors_.size() == mesh.vertices_.size()) {
+        for (size_t i = 0; i < proxy_intensity.size(); ++i) {
+            proxy_intensity[i] = 0.2990f * mesh.vertex_colors_[i][0] +
+                                 0.5870f * mesh.vertex_colors_[i][1] +
+                                 0.1140f * mesh.vertex_colors_[i][2];
+        }
+        PrintDebug("[OptimizeImageCoorNonrigid] Injected mesh's color\n");
+    }
     for (int itr = 0; itr < option.maximum_iteration_; itr++) {
         PrintDebug("[Iteration %04d] ", itr + 1);
         double residual = 0.0;
