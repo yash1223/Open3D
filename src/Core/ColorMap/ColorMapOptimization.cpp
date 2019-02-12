@@ -348,7 +348,7 @@ std::vector<ImageWarpingField> CreateWarpingFields(
 
 }  // namespace
 
-void ColorMapOptimization(
+std::vector<std::shared_ptr<Image>> ColorMapOptimization(
         TriangleMesh& mesh,
         const std::vector<std::shared_ptr<RGBDImage>>& images_rgbd,
         PinholeCameraTrajectory& camera,
@@ -394,6 +394,7 @@ void ColorMapOptimization(
                                 visiblity_vertex_to_image,
                                 option.image_boundary_margin_);
     }
+    return images_mask;
 }
 
 }  // namespace open3d

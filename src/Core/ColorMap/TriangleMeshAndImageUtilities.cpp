@@ -31,6 +31,7 @@
 #include <Core/Geometry/Image.h>
 #include <Core/Geometry/RGBDImage.h>
 #include <Core/Geometry/TriangleMesh.h>
+#include <iostream>
 
 namespace open3d {
 
@@ -64,33 +65,57 @@ CreateVertexAndImageVisibility(
     std::vector<std::vector<int>> visiblity_image_to_vertex;
     visiblity_vertex_to_image.resize(n_vertex);
     visiblity_image_to_vertex.resize(n_camera);
-#ifdef _OPENMP
-#pragma omp parallel for schedule(static)
-#endif
+    // #ifdef _OPENMP
+    // #pragma omp parallel for schedule(static)
+    // #endif
     for (int c = 0; c < n_camera; c++) {
         int viscnt = 0;
+        size_t reject_image_boundary = 0;
+        size_t reject_allowable_depth = 0;
+        size_t reject_images_mask = 0;
+        size_t reject_depth_threshold = 0;
         for (int vertex_id = 0; vertex_id < n_vertex; vertex_id++) {
             Eigen::Vector3d X = mesh.vertices_[vertex_id];
             float u, v, d;
             std::tie(u, v, d) = Project3DPointAndGetUVDepth(X, camera, c);
             int u_d = int(round(u)), v_d = int(round(v));
-            if (d < 0.0 || !images_depth[c]->TestImageBoundary(u_d, v_d))
+            if (d < 0.0 || !images_depth[c]->TestImageBoundary(u_d, v_d)) {
+                reject_image_boundary++;
                 continue;
+            }
             float d_sensor = *PointerAt<float>(*images_depth[c], u_d, v_d);
-            if (d_sensor > maximum_allowable_depth) continue;
-            if (*PointerAt<unsigned char>(*images_mask[c], u_d, v_d) == 255)
-                continue;
-            if (std::fabs(d - d_sensor) < depth_threshold_for_visiblity_check) {
-#ifdef _OPENMP
-#pragma omp critical
-#endif
-                {
-                    visiblity_vertex_to_image[vertex_id].push_back(c);
-                    visiblity_image_to_vertex[c].push_back(vertex_id);
-                    viscnt++;
+            if (d_sensor > maximum_allowable_depth) {
+                if (reject_allowable_depth < 10) {
+                    std::cout << "d_sensor " << d_sensor
+                              << " maximum_allowable_depth "
+                              << maximum_allowable_depth << std::endl;
                 }
+                reject_allowable_depth++;
+                continue;
+            }
+            if (*PointerAt<unsigned char>(*images_mask[c], u_d, v_d) == 255) {
+                reject_images_mask++;
+                continue;
+            }
+            if (std::fabs(d - d_sensor) >=
+                depth_threshold_for_visiblity_check) {
+                reject_depth_threshold++;
+                continue;
+            }
+            // #ifdef _OPENMP
+            // #pragma omp critical
+            // #endif
+            {
+                visiblity_vertex_to_image[vertex_id].push_back(c);
+                visiblity_image_to_vertex[c].push_back(vertex_id);
+                viscnt++;
             }
         }
+        PrintDebug(
+                "[cam %d] Total %d, rj_image_boundary %d, rj_allowable_depth "
+                "%d, rj_images_mask %d, rj_depth_threshold %d \n",
+                c, n_vertex, reject_image_boundary, reject_allowable_depth,
+                reject_images_mask, reject_depth_threshold);
         PrintDebug("[cam %d] %.5f percents are visible\n", c,
                    double(viscnt) / n_vertex * 100);
         fflush(stdout);
