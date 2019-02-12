@@ -29,6 +29,7 @@
 #include <unordered_map>
 #include <ctime>
 #include <omp.h>
+#include <fstream>
 
 #include <Core/Camera/PinholeCameraTrajectory.h>
 #include <Core/ColorMap/ColorMapOptimizationJacobian.h>
@@ -145,6 +146,19 @@ void OptimizeImageCoorNonrigid(
             size_t num_selected_cols = selected_col;
             // std::cout << "num_selected_cols " << num_selected_cols <<
             // std::endl;
+
+            // Print to file for debugging
+            // std::ofstream f;
+            // f.open("selected_anchors.txt");
+            // f << warping_fields[c].anchor_w_ << std::endl;
+            // f << warping_fields[c].anchor_h_ << std::endl;
+            // f << warping_fields[c].anchor_step_ << std::endl;
+            // for (auto it : map_col_to_selected_col) {
+            //     f << it.first << " ";
+            // }
+            // f << std::endl;
+            // f.close();
+            // exit(0);
 
             // col_selection_matrix is used to map columns to selected columns
             Eigen::SparseMatrix<double> col_selection_matrix(num_cols,
