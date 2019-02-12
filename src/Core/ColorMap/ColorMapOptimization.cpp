@@ -215,7 +215,7 @@ void OptimizeImageCoorNonrigid(
         SetProxyIntensityForVertex(mesh, images_gray, warping_fields, camera,
                                    visiblity_vertex_to_image, proxy_intensity,
                                    option.image_boundary_margin_);
-    }  // namespace
+    }  // for (int itr = 0; itr < option.maximum_iteration_; itr++)
 }  // namespace
 
 void OptimizeImageCoorRigid(
