@@ -402,6 +402,7 @@ std::shared_ptr<Image> CreateDepthBoundaryMask(
                 *mask, half_dilation_kernel_size_for_discontinuity_map);
         return mask_dilated;
     } else {
+        return mask;
         // TODO: specify erode size
         auto mask_eroded = ErodeImage(*mask, 1);
         return mask_eroded;
