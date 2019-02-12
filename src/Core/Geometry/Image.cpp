@@ -403,7 +403,7 @@ std::shared_ptr<Image> CreateDepthBoundaryMask(
         return mask_dilated;
     } else {
         // TODO: specify erode size
-        auto mask_eroded = ErodeImage(*mask, 2);
+        auto mask_eroded = ErodeImage(*mask, 1);
         return mask_eroded;
     }
 }
