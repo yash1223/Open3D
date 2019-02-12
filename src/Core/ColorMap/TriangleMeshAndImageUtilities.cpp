@@ -93,15 +93,16 @@ CreateVertexAndImageVisibility(
                 reject_allowable_depth++;
                 continue;
             }
-            if (*PointerAt<unsigned char>(*images_mask[c], u_d, v_d) == 255) {
-                reject_images_mask++;
-                continue;
-            }
             if (std::fabs(d - d_sensor) >=
                 depth_threshold_for_visiblity_check) {
                 reject_depth_threshold++;
                 continue;
             }
+            if (*PointerAt<unsigned char>(*images_mask[c], u_d, v_d) == 255) {
+                reject_images_mask++;
+                continue;
+            }
+
             // #ifdef _OPENMP
             // #pragma omp critical
             // #endif
