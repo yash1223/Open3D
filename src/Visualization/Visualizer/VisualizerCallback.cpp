@@ -133,6 +133,8 @@ void Visualizer::KeyPressCallback(
         case GLFW_KEY_C:
             if (mods & GLFW_MOD_CONTROL || mods & GLFW_MOD_SUPER) {
                 CopyViewStatusToClipboard();
+            } else {
+                CaptureScreenImage();
             }
             break;
         case GLFW_KEY_V:

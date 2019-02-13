@@ -170,10 +170,11 @@ void Visualizer::CaptureScreenImage(const std::string &filename /* = ""*/,
                                     bool do_render /* = true*/) {
     std::string png_filename = filename;
     std::string camera_filename;
+    std::string root_dir = "/home/ylao/open3d_capture/";
     if (png_filename.empty()) {
         std::string timestamp = GetCurrentTimeStamp();
-        png_filename = "ScreenCapture_" + timestamp + ".png";
-        camera_filename = "ScreenCamera_" + timestamp + ".json";
+        png_filename = root_dir + "ScreenCapture_" + timestamp + ".png";
+        camera_filename = root_dir + "ScreenCamera_" + timestamp + ".json";
     }
     Image screen_image;
     screen_image.PrepareImage(view_control_ptr_->GetWindowWidth(),
