@@ -35,6 +35,14 @@
 #include <IO/ClassIO/IJsonConvertibleIO.h>
 using namespace open3d;
 
+class Dog {
+public:
+    Dog(int age) { age_ = age; }
+
+private:
+    int age_;
+};
+
 void pybind_utility(py::module &m) {
     py::class_<SelectionPolygonVolume> selection_volume(
             m, "SelectionPolygonVolume");
@@ -97,14 +105,21 @@ void pybind_utility_methods(py::module &m) {
           "height"_a = 1080, "left"_a = 50, "top"_a = 50,
           "optional_view_trajectory_json_file"_a = "");
 
-    m.def("dummy_callback",
-          [](std::function<bool(Visualizer *)> callback_func) {
-              std::cout << "inside dummy_callback" << std::endl;
-              Visualizer vis;
-              callback_func(&vis);
-              std::cout << "callback_func in dummy_callback called"
-                        << std::endl;
-          });
+    // m.def("dummy_callback",
+    //       [](std::function<bool(Visualizer *)> callback_func) {
+    //           std::cout << "inside dummy_callback" << std::endl;
+    //           Visualizer vis;
+    //           callback_func(&vis);
+    //           std::cout << "callback_func in dummy_callback called"
+    //                     << std::endl;
+    //       });
+
+    m.def("dummy_callback", [](std::function<bool(Dog *)> callback_func) {
+        std::cout << "inside dummy_callback" << std::endl;
+        Dog dog(10);
+        callback_func(&dog);
+        std::cout << "callback_func in dummy_callback called" << std::endl;
+    });
 
     m.def("draw_geometries_with_animation_callback",
           [](const std::vector<std::shared_ptr<const Geometry>> &geometry_ptrs,

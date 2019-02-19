@@ -36,7 +36,7 @@ def custom_draw_geometry_with_rotation(pcd):
         # ctr.rotate(10.0, 0.0)
         return False
     dummy_callback(rotate_view)
-    draw_geometries_with_animation_callback([pcd], rotate_view)
+    # draw_geometries_with_animation_callback([pcd], rotate_view)
 
 def custom_draw_geometry_load_option(pcd):
     vis = Visualizer()
