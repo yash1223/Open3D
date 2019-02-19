@@ -119,25 +119,25 @@ def custom_draw_geometry_with_camera_trajectory(pcd):
 if __name__ == "__main__":
     pcd = read_point_cloud("../../TestData/fragment.ply")
 
-    print("1. Customized visualization to mimic DrawGeometry")
-    custom_draw_geometry(pcd)
-
-    print("2. Changing field of view")
-    custom_draw_geometry_with_custom_fov(pcd, 90.0)
-    custom_draw_geometry_with_custom_fov(pcd, -90.0)
+    # print("1. Customized visualization to mimic DrawGeometry")
+    # custom_draw_geometry(pcd)
+    #
+    # print("2. Changing field of view")
+    # custom_draw_geometry_with_custom_fov(pcd, 90.0)
+    # custom_draw_geometry_with_custom_fov(pcd, -90.0)
 
     print("3. Customized visualization with a rotating view")
     custom_draw_geometry_with_rotation(pcd)
 
-    print("4. Customized visualization showing normal rendering")
-    custom_draw_geometry_load_option(pcd)
-
-    print("5. Customized visualization with key press callbacks")
-    print("   Press 'K' to change background color to black")
-    print("   Press 'R' to load a customized render option, showing normals")
-    print("   Press ',' to capture the depth buffer and show it")
-    print("   Press '.' to capture the screen and show it")
-    custom_draw_geometry_with_key_callback(pcd)
-
-    print("6. Customized visualization playing a camera trajectory")
-    custom_draw_geometry_with_camera_trajectory(pcd)
+    # print("4. Customized visualization showing normal rendering")
+    # custom_draw_geometry_load_option(pcd)
+    #
+    # print("5. Customized visualization with key press callbacks")
+    # print("   Press 'K' to change background color to black")
+    # print("   Press 'R' to load a customized render option, showing normals")
+    # print("   Press ',' to capture the depth buffer and show it")
+    # print("   Press '.' to capture the screen and show it")
+    # custom_draw_geometry_with_key_callback(pcd)
+    #
+    # print("6. Customized visualization playing a camera trajectory")
+    # custom_draw_geometry_with_camera_trajectory(pcd)
