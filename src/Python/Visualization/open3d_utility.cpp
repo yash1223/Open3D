@@ -33,6 +33,9 @@
 #include <Visualization/Utility/DrawGeometry.h>
 #include <Visualization/Visualizer/Visualizer.h>
 #include <IO/ClassIO/IJsonConvertibleIO.h>
+#include <pybind11/functional.h>
+#include <pybind11/stl.h>
+
 using namespace open3d;
 
 class Dog {
@@ -114,12 +117,14 @@ void pybind_utility_methods(py::module &m) {
     //                     << std::endl;
     //       });
 
-    m.def("dummy_callback", [](std::function<bool(int *)> callback_func) {
-        std::cout << "inside dummy_callback" << std::endl;
-        int a = 100;
-        callback_func(&a);
-        std::cout << "callback_func in dummy_callback called" << std::endl;
-    });
+    m.def("dummy_callback",
+          [](const std::function<bool(int *)> &callback_func) {
+              std::cout << "inside dummy_callback" << std::endl;
+              int a = 100;
+              callback_func(&a);
+              std::cout << "callback_func in dummy_callback called"
+                        << std::endl;
+          });
 
     m.def("draw_geometries_with_animation_callback",
           [](const std::vector<std::shared_ptr<const Geometry>> &geometry_ptrs,
