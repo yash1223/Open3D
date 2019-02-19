@@ -27,6 +27,7 @@
 #include "Visualizer.h"
 
 #include <Core/Geometry/TriangleMesh.h>
+#include <iostream>
 
 namespace open3d {
 
@@ -244,8 +245,11 @@ void Visualizer::BuildUtilities() {
 void Visualizer::Run() {
     BuildUtilities();
     UpdateWindowTitle();
+    std::cout << "bool(animation_callback_func_) "
+              << bool(animation_callback_func_) << std::endl;
     while (bool(animation_callback_func_) ? PollEvents() : WaitEvents()) {
         if (bool(animation_callback_func_in_loop_)) {
+            bool val = animation_callback_func_in_loop_(this);
             if (animation_callback_func_in_loop_(this)) {
                 UpdateGeometry();
             }

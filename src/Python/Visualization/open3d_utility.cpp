@@ -68,6 +68,11 @@ void pybind_utility(py::module &m) {
             .def_readwrite("axis_max", &SelectionPolygonVolume::axis_max_);
 }
 
+bool dummy_callback_caller(std::function<bool(Visualizer *)> callback_func) {
+    std::cout << "inside dummy_callback_caller" << std::endl;
+    return false;
+}
+
 void pybind_utility_methods(py::module &m) {
     m.def("draw_geometries",
           [](const std::vector<std::shared_ptr<const Geometry>> &geometry_ptrs,
@@ -96,9 +101,16 @@ void pybind_utility_methods(py::module &m) {
           "geometry_list"_a, "window_name"_a = "Open3D", "width"_a = 1920,
           "height"_a = 1080, "left"_a = 50, "top"_a = 50,
           "optional_view_trajectory_json_file"_a = "");
+
+    m.def("dummy_callback",
+          [](std::function<bool(Visualizer *)> callback_func) {
+              dummy_callback_caller(callback_func);
+              std::cout << "inside dummy_callback" << std::endl;
+          });
+
     m.def("draw_geometries_with_animation_callback",
           [](const std::vector<std::shared_ptr<const Geometry>> &geometry_ptrs,
-             std::function<bool(Visualizer *)> callback_func,
+             const std::function<bool(Visualizer *)> &callback_func,
              const std::string &window_name, int width, int height, int left,
              int top) {
               std::string current_dir = filesystem::GetWorkingDirectory();
@@ -112,6 +124,7 @@ void pybind_utility_methods(py::module &m) {
           "geometry_list"_a, "callback_function"_a, "window_name"_a = "Open3D",
           "width"_a = 1920, "height"_a = 1080, "left"_a = 50, "top"_a = 50,
           py::return_value_policy::reference);
+
     m.def("draw_geometries_with_key_callbacks",
           [](const std::vector<std::shared_ptr<const Geometry>> &geometry_ptrs,
              const std::map<int, std::function<bool(Visualizer *)>>

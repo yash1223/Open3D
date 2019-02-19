@@ -49,8 +49,8 @@ const double ViewControl::ROTATION_RADIAN_PER_PIXEL = 0.003;
 void ViewControl::SetViewMatrices(
         const Eigen::Matrix4d
                 &model_matrix /* = Eigen::Matrix4d::Identity()*/) {
-    std::cout << "window_height_ " << window_height_ << std::endl;
-    std::cout << "window_width_ " << window_width_ << std::endl;
+    // std::cout << "window_height_ " << window_height_ << std::endl;
+    // std::cout << "window_width_ " << window_width_ << std::endl;
     if (window_height_ <= 0 || window_width_ <= 0) {
         PrintWarning(
                 "[ViewControl] SetViewPoint() failed because window height and "
