@@ -130,9 +130,9 @@ if __name__ == "__main__":
 
     # print("3. Customized visualization with a rotating view")
     def dummy_func(value):
-        print(value)
+        print("inside python dummy_func:", value)
         return False
-    dummy_callback(dummy_func)
+    dummy_callback(dummy_func, 123)
 
     # print("4. Customized visualization showing normal rendering")
     # custom_draw_geometry_load_option(pcd)
