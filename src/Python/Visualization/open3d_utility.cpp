@@ -68,11 +68,6 @@ void pybind_utility(py::module &m) {
             .def_readwrite("axis_max", &SelectionPolygonVolume::axis_max_);
 }
 
-bool dummy_callback_caller(std::function<bool(Visualizer *)> callback_func) {
-    std::cout << "inside dummy_callback_caller" << std::endl;
-    return false;
-}
-
 void pybind_utility_methods(py::module &m) {
     m.def("draw_geometries",
           [](const std::vector<std::shared_ptr<const Geometry>> &geometry_ptrs,
@@ -104,8 +99,11 @@ void pybind_utility_methods(py::module &m) {
 
     m.def("dummy_callback",
           [](std::function<bool(Visualizer *)> callback_func) {
-              dummy_callback_caller(callback_func);
               std::cout << "inside dummy_callback" << std::endl;
+              Visualizer vis;
+              callback_func(&vis);
+              std::cout << "callback_func in dummy_callback called"
+                        << std::endl;
           });
 
     m.def("draw_geometries_with_animation_callback",

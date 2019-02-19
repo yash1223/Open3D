@@ -245,6 +245,8 @@ void Visualizer::BuildUtilities() {
 void Visualizer::Run() {
     BuildUtilities();
     UpdateWindowTitle();
+    std::cout << "before (animation_callback_func_) " << std::endl;
+    animation_callback_func_(this);
     std::cout << "bool(animation_callback_func_) "
               << bool(animation_callback_func_) << std::endl;
     while (bool(animation_callback_func_) ? PollEvents() : WaitEvents()) {

@@ -31,8 +31,9 @@ def custom_draw_geometry_with_custom_fov(pcd, fov_step):
 
 def custom_draw_geometry_with_rotation(pcd):
     def rotate_view(vis):
-        ctr = vis.get_view_control()
-        ctr.rotate(10.0, 0.0)
+        print("roate_view called!")
+        # ctr = vis.get_view_control()
+        # ctr.rotate(10.0, 0.0)
         return False
     dummy_callback(rotate_view)
     draw_geometries_with_animation_callback([pcd], rotate_view)
@@ -127,12 +128,12 @@ if __name__ == "__main__":
     # custom_draw_geometry_with_custom_fov(pcd, 90.0)
     # custom_draw_geometry_with_custom_fov(pcd, -90.0)
 
-    print("3. Customized visualization with a rotating view")
+    # print("3. Customized visualization with a rotating view")
     custom_draw_geometry_with_rotation(pcd)
 
     # print("4. Customized visualization showing normal rendering")
     # custom_draw_geometry_load_option(pcd)
-    #
+
     # print("5. Customized visualization with key press callbacks")
     # print("   Press 'K' to change background color to black")
     # print("   Press 'R' to load a customized render option, showing normals")
