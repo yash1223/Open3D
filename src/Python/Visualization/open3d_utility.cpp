@@ -79,7 +79,7 @@ void pybind_utility(py::module &m) {
             .def_readwrite("axis_max", &SelectionPolygonVolume::axis_max_);
 }
 
-void dummy_caller(std::function<bool(int)> func, int val) {
+void dummy_caller(const std::function<bool(int)> &func, int val) {
     std::cout << "inside dummy_caller" << std::endl;
     std::cout << "val " << val << std::endl;
     func(val);
