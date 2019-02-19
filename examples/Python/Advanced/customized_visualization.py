@@ -129,7 +129,10 @@ if __name__ == "__main__":
     # custom_draw_geometry_with_custom_fov(pcd, -90.0)
 
     # print("3. Customized visualization with a rotating view")
-    custom_draw_geometry_with_rotation(pcd)
+    def dummy_func(value):
+        print(value)
+        return False
+    dummy_callback(dummy_func)
 
     # print("4. Customized visualization showing normal rendering")
     # custom_draw_geometry_load_option(pcd)

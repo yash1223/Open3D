@@ -114,10 +114,10 @@ void pybind_utility_methods(py::module &m) {
     //                     << std::endl;
     //       });
 
-    m.def("dummy_callback", [](std::function<bool(Dog *)> callback_func) {
+    m.def("dummy_callback", [](std::function<bool(int *)> callback_func) {
         std::cout << "inside dummy_callback" << std::endl;
-        Dog dog(10);
-        callback_func(&dog);
+        int a = 100;
+        callback_func(&a);
         std::cout << "callback_func in dummy_callback called" << std::endl;
     });
 
