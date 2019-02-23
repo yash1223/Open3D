@@ -24,25 +24,11 @@
 // IN THE SOFTWARE.
 // ----------------------------------------------------------------------------
 
-#pragma once
+#include "Utility/UnitTest.h"
 
-#include "Open3D/Geometry/TriangleMesh.h"
-#include <Eigen/Core>
+#include "Open3D/Geometry/HalfEdgeTriangleMesh.h"
 
-namespace open3d {
+using namespace open3d;
+using namespace unit_test;
 
-class HalfEdge {
-public:
-    int next_;
-    int twin_;
-    Eigen::Vector2i vertices_;
-    int triangle_id_;
-};
-
-class HalfEdgeTriangleMesh : public TriangleMesh {
-public:
-    // Half-edge
-    std::vector<HalfEdge> half_edges_;
-};
-
-}  // namespace open3d
+TEST(HalfEdgeTriangleMesh, HalfEdgeTriangleMesh) { HalfEdgeTriangleMesh mesh; }
