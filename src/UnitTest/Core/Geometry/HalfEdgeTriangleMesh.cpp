@@ -25,10 +25,17 @@
 // ----------------------------------------------------------------------------
 
 #include "Utility/UnitTest.h"
-
 #include "Open3D/Geometry/HalfEdgeTriangleMesh.h"
+#include "Open3D/IO/ClassIO/TriangleMeshIO.h"
+
+#include <iostream>
+#include <string>
 
 using namespace open3d;
 using namespace unit_test;
 
-TEST(HalfEdgeTriangleMesh, HalfEdgeTriangleMesh) { HalfEdgeTriangleMesh mesh; }
+TEST(HalfEdgeTriangleMesh, HalfEdgeTriangleMesh) {
+    TriangleMesh mesh;
+    ReadTriangleMesh(std::string(TEST_DATA_DIR) + "/sphere.ply", mesh);
+    std::cout << "size: " << mesh.vertices_.size() << std::endl;
+}
