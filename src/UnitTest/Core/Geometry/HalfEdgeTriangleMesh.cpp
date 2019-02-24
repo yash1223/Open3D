@@ -34,9 +34,9 @@
 using namespace open3d;
 using namespace unit_test;
 
-TEST(HalfEdgeTriangleMesh, Copy) {
+TEST(HalfEdgeTriangleMesh, ConstructFromTriangleMesh) {
     TriangleMesh mesh;
     ReadTriangleMesh(std::string(TEST_DATA_DIR) + "/sphere.ply", mesh);
-    TriangleMesh mesh_copy(mesh);
-    std::cout << "size mesh_copy: " << mesh_copy.vertices_.size() << std::endl;
+    HalfEdgeTriangleMesh he_mesh(mesh);
+    std::cout << "size he_mesh: " << he_mesh.vertices_.size() << std::endl;
 }

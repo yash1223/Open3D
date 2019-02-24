@@ -45,6 +45,7 @@ class HalfEdgeTriangleMesh : public TriangleMesh {
 public:
     HalfEdgeTriangleMesh()
         : TriangleMesh(Geometry::GeometryType::HalfEdgeTriangleMesh){};
+    HalfEdgeTriangleMesh(const TriangleMesh& triangle_mesh);
 
     // Half-edge
     std::vector<HalfEdge> half_edges_;
