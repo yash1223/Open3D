@@ -26,10 +26,11 @@
 
 #pragma once
 
+#include <Eigen/Core>
+#include <unordered_map>
+
 #include "Open3D/Geometry/TriangleMesh.h"
 #include "Open3D/Geometry/Geometry3D.h"
-
-#include <Eigen/Core>
 
 namespace open3d {
 
@@ -55,14 +56,16 @@ public:
     /// Query half edges owned by the triangle
     Eigen::Vector3i HalfEdgesInTriangle(int triangle_idx);
 
-    /// List of half edge lists starting from this vertex
-    std::vector<Eigen::Vector3i> HalfEdgesListFromVertex(int vertex_idx);
+    /// List of half edges starting from this vertex
+    /// Counter-clockwise ordered relative to the normal direction
+    std::vector<int> HalfEdgesFromVertex(int vertex_idx);
 
     /// Query manifold boundary, the starting edge must be a boundary (no twin)
     std::vector<int> ManifoldBoundaryFromEdge(int half_edge_idx);
 
 public:
     std::vector<HalfEdge> half_edges_;
+    std::unordered_map<int, int> map_vertex_to_triangle;
 };
 
 }  // namespace open3d

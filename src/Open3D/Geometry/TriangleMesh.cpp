@@ -163,7 +163,9 @@ void TriangleMesh::ComputeTriangleNormals(bool normalized /* = true*/) {
     triangle_normals_.resize(triangles_.size());
     for (size_t i = 0; i < triangles_.size(); i++) {
         auto &triangle = triangles_[i];
+        // Vector from triangle(0) to triangle(1)
         Eigen::Vector3d v01 = vertices_[triangle(1)] - vertices_[triangle(0)];
+        // Vector from triangle(0) to triangle(2)
         Eigen::Vector3d v02 = vertices_[triangle(2)] - vertices_[triangle(0)];
         triangle_normals_[i] = v01.cross(v02);
     }
