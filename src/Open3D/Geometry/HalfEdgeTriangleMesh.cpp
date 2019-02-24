@@ -29,12 +29,17 @@
 namespace open3d {
 
 HalfEdgeTriangleMesh::HalfEdgeTriangleMesh(const TriangleMesh& triangle_mesh) {
+    // Copy
     vertices_ = triangle_mesh.vertices_;
     vertex_normals_ = triangle_mesh.vertex_normals_;
     vertex_colors_ = triangle_mesh.vertex_colors_;
     triangles_ = triangle_mesh.triangles_;
     triangle_normals_ = triangle_mesh.triangle_normals_;
     adjacency_list_ = triangle_mesh.adjacency_list_;
+    Purge();
+    ComputeHalfEdges();
 }
+
+void HalfEdgeTriangleMesh::ComputeHalfEdges() {}
 
 }  // namespace open3d

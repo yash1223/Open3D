@@ -35,19 +35,33 @@ namespace open3d {
 
 class HalfEdge {
 public:
-    int next_;
-    int twin_;
-    Eigen::Vector2i vertices_;
-    int triangle_id_;
+    int next_;                  // Index of the next HalfEdge
+    int twin_;                  // Index of the twin HalfEdge
+    Eigen::Vector2i vertices_;  // Index of the vertices forming this half edge
+    int triangle_id_;           // Index of the triangle owning this half edge
 };
 
 class HalfEdgeTriangleMesh : public TriangleMesh {
 public:
     HalfEdgeTriangleMesh()
         : TriangleMesh(Geometry::GeometryType::HalfEdgeTriangleMesh){};
+
+    /// Copy constructor to convert TriangleMesh to HalfEdgeTriangleMesh
     HalfEdgeTriangleMesh(const TriangleMesh& triangle_mesh);
 
-    // Half-edge
+    /// Compute and update half edges
+    void ComputeHalfEdges();
+
+    /// Query half edges owned by the triangle
+    Eigen::Vector3i HalfEdgesInTriangle(int triangle_idx);
+
+    /// List of half edge lists starting from this vertex
+    std::vector<Eigen::Vector3i> HalfEdgesListFromVertex(int vertex_idx);
+
+    /// Query manifold boundary, the starting edge must be a boundary (no twin)
+    std::vector<int> ManifoldBoundaryFromEdge(int half_edge_idx);
+
+public:
     std::vector<HalfEdge> half_edges_;
 };
 
