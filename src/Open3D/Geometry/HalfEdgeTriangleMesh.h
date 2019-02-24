@@ -27,6 +27,8 @@
 #pragma once
 
 #include "Open3D/Geometry/TriangleMesh.h"
+#include "Open3D/Geometry/Geometry3D.h"
+
 #include <Eigen/Core>
 
 namespace open3d {
@@ -41,6 +43,9 @@ public:
 
 class HalfEdgeTriangleMesh : public TriangleMesh {
 public:
+    HalfEdgeTriangleMesh()
+        : TriangleMesh(Geometry::GeometryType::HalfEdgeTriangleMesh){};
+
     // Half-edge
     std::vector<HalfEdge> half_edges_;
 };
