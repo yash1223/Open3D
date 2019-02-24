@@ -36,10 +36,14 @@ namespace open3d {
 
 class HalfEdge {
 public:
-    int next_;                  // Index of the next HalfEdge
-    int twin_;                  // Index of the twin HalfEdge
-    Eigen::Vector2i vertices_;  // Index of the vertices forming this half edge
-    int triangle_id_;           // Index of the triangle owning this half edge
+    // Index of the next HalfEdge
+    int next_ = -1;
+    // Index of the twin HalfEdge
+    int twin_ = -1;
+    // Index of the ordered vertices forming this half edge
+    Eigen::Vector2i vertices = Eigen::Vector2i(-1, -1);
+    // Index of the triangle containing this half edge
+    int triangle_id_ = -1;
 };
 
 class HalfEdgeTriangleMesh : public TriangleMesh {
