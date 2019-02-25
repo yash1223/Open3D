@@ -84,16 +84,6 @@ HalfEdgeTriangleMesh::HalfEdgeTriangleMesh(const TriangleMesh& triangle_mesh) {
     }
 }
 
-int HalfEdgeTriangleMesh::NextNextTwinHalfEdgeIndex(int half_edge_index) const {
-    const HalfEdge& curr_he = half_edges_[half_edge_index];
-    int next_he_index = curr_he.next_;
-    const HalfEdge& next_he = half_edges_[next_he_index];
-    int next_next_he_index = next_he.next_;
-    const HalfEdge& next_next_he = half_edges_[next_next_he_index];
-    int next_next_twin_he_index = next_next_he.twin_;
-    return next_next_twin_he_index;
-}
-
 bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
     // Clean up half-edge related data structures
     half_edges_.clear();
@@ -197,6 +187,32 @@ bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
     }
 
     return true;
+}
+
+bool HalfEdgeTriangleMesh::HasHalfEdges() {
+    return half_edges_.size() > 0 &&
+           vertices_.size() == ordered_half_edge_from_vertex_.size();
+}
+
+std::vector<int> HalfEdgeTriangleMesh::HalfEdgesFromVertex(int vertex_idx) {
+    if (vertex_idx >= vertices_.size()) {
+        PrintError("vertex_idx %d out of range.\n", vertex_idx);
+        return {};
+    }
+    if (!HasHalfEdges()) {
+        ComputeHalfEdges();
+    }
+    return ordered_half_edge_from_vertex_[vertex_idx];
+}
+
+int HalfEdgeTriangleMesh::NextNextTwinHalfEdgeIndex(int half_edge_index) const {
+    const HalfEdge& curr_he = half_edges_[half_edge_index];
+    int next_he_index = curr_he.next_;
+    const HalfEdge& next_he = half_edges_[next_he_index];
+    int next_next_he_index = next_he.next_;
+    const HalfEdge& next_next_he = half_edges_[next_next_he_index];
+    int next_next_twin_he_index = next_next_he.twin_;
+    return next_next_twin_he_index;
 }
 
 }  // namespace open3d

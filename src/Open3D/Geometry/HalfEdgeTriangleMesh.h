@@ -65,6 +65,9 @@ public:
     /// mesh is a manifold. Returns true if half edges are computed.
     bool ComputeHalfEdges();
 
+    /// True if half-edges have already been computed
+    bool HasHalfEdges();
+
     /// Clear all data in HalfEdgeTriangleMesh
     void Clear() override;
 
