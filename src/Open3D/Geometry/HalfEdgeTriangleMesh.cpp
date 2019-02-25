@@ -191,7 +191,7 @@ bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
 
     // Find ordered half-edges from each vertex by traversal. To be a valid
     // manifold, there can be at most 1 out-going half-edge for each vertex.
-    std::vector<std::vector<int>> ordered_half_edges_from_vertex(
+    std::vector<std::vector<int>> ordered_half_edge_indices_from_vertex(
             vertices_.size());
     for (size_t vertex_index = 0; vertex_index < half_edges_from_vertex.size();
          vertex_index++) {
@@ -207,14 +207,15 @@ bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
             return false;
         }
 
-        // Push edges to ordered_half_edges_from_vertex. If there is a boundary
-        // edge, start from that; otherwise start with 0
+        // Push edges to ordered_half_edge_indices_from_vertex. If there is a
+        // boundary edge, start from that; otherwise start with 0
         int curr_he_index = init_half_edge_index;
-        ordered_half_edges_from_vertex[vertex_index].push_back(curr_he_index);
+        ordered_half_edge_indices_from_vertex[vertex_index].push_back(
+                curr_he_index);
         int next_next_twin_he_index = NextNextTwinHalfEdgeIndex(curr_he_index);
         curr_he_index = next_next_twin_he_index;
         while (curr_he_index != -1 && curr_he_index != init_half_edge_index) {
-            ordered_half_edges_from_vertex[vertex_index].push_back(
+            ordered_half_edge_indices_from_vertex[vertex_index].push_back(
                     curr_he_index);
             next_next_twin_he_index = NextNextTwinHalfEdgeIndex(curr_he_index);
             curr_he_index = next_next_twin_he_index;
