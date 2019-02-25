@@ -191,6 +191,7 @@ void TriangleMesh::ComputeVertexNormals(bool normalized /* = true*/) {
 }
 
 void TriangleMesh::ComputeAdjacencyList() {
+    adjacency_list_.clear();
     adjacency_list_.resize(vertices_.size());
     for (const auto &triangle : triangles_) {
         adjacency_list_[triangle(0)].insert(triangle(1));
