@@ -158,14 +158,16 @@ bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
     // Find ordered half-edges from each vertex by traversal. To be a valid
     // manifold, there can be at most 1 out-going half-edge for each vertex.
     ordered_half_edge_from_vertex_.resize(vertices_.size());
-    for (size_t vertex_index = 0; vertex_index < half_edges_from_vertex.size();
+    for (size_t vertex_index = 0; vertex_index < vertices_.size();
          vertex_index++) {
         size_t num_boundaries = 0;
         int init_half_edge_index = 0;
         for (const int& half_edge_index :
              half_edges_from_vertex[vertex_index]) {
-            num_boundaries += int(half_edges_[half_edge_index].IsBoundary());
-            init_half_edge_index = half_edge_index;
+            if (bool is_boundary = half_edges_[half_edge_index].IsBoundary()) {
+                num_boundaries++;
+                init_half_edge_index = half_edge_index;
+            }
         }
         if (num_boundaries > 1) {
             PrintError("ComputeHalfEdges failed. Invalid vertex.\n");
