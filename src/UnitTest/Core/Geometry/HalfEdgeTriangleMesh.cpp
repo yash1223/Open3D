@@ -88,7 +88,7 @@ TriangleMesh get_mesh_hexagon() {
             Eigen::Vector3d(-1, 2, 0), Eigen::Vector3d(1, 2, 0),
             Eigen::Vector3d(-2, 0, 0), Eigen::Vector3d(0, 0, 0),
             Eigen::Vector3d(2, 0, 0),  Eigen::Vector3d(-1, -2, 0),
-            Eigen::Vector3d(-1, 2, 0)};
+            Eigen::Vector3d(1, -2, 0)};
     std::vector<Eigen::Vector3i> triangles{
             Eigen::Vector3i(0, 2, 3), Eigen::Vector3i(0, 3, 1),
             Eigen::Vector3i(1, 3, 4), Eigen::Vector3i(2, 5, 3),
@@ -116,7 +116,7 @@ TriangleMesh get_mesh_partial_hexagon() {
             Eigen::Vector3d(-1, 2, 0), Eigen::Vector3d(1, 2, 0),
             Eigen::Vector3d(-2, 0, 0), Eigen::Vector3d(0, 0, 0),
             Eigen::Vector3d(2, 0, 0),  Eigen::Vector3d(-1, -2, 0),
-            Eigen::Vector3d(-1, 2, 0)};
+            Eigen::Vector3d(1, -2, 0)};
     std::vector<Eigen::Vector3i> triangles{
             Eigen::Vector3i(0, 2, 3), Eigen::Vector3i(0, 3, 1),
             Eigen::Vector3i(1, 3, 4), Eigen::Vector3i(2, 5, 3),
