@@ -169,8 +169,8 @@ bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
         }
     }
 
-    // Get out-going half-edge from vertex. This can be done during half-edge
-    // construction. Done here for readability.
+    // Get out-going half-edges from each vertex. This can be done during
+    // half-edge construction. Done here for readability.
     std::vector<std::unordered_set<int>> half_edges_from_vertex(
             vertices_.size());
     for (size_t half_edge_index = 0; half_edge_index < half_edges_.size();
@@ -178,6 +178,11 @@ bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
         int src_vertex_index = half_edges_[half_edge_index].vertex_indices_(0);
         half_edges_from_vertex[src_vertex_index].insert(int(half_edge_index));
     }
+
+    // Find ordered half-edges from each vertex by traversal. If the traversal
+    // doesn't cover all out-going half-edges, the mesh is not a manifold.
+    std::vector<std::vector<int>> ordered_half_edges_from_vertex(
+            vertices_.size());
 
     return true;
 }
