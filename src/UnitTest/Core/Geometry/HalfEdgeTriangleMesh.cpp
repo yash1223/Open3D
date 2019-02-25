@@ -251,4 +251,22 @@ TEST(HalfEdgeTriangleMesh, OrderedHalfEdgesFromVertex_Hexagon) {
     assert_ordreded_neighbor(mesh, 2, {5, 3});
     assert_ordreded_neighbor(mesh, 3, {0, 2, 5, 6, 4, 1}, true);
     assert_ordreded_neighbor(mesh, 3, {2, 5, 6, 4, 1, 0}, true);  // Rotate ok
+    assert_ordreded_neighbor(mesh, 4, {1, 3});
+    assert_ordreded_neighbor(mesh, 5, {6, 3});
+    assert_ordreded_neighbor(mesh, 6, {4, 3});
+}
+
+TEST(HalfEdgeTriangleMesh,
+     OrderedHalfEdgesFromVertex_get_mesh_partial_hexagon) {
+    HalfEdgeTriangleMesh mesh(get_mesh_partial_hexagon());
+    EXPECT_FALSE(mesh.IsEmpty());
+    std::vector<int> ordered_half_edges;
+
+    assert_ordreded_neighbor(mesh, 0, {2, 3});
+    assert_ordreded_neighbor(mesh, 1, {0, 3});
+    assert_ordreded_neighbor(mesh, 2, {5, 3});
+    assert_ordreded_neighbor(mesh, 3, {4, 1, 0, 2, 5});  // Rotate not ok
+    assert_ordreded_neighbor(mesh, 4, {1});
+    assert_ordreded_neighbor(mesh, 5, {6, 3});
+    assert_ordreded_neighbor(mesh, 6, {3});
 }
