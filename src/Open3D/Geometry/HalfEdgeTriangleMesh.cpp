@@ -82,7 +82,7 @@ bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
     // Check: for valid manifolds, there mustn't be duplicated half-edges
     std::unordered_map<Eigen::Vector2i, size_t,
                        hash_eigen::hash<Eigen::Vector2i>>
-            map_end_points_to_half_edge_index;
+            vertex_indices_to_half_edge_index;
 
     for (size_t triangle_index = 0; triangle_index < triangles_.size();
          triangle_index++) {
@@ -99,12 +99,12 @@ bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
         HalfEdge he_2(Eigen::Vector2i(triangle(2), triangle(0)), triangle_index,
                       he_0_index, -1);
 
-        if (map_end_points_to_half_edge_index.find(he_0.vertex_indices_) !=
-                    map_end_points_to_half_edge_index.end() ||
-            map_end_points_to_half_edge_index.find(he_1.vertex_indices_) !=
-                    map_end_points_to_half_edge_index.end() ||
-            map_end_points_to_half_edge_index.find(he_2.vertex_indices_) !=
-                    map_end_points_to_half_edge_index.end()) {
+        if (vertex_indices_to_half_edge_index.find(he_0.vertex_indices_) !=
+                    vertex_indices_to_half_edge_index.end() ||
+            vertex_indices_to_half_edge_index.find(he_1.vertex_indices_) !=
+                    vertex_indices_to_half_edge_index.end() ||
+            vertex_indices_to_half_edge_index.find(he_2.vertex_indices_) !=
+                    vertex_indices_to_half_edge_index.end()) {
             PrintError(
                     "[ComputeHalfEdges] failed because duplicated half-edges "
                     "found\n");
@@ -117,9 +117,9 @@ bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
         half_edges_.push_back(he_0);
         half_edges_.push_back(he_1);
         half_edges_.push_back(he_2);
-        map_end_points_to_half_edge_index[he_0.vertex_indices_] = he_0_index;
-        map_end_points_to_half_edge_index[he_1.vertex_indices_] = he_1_index;
-        map_end_points_to_half_edge_index[he_2.vertex_indices_] = he_2_index;
+        vertex_indices_to_half_edge_index[he_0.vertex_indices_] = he_0_index;
+        vertex_indices_to_half_edge_index[he_1.vertex_indices_] = he_1_index;
+        vertex_indices_to_half_edge_index[he_2.vertex_indices_] = he_2_index;
     }
 
     // Fill twin half-edge. In the previous step, it is already guaranteed that
@@ -129,10 +129,10 @@ bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
         HalfEdge& this_he = half_edges_[this_he_index];
         Eigen::Vector2i twin_end_points(this_he.vertex_indices_(1),
                                         this_he.vertex_indices_(0));
-        if (map_end_points_to_half_edge_index.find(twin_end_points) !=
-            map_end_points_to_half_edge_index.end()) {
+        if (vertex_indices_to_half_edge_index.find(twin_end_points) !=
+            vertex_indices_to_half_edge_index.end()) {
             size_t twin_he_index =
-                    map_end_points_to_half_edge_index[twin_end_points];
+                    vertex_indices_to_half_edge_index[twin_end_points];
             HalfEdge& twin_he = half_edges_[twin_he_index];
             this_he.twin_ = int(twin_he_index);
             twin_he.twin_ = int(this_he_index);
