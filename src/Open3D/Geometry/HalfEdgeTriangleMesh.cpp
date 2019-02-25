@@ -80,17 +80,31 @@ bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
     for (size_t triangle_index = 0; triangle_index < triangles_.size();
          triangle_index++) {
         const Eigen::Vector3i& triangle = triangles_[triangle_index];
-        Eigen::Vector2i end_points;
-
-        end_points << triangle(0), triangle(1);
-        if (map_end_points_to_half_edge.count(end_points) != 0) {
+        if (map_end_points_to_half_edge.count(
+                    Eigen::Vector2i(triangle(0), triangle(1))) != 0 ||
+            map_end_points_to_half_edge.count(
+                    Eigen::Vector2i(triangle(1), triangle(2))) != 0 ||
+            map_end_points_to_half_edge.count(
+                    Eigen::Vector2i(triangle(2), triangle(0))) != 0) {
             PrintError(
                     "[ComputeHalfEdges] failed because duplicated half-edges"
                     "are found\n");
             return false;
-        } else {
-            // PrintAlways("Added\n");
         }
+
+        size_t num_half_edges = half_edges_.size();
+        // Edge 0->1
+        half_edges_.push_back(HalfEdge(
+                num_half_edges + 1, -1,
+                Eigen::Vector2i(triangle(0), triangle(1)), triangle_index));
+        // Edge 1->2
+        half_edges_.push_back(HalfEdge(
+                num_half_edges + 2, -1,
+                Eigen::Vector2i(triangle(1), triangle(2)), triangle_index));
+        // Edge 2->0
+        half_edges_.push_back(HalfEdge(
+                num_half_edges + 0, -1,
+                Eigen::Vector2i(triangle(2), triangle(0)), triangle_index));
     }
     return true;
 }
