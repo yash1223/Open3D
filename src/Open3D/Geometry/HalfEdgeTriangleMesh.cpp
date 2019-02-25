@@ -36,13 +36,15 @@ HalfEdgeTriangleMesh::HalfEdgeTriangleMesh(const TriangleMesh& triangle_mesh) {
     triangles_ = triangle_mesh.triangles_;
     triangle_normals_ = triangle_mesh.triangle_normals_;
     adjacency_list_ = triangle_mesh.adjacency_list_;
-    // Purge();
-    // ComputeHalfEdges();
+    Purge();
+    ComputeHalfEdges();
 }
 
 bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
     // Clean up
     // TODO: clean up all half-edge related structures
+    half_edges_.clear();
+    return true;
 }
 
 }  // namespace open3d
