@@ -39,7 +39,7 @@ using namespace unit_test;
 //              \  (0) /  \
 //               \    / (1)\
 //                \  /      \
-//      [2: (O, 0)]\/________\[3: (2, 0)]
+//      [2: (0, 0)]\/________\[3: (2, 0)]
 TriangleMesh get_mesh_two_triangles() {
     std::vector<Eigen::Vector3d> vertices{
             Eigen::Vector3d(-1, 2, 0), Eigen::Vector3d(1, 2, 0),
@@ -57,7 +57,7 @@ TriangleMesh get_mesh_two_triangles() {
 //              \  (0) /  \
 //               \    / (1)\
 //                \  /      \
-//      [2: (O, 0)]\/________\[3: (2, 0)]
+//      [2: (0, 0)]\/________\[3: (2, 0)]
 //
 // Non-manifold: triangle (1) is flipped
 TriangleMesh get_mesh_two_triangles_flipped() {
@@ -155,39 +155,71 @@ TriangleMesh get_mesh_partial_hexagon() {
     return mesh;
 }
 
-TEST(HalfEdgeTriangleMesh, ConstructorTwoTriangles) {
+void assert_half_edge_vertex(const HalfEdgeTriangleMesh& mesh,
+                             int half_edge_index,
+                             const Eigen::Vector2i expected_vertex_indices) {
+    EXPECT_TRUE(mesh.half_edges_[half_edge_index].vertex_indices_.isApprox(
+            expected_vertex_indices));
+}
+
+TEST(HalfEdgeTriangleMesh, Constructor_TwoTriangles) {
     TriangleMesh mesh = get_mesh_two_triangles();
     HalfEdgeTriangleMesh he_mesh(mesh);
     EXPECT_FALSE(he_mesh.IsEmpty());
 }
 
-TEST(HalfEdgeTriangleMesh, ConstructorTwoTrianglesFlipped) {
+TEST(HalfEdgeTriangleMesh, Constructor_TwoTrianglesFlipped) {
     TriangleMesh mesh = get_mesh_two_triangles_flipped();
     HalfEdgeTriangleMesh he_mesh(mesh);
     EXPECT_TRUE(he_mesh.IsEmpty());  // Non-manifold
 }
 
-TEST(HalfEdgeTriangleMesh, ConstructorTwoTrianglesInvalidVertex) {
+TEST(HalfEdgeTriangleMesh, Constructo_rTwoTrianglesInvalidVertex) {
     TriangleMesh mesh = get_mesh_two_triangles_invalid_vertex();
     HalfEdgeTriangleMesh he_mesh(mesh);
     EXPECT_TRUE(he_mesh.IsEmpty());  // Non-manifold
 }
 
-TEST(HalfEdgeTriangleMesh, ConstructorHexagon) {
+TEST(HalfEdgeTriangleMesh, Constructor_Hexagon) {
     TriangleMesh mesh = get_mesh_hexagon();
     HalfEdgeTriangleMesh he_mesh(mesh);
     EXPECT_FALSE(he_mesh.IsEmpty());
 }
 
-TEST(HalfEdgeTriangleMesh, ConstructorPartialHexagon) {
+TEST(HalfEdgeTriangleMesh, Constructor_PartialHexagon) {
     TriangleMesh mesh = get_mesh_partial_hexagon();
     HalfEdgeTriangleMesh he_mesh(mesh);
     EXPECT_FALSE(he_mesh.IsEmpty());
 }
 
-TEST(HalfEdgeTriangleMesh, ConstructorSphere) {
+TEST(HalfEdgeTriangleMesh, Constructor_Sphere) {
     TriangleMesh mesh;
     ReadTriangleMesh(std::string(TEST_DATA_DIR) + "/sphere.ply", mesh);
     HalfEdgeTriangleMesh he_mesh(mesh);
     EXPECT_FALSE(he_mesh.IsEmpty());
+}
+
+TEST(HalfEdgeTriangleMesh, OrderedHalfEdgesFromVertex_TwoTriangles) {
+    HalfEdgeTriangleMesh mesh(get_mesh_two_triangles());
+    EXPECT_FALSE(mesh.IsEmpty());
+    std::vector<int> ordered_half_edges;
+
+    // Vertex 0
+    ordered_half_edges = mesh.ordered_half_edge_from_vertex_[0];
+    EXPECT_EQ(ordered_half_edges.size(), 1);
+    assert_half_edge_vertex(mesh, ordered_half_edges[0], Eigen::Vector2i(0, 2));
+    // Vertex 1
+    ordered_half_edges = mesh.ordered_half_edge_from_vertex_[1];
+    EXPECT_EQ(ordered_half_edges.size(), 2);
+    assert_half_edge_vertex(mesh, ordered_half_edges[0], Eigen::Vector2i(1, 0));
+    assert_half_edge_vertex(mesh, ordered_half_edges[1], Eigen::Vector2i(1, 2));
+    // Vertex 2
+    ordered_half_edges = mesh.ordered_half_edge_from_vertex_[2];
+    EXPECT_EQ(ordered_half_edges.size(), 2);
+    assert_half_edge_vertex(mesh, ordered_half_edges[0], Eigen::Vector2i(2, 3));
+    assert_half_edge_vertex(mesh, ordered_half_edges[1], Eigen::Vector2i(2, 1));
+    // Vertex 3
+    ordered_half_edges = mesh.ordered_half_edge_from_vertex_[3];
+    EXPECT_EQ(ordered_half_edges.size(), 1);
+    assert_half_edge_vertex(mesh, ordered_half_edges[0], Eigen::Vector2i(3, 1));
 }
