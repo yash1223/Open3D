@@ -73,6 +73,7 @@ public:
 
     /// List of half edges starting from this vertex
     /// Counter-clockwise ordered relative to the normal direction
+    /// This functions simply queries ordered_half_edge_from_vertex_
     std::vector<int> HalfEdgesFromVertex(int vertex_idx);
 
     /// Query manifold boundary, the query edge must be a boundary (no twin)
