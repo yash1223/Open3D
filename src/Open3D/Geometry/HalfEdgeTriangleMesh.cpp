@@ -189,18 +189,17 @@ bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
     return true;
 }
 
-bool HalfEdgeTriangleMesh::HasHalfEdges() {
+bool HalfEdgeTriangleMesh::HasHalfEdges() const {
     return half_edges_.size() > 0 &&
            vertices_.size() == ordered_half_edge_from_vertex_.size();
 }
 
-std::vector<int> HalfEdgeTriangleMesh::HalfEdgesFromVertex(int vertex_idx) {
-    if (vertex_idx >= vertices_.size()) {
-        PrintError("vertex_idx %d out of range.\n", vertex_idx);
+std::vector<int> HalfEdgeTriangleMesh::OrderedHalfEdgesFromVertex(
+        int vertex_idx) const {
+    if (vertex_idx >= vertices_.size() || !HasHalfEdges()) {
+        PrintError("vertex_idx %d out of range or half-edges not available.\n",
+                   vertex_idx);
         return {};
-    }
-    if (!HasHalfEdges()) {
-        ComputeHalfEdges();
     }
     return ordered_half_edge_from_vertex_[vertex_idx];
 }
@@ -213,6 +212,58 @@ int HalfEdgeTriangleMesh::NextNextTwinHalfEdgeIndex(int half_edge_index) const {
     const HalfEdge& next_next_he = half_edges_[next_next_he_index];
     int next_next_twin_he_index = next_next_he.twin_;
     return next_next_twin_he_index;
+}
+
+std::vector<int> HalfEdgeTriangleMesh::BoundaryFromHalfEdge(
+        int init_half_edge_index) const {
+    if (!HasHalfEdges() || init_half_edge_index >= half_edges_.size()) {
+        PrintError("edge index %d out of range or half-edges not available.\n",
+                   init_half_edge_index);
+        return {};
+    }
+    if (!half_edges_[init_half_edge_index].IsBoundary()) {
+        PrintError("The currented half-edge index %d is on boundary.\n",
+                   init_half_edge_index);
+        return {};
+    }
+    std::vector<int> boundary_half_edge_indices;
+    int curr_he_index = init_half_edge_index;
+    boundary_half_edge_indices.push_back(curr_he_index);
+    curr_he_index = NextHalfEdgeOnBoundary(curr_he_index);
+    while (curr_he_index != init_half_edge_index &&
+           init_half_edge_index != -1) {
+        boundary_half_edge_indices.push_back(curr_he_index);
+        curr_he_index = NextHalfEdgeOnBoundary(curr_he_index);
+    }
+    return boundary_half_edge_indices;
+}
+
+int HalfEdgeTriangleMesh::NextHalfEdgeOnBoundary(
+        int curr_half_edge_index) const {
+    if (!HasHalfEdges() || curr_half_edge_index >= half_edges_.size() ||
+        curr_half_edge_index == -1) {
+        PrintError("edge index %d out of range or half-edges not available.\n",
+                   curr_half_edge_index);
+        return -1;
+    }
+    if (!half_edges_[curr_half_edge_index].IsBoundary()) {
+        PrintError("The currented half-edge index %d is on boundary.\n",
+                   curr_half_edge_index);
+        return -1;
+    }
+
+    // curr_half_edge's end point and next_half_edge's start point is the same
+    // vertex. It is guaranteed that next_half_edge is the first edge
+    // in ordered_half_edge_from_vertex_ and next_half_edge is a boundary edge.
+    int vertex_index = half_edges_[curr_half_edge_index].vertex_indices_(1);
+    int next_half_edge_index = ordered_half_edge_from_vertex_[vertex_index][0];
+    if (!half_edges_[next_half_edge_index].IsBoundary()) {
+        PrintError(
+                "Internal algorithm error. The next half-edge along the "
+                "boundary is not a boundary edge.\n");
+        return -1;
+    }
+    return next_half_edge_index;
 }
 
 }  // namespace open3d
