@@ -58,7 +58,7 @@ public:
     HalfEdgeTriangleMesh()
         : TriangleMesh(Geometry::GeometryType::HalfEdgeTriangleMesh){};
 
-    /// Copy constructor to convert TriangleMesh to HalfEdgeTriangleMesh
+    /// Copy constructocr to convert TriangleMesh to HalfEdgeTriangleMesh
     HalfEdgeTriangleMesh(const TriangleMesh& triangle_mesh);
 
     /// Compute and update half edges, half edge can only be computed if the
@@ -77,6 +77,7 @@ public:
     };
 
     /// Query manifold boundary, the query edge must be a boundary (no twin)
+    /// TODO: Change this: start from vertex index
     std::vector<int> BoundaryFromHalfEdge(int half_edge_idx) const;
 
 public:
