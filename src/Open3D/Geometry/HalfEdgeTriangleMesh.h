@@ -74,7 +74,7 @@ public:
     /// Counter-clockwise ordered relative to the normal direction
     std::vector<int> HalfEdgesFromVertex(int vertex_idx);
 
-    /// Query manifold boundary, the starting edge must be a boundary (no twin)
+    /// Query manifold boundary, the query edge must be a boundary (no twin)
     std::vector<int> ManifoldBoundaryFromEdge(int half_edge_idx);
 
 public:
