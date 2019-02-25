@@ -32,21 +32,6 @@
 
 namespace open3d {
 
-static void print_mesh(const TriangleMesh& mesh) {
-    std::cout << "Num vertices: " << mesh.vertices_.size() << std::endl;
-    for (size_t i = 0; i < mesh.vertices_.size(); ++i) {
-        auto& vertex = mesh.vertices_[i];
-        std::cout << "Vertex " << i << ": (" << vertex(0) << ", " << vertex(1)
-                  << ", " << vertex(2) << ")" << std::endl;
-    }
-    std::cout << "Num triangles: " << mesh.triangles_.size() << std::endl;
-    for (size_t i = 0; i < mesh.triangles_.size(); ++i) {
-        auto& triangle = mesh.triangles_[i];
-        std::cout << "Triangle " << i << ": (" << triangle(0) << ", "
-                  << triangle(1) << ", " << triangle(2) << ")" << std::endl;
-    }
-}
-
 HalfEdge::HalfEdge(const Eigen::Vector2i& vertex_indices,
                    int triangle_index,
                    int next,
@@ -198,16 +183,6 @@ bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
 bool HalfEdgeTriangleMesh::HasHalfEdges() const {
     return half_edges_.size() > 0 &&
            vertices_.size() == ordered_half_edge_from_vertex_.size();
-}
-
-std::vector<int> HalfEdgeTriangleMesh::OrderedHalfEdgesFromVertex(
-        int vertex_idx) const {
-    if (vertex_idx >= vertices_.size() || !HasHalfEdges()) {
-        PrintError("vertex_idx %d out of range or half-edges not available.\n",
-                   vertex_idx);
-        return {};
-    }
-    return ordered_half_edge_from_vertex_[vertex_idx];
 }
 
 int HalfEdgeTriangleMesh::NextNextTwinHalfEdgeIndex(int half_edge_index) const {

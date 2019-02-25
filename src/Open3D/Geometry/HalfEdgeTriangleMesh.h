@@ -72,18 +72,17 @@ public:
     void Clear() override;
 
     /// Query half edges owned by the triangle
-    Eigen::Vector3i HalfEdgesInTriangle(int triangle_idx) const;
-
-    /// List of half edges starting from this vertex
-    /// Counter-clockwise ordered relative to the normal direction
-    /// This functions simply queries ordered_half_edge_from_vertex_
-    std::vector<int> OrderedHalfEdgesFromVertex(int vertex_idx) const;
+    Eigen::Vector3i HalfEdgesInTriangle(int triangle_idx) const {
+        throw std::runtime_error("TODO: not implemented");
+    };
 
     /// Query manifold boundary, the query edge must be a boundary (no twin)
     std::vector<int> BoundaryFromHalfEdge(int half_edge_idx) const;
 
 public:
     std::vector<HalfEdge> half_edges_;
+    // Counter-clockwise ordered half-edges started from each vertex
+    // If the vertex is on boundary, the starting edge must be on boundary too
     std::vector<std::vector<int>> ordered_half_edge_from_vertex_;
     std::unordered_map<int, int> map_vertex_to_triangle;
 
