@@ -80,30 +80,36 @@ bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
     for (size_t triangle_index = 0; triangle_index < triangles_.size();
          triangle_index++) {
         const Eigen::Vector3i& triangle = triangles_[triangle_index];
-        if (map_end_points_to_half_edge_index.count(
-                    Eigen::Vector2i(triangle(0), triangle(1))) != 0 ||
-            map_end_points_to_half_edge_index.count(
-                    Eigen::Vector2i(triangle(1), triangle(2))) != 0 ||
-            map_end_points_to_half_edge_index.count(
-                    Eigen::Vector2i(triangle(2), triangle(0))) != 0) {
+        size_t num_half_edges = half_edges_.size();
+
+        size_t he_0_index = num_half_edges;
+        size_t he_1_index = num_half_edges + 1;
+        size_t he_2_index = num_half_edges + 2;
+        HalfEdge he_0(he_1_index, -1, Eigen::Vector2i(triangle(0), triangle(1)),
+                      triangle_index);
+        HalfEdge he_1(he_2_index, -1, Eigen::Vector2i(triangle(1), triangle(2)),
+                      triangle_index);
+        HalfEdge he_2(he_0_index, -1, Eigen::Vector2i(triangle(2), triangle(0)),
+                      triangle_index);
+
+        if (map_end_points_to_half_edge_index.find(he_0.vertex_indices_) !=
+                    map_end_points_to_half_edge_index.end() ||
+            map_end_points_to_half_edge_index.find(he_1.vertex_indices_) !=
+                    map_end_points_to_half_edge_index.end() ||
+            map_end_points_to_half_edge_index.find(he_2.vertex_indices_) !=
+                    map_end_points_to_half_edge_index.end()) {
             PrintError(
                     "[ComputeHalfEdges] failed because duplicated half-edges"
                     "are found\n");
             return false;
         }
-        size_t num_half_edges = half_edges_.size();
-        // Edge 0->1
-        half_edges_.push_back(HalfEdge(
-                num_half_edges + 1, -1,
-                Eigen::Vector2i(triangle(0), triangle(1)), triangle_index));
-        // Edge 1->2
-        half_edges_.push_back(HalfEdge(
-                num_half_edges + 2, -1,
-                Eigen::Vector2i(triangle(1), triangle(2)), triangle_index));
-        // Edge 2->0
-        half_edges_.push_back(HalfEdge(
-                num_half_edges + 0, -1,
-                Eigen::Vector2i(triangle(2), triangle(0)), triangle_index));
+
+        half_edges_.push_back(he_0);
+        half_edges_.push_back(he_1);
+        half_edges_.push_back(he_2);
+        map_end_points_to_half_edge_index[he_0.vertex_indices_] = he_0_index;
+        map_end_points_to_half_edge_index[he_1.vertex_indices_] = he_1_index;
+        map_end_points_to_half_edge_index[he_2.vertex_indices_] = he_2_index;
     }
 
     return true;
