@@ -50,6 +50,21 @@ namespace open3d {
 //     int triangle_index_ = -1;
 // };
 
+void print_mesh(const TriangleMesh& mesh) {
+    std::cout << "Num vertices: " << mesh.vertices_.size() << std::endl;
+    for (size_t i = 0; i < mesh.vertices_.size(); ++i) {
+        auto& vertex = mesh.vertices_[i];
+        std::cout << "Vertex " << i << ": (" << vertex(0) << ", " << vertex(1)
+                  << ", " << vertex(2) << ")" << std::endl;
+    }
+    std::cout << "Num triangles: " << mesh.triangles_.size() << std::endl;
+    for (size_t i = 0; i < mesh.triangles_.size(); ++i) {
+        auto& triangle = mesh.triangles_[i];
+        std::cout << "Triangle " << i << ": (" << triangle(0) << ", "
+                  << triangle(1) << ", " << triangle(2) << ")" << std::endl;
+    }
+}
+
 HalfEdge::HalfEdge(const Eigen::Vector2i& vertex_indices,
                    int triangle_index,
                    int next,
@@ -68,11 +83,11 @@ HalfEdgeTriangleMesh::HalfEdgeTriangleMesh(const TriangleMesh& triangle_mesh) {
     triangles_ = triangle_mesh.triangles_;
     triangle_normals_ = triangle_mesh.triangle_normals_;
     adjacency_list_ = triangle_mesh.adjacency_list_;
-    std::cout << "before vertices_.size(): " << vertices_.size() << std::endl;
-    std::cout << "before triangles_.size(): " << triangles_.size() << std::endl;
+    std::cout << "[before]" << std::endl;
+    print_mesh(*this);
     Purge();
-    std::cout << "after vertices_.size(): " << vertices_.size() << std::endl;
-    std::cout << "after triangles_.size(): " << triangles_.size() << std::endl;
+    std::cout << "[after]" << std::endl;
+    print_mesh(*this);
     ComputeHalfEdges();
 }
 
