@@ -58,13 +58,41 @@ TriangleMesh get_mesh_two_triangles() {
 //               \    / (1)\
 //                \  /      \
 //      [2: (O, 0)]\/________\[3: (2, 0)]
-// Where triangle (1) is flipped
+//
+// Non-manifold: triangle (1) is flipped
 TriangleMesh get_mesh_two_triangles_flipped() {
     std::vector<Eigen::Vector3d> vertices{
             Eigen::Vector3d(-1, 2, 0), Eigen::Vector3d(1, 2, 0),
             Eigen::Vector3d(0, 0, 0), Eigen::Vector3d(2, 0, 0)};
     std::vector<Eigen::Vector3i> triangles{Eigen::Vector3i(0, 2, 1),
                                            Eigen::Vector3i(1, 3, 2)};
+    TriangleMesh mesh;
+    mesh.vertices_ = vertices;
+    mesh.triangles_ = triangles;
+    return mesh;
+}
+
+//  [0: (-1, 2)]__________[1: (1, 2)]
+//              \        /
+//               \  (0) /
+//                \    /
+//                 \  /
+//                  \/ [2: (0, 0)]
+//                  /\
+//                 /  \
+//                /    \
+//               /  (1) \
+//              /________\
+// [3: (-1, -2)]          [4: (1, -2)]
+//
+// Non-manifold
+TriangleMesh get_mesh_two_triangles_invalid_vertex() {
+    std::vector<Eigen::Vector3d> vertices{
+            Eigen::Vector3d(-1, 2, 0), Eigen::Vector3d(1, 2, 0),
+            Eigen::Vector3d(0, 0, 0), Eigen::Vector3d(-1, -2, 0),
+            Eigen::Vector3d(1, -2, 0)};
+    std::vector<Eigen::Vector3i> triangles{Eigen::Vector3i(0, 2, 1),
+                                           Eigen::Vector3i(2, 3, 4)};
     TriangleMesh mesh;
     mesh.vertices_ = vertices;
     mesh.triangles_ = triangles;
@@ -135,6 +163,12 @@ TEST(HalfEdgeTriangleMesh, ConstructorTwoTriangles) {
 
 TEST(HalfEdgeTriangleMesh, ConstructorTwoTrianglesFlipped) {
     TriangleMesh mesh = get_mesh_two_triangles_flipped();
+    HalfEdgeTriangleMesh he_mesh(mesh);
+    EXPECT_TRUE(he_mesh.IsEmpty());  // Non-manifold
+}
+
+TEST(HalfEdgeTriangleMesh, ConstructorTwoTrianglesInvalidVertex) {
+    TriangleMesh mesh = get_mesh_two_triangles_invalid_vertex();
     HalfEdgeTriangleMesh he_mesh(mesh);
     EXPECT_TRUE(he_mesh.IsEmpty());  // Non-manifold
 }
