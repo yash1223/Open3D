@@ -74,6 +74,11 @@ HalfEdge::HalfEdge(const Eigen::Vector2i& vertex_indices,
       next_(next),
       twin_(twin) {}
 
+void HalfEdgeTriangleMesh::Clear() {
+    TriangleMesh::Clear();
+    half_edges_.clear();
+}
+
 HalfEdgeTriangleMesh::HalfEdgeTriangleMesh(const TriangleMesh& triangle_mesh) {
     SetVerbosityLevel(VerbosityLevel::VerboseAlways);
     // Copy
@@ -83,12 +88,21 @@ HalfEdgeTriangleMesh::HalfEdgeTriangleMesh(const TriangleMesh& triangle_mesh) {
     triangles_ = triangle_mesh.triangles_;
     triangle_normals_ = triangle_mesh.triangle_normals_;
     adjacency_list_ = triangle_mesh.adjacency_list_;
-    std::cout << "[before]" << std::endl;
-    print_mesh(*this);
+
+    // Purge to remove duplications
+    // std::cout << "[before]" << std::endl;
+    // print_mesh(*this);
     Purge();
-    std::cout << "[after]" << std::endl;
-    print_mesh(*this);
-    ComputeHalfEdges();
+    // std::cout << "[after]" << std::endl;
+    // print_mesh(*this);
+
+    // If the original mesh is not a manifold, we set HalfEdgeTriangleMesh to
+    // be empty. Caller to this constructor is responsible to checking
+    // HalfEdgeTriangleMesh::IsEmpty().
+    if (!ComputeHalfEdges()) {
+        PrintError("Converting mesh to half-edge mesh filed, not manifold\n");
+        Clear();
+    }
 }
 
 bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
@@ -123,12 +137,10 @@ bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
                     vertex_indices_to_half_edge_index.end() ||
             vertex_indices_to_half_edge_index.find(he_2.vertex_indices_) !=
                     vertex_indices_to_half_edge_index.end()) {
-            PrintError(
-                    "[ComputeHalfEdges] failed because duplicated half-edges "
-                    "found\n");
-            std::cout << he_0.vertex_indices_ << std::endl;
-            std::cout << he_1.vertex_indices_ << std::endl;
-            std::cout << he_2.vertex_indices_ << std::endl;
+            PrintError("ComputeHalfEdges failed. Duplicated half-edges.\n");
+            // std::cout << he_0.vertex_indices_ << std::endl;
+            // std::cout << he_1.vertex_indices_ << std::endl;
+            // std::cout << he_2.vertex_indices_ << std::endl;
             return false;
         }
 

@@ -37,7 +37,11 @@ namespace open3d {
 
 void TriangleMesh::Clear() {
     vertices_.clear();
+    vertex_normals_.clear();
+    vertex_colors_.clear();
     triangles_.clear();
+    triangle_normals_.clear();
+    adjacency_list_.clear();
 }
 
 bool TriangleMesh::IsEmpty() const { return !HasVertices(); }

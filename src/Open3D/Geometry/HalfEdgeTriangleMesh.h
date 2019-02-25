@@ -64,6 +64,9 @@ public:
     /// mesh is a manifold. Returns true if half edges are computed.
     bool ComputeHalfEdges();
 
+    /// Clear all data in HalfEdgeTriangleMesh
+    void Clear() override;
+
     /// Query half edges owned by the triangle
     Eigen::Vector3i HalfEdgesInTriangle(int triangle_idx);
 

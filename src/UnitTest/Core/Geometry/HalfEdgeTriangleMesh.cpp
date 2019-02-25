@@ -127,33 +127,33 @@ TriangleMesh get_mesh_partial_hexagon() {
     return mesh;
 }
 
-TEST(HalfEdgeTriangleMesh, ConstructFromTriangleMeshSphere) {
-    TriangleMesh mesh;
-    ReadTriangleMesh(std::string(TEST_DATA_DIR) + "/sphere.ply", mesh);
-    HalfEdgeTriangleMesh he_mesh(mesh);
-    std::cout << "size he_mesh: " << he_mesh.vertices_.size() << std::endl;
-}
-
 TEST(HalfEdgeTriangleMesh, ConstructorTwoTriangles) {
     TriangleMesh mesh = get_mesh_two_triangles();
     HalfEdgeTriangleMesh he_mesh(mesh);
-    std::cout << "size he_mesh: " << he_mesh.vertices_.size() << std::endl;
+    EXPECT_FALSE(he_mesh.IsEmpty());
 }
 
 TEST(HalfEdgeTriangleMesh, ConstructorTwoTrianglesFlipped) {
     TriangleMesh mesh = get_mesh_two_triangles_flipped();
     HalfEdgeTriangleMesh he_mesh(mesh);
-    std::cout << "size he_mesh: " << he_mesh.vertices_.size() << std::endl;
+    EXPECT_TRUE(he_mesh.IsEmpty());  // Non-manifold
 }
 
 TEST(HalfEdgeTriangleMesh, ConstructorHexagon) {
     TriangleMesh mesh = get_mesh_hexagon();
     HalfEdgeTriangleMesh he_mesh(mesh);
-    std::cout << "size he_mesh: " << he_mesh.vertices_.size() << std::endl;
+    EXPECT_FALSE(he_mesh.IsEmpty());
 }
 
 TEST(HalfEdgeTriangleMesh, ConstructorPartialHexagon) {
     TriangleMesh mesh = get_mesh_partial_hexagon();
     HalfEdgeTriangleMesh he_mesh(mesh);
-    std::cout << "size he_mesh: " << he_mesh.vertices_.size() << std::endl;
+    EXPECT_FALSE(he_mesh.IsEmpty());
+}
+
+TEST(HalfEdgeTriangleMesh, ConstructorSphere) {
+    TriangleMesh mesh;
+    ReadTriangleMesh(std::string(TEST_DATA_DIR) + "/sphere.ply", mesh);
+    HalfEdgeTriangleMesh he_mesh(mesh);
+    EXPECT_FALSE(he_mesh.IsEmpty());
 }
