@@ -32,25 +32,7 @@
 
 namespace open3d {
 
-// class HalfEdge {
-// public:
-//     HalfEdge(const Eigen::Vector2i& vertex_indices,
-//              int triangle_index,
-//              int next,
-//              int twin);
-
-// public:
-//     // Index of the next HalfEdge
-//     int next_ = -1;
-//     // Index of the twin HalfEdge
-//     int twin_ = -1;
-//     // Index of the ordered vertices forming this half edge
-//     Eigen::Vector2i vertex_indices_ = Eigen::Vector2i(-1, -1);
-//     // Index of the triangle containing this half edge
-//     int triangle_index_ = -1;
-// };
-
-void print_mesh(const TriangleMesh& mesh) {
+static void print_mesh(const TriangleMesh& mesh) {
     std::cout << "Num vertices: " << mesh.vertices_.size() << std::endl;
     for (size_t i = 0; i < mesh.vertices_.size(); ++i) {
         auto& vertex = mesh.vertices_[i];
@@ -91,11 +73,7 @@ HalfEdgeTriangleMesh::HalfEdgeTriangleMesh(const TriangleMesh& triangle_mesh) {
     adjacency_list_ = triangle_mesh.adjacency_list_;
 
     // Purge to remove duplications
-    // std::cout << "[before]" << std::endl;
-    // print_mesh(*this);
     Purge();
-    // std::cout << "[after]" << std::endl;
-    // print_mesh(*this);
 
     // If the original mesh is not a manifold, we set HalfEdgeTriangleMesh to
     // be empty. Caller to this constructor is responsible to checking
