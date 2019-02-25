@@ -36,10 +36,10 @@ namespace open3d {
 
 class HalfEdge {
 public:
-    HalfEdge(int next,
-             int twin,
-             const Eigen::Vector2i& vertex_indices,
-             int triangle_index);
+    HalfEdge(const Eigen::Vector2i& vertex_indices,
+             int triangle_index,
+             int next,
+             int twin);
 
 public:
     // Index of the next HalfEdge

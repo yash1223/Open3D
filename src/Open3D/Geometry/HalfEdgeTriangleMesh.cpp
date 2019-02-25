@@ -32,24 +32,30 @@ namespace open3d {
 
 // class HalfEdge {
 // public:
+//     HalfEdge(const Eigen::Vector2i& vertex_indices,
+//              int triangle_index,
+//              int next,
+//              int twin);
+
+// public:
 //     // Index of the next HalfEdge
 //     int next_ = -1;
 //     // Index of the twin HalfEdge
 //     int twin_ = -1;
 //     // Index of the ordered vertices forming this half edge
-//     Eigen::Vector2i vertex_indices = Eigen::Vector2i(-1, -1);
+//     Eigen::Vector2i vertex_indices_ = Eigen::Vector2i(-1, -1);
 //     // Index of the triangle containing this half edge
-//     int triangle_index = -1;
+//     int triangle_index_ = -1;
 // };
 
-HalfEdge::HalfEdge(int next,
-                   int twin,
-                   const Eigen::Vector2i& vertex_indices,
-                   int triangle_index)
-    : next_(next),
-      twin_(twin),
-      vertex_indices_(vertex_indices),
-      triangle_index_(triangle_index) {}
+HalfEdge::HalfEdge(const Eigen::Vector2i& vertex_indices,
+                   int triangle_index,
+                   int next,
+                   int twin)
+    : vertex_indices_(vertex_indices),
+      triangle_index_(triangle_index),
+      next_(next),
+      twin_(twin) {}
 
 HalfEdgeTriangleMesh::HalfEdgeTriangleMesh(const TriangleMesh& triangle_mesh) {
     // Copy
@@ -85,12 +91,12 @@ bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
         size_t he_0_index = num_half_edges;
         size_t he_1_index = num_half_edges + 1;
         size_t he_2_index = num_half_edges + 2;
-        HalfEdge he_0(he_1_index, -1, Eigen::Vector2i(triangle(0), triangle(1)),
-                      triangle_index);
-        HalfEdge he_1(he_2_index, -1, Eigen::Vector2i(triangle(1), triangle(2)),
-                      triangle_index);
-        HalfEdge he_2(he_0_index, -1, Eigen::Vector2i(triangle(2), triangle(0)),
-                      triangle_index);
+        HalfEdge he_0(Eigen::Vector2i(triangle(0), triangle(1)), triangle_index,
+                      he_1_index, -1);
+        HalfEdge he_1(Eigen::Vector2i(triangle(1), triangle(2)), triangle_index,
+                      he_2_index, -1);
+        HalfEdge he_2(Eigen::Vector2i(triangle(2), triangle(0)), triangle_index,
+                      he_0_index, -1);
 
         if (map_end_points_to_half_edge_index.find(he_0.vertex_indices_) !=
                     map_end_points_to_half_edge_index.end() ||
