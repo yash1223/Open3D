@@ -26,6 +26,7 @@
 
 #include "Utility/UnitTest.h"
 #include "Open3D/Geometry/HalfEdgeTriangleMesh.h"
+#include "Open3D/Utility/Helper.h"
 #include "Open3D/IO/ClassIO/TriangleMeshIO.h"
 
 #include <iostream>
@@ -155,11 +156,17 @@ TriangleMesh get_mesh_partial_hexagon() {
     return mesh;
 }
 
-void assert_half_edge_vertex(const HalfEdgeTriangleMesh& mesh,
-                             int half_edge_index,
-                             const Eigen::Vector2i expected_vertex_indices) {
-    EXPECT_TRUE(mesh.half_edges_[half_edge_index].vertex_indices_.isApprox(
-            expected_vertex_indices));
+void assert_ordreded_neighbor(
+        const HalfEdgeTriangleMesh& mesh,
+        int vertex_index,
+        const std::vector<int> expected_ordered_neighbors) {
+    std::vector<int> actual_ordered_neighbors;
+    for (int half_edge_index :
+         mesh.ordered_half_edge_from_vertex_[vertex_index]) {
+        actual_ordered_neighbors.push_back(
+                mesh.half_edges_[half_edge_index].vertex_indices_[1]);
+    }
+    EXPECT_EQ(expected_ordered_neighbors, actual_ordered_neighbors);
 }
 
 TEST(HalfEdgeTriangleMesh, Constructor_TwoTriangles) {
@@ -204,22 +211,38 @@ TEST(HalfEdgeTriangleMesh, OrderedHalfEdgesFromVertex_TwoTriangles) {
     EXPECT_FALSE(mesh.IsEmpty());
     std::vector<int> ordered_half_edges;
 
-    // Vertex 0
-    ordered_half_edges = mesh.ordered_half_edge_from_vertex_[0];
-    EXPECT_EQ(ordered_half_edges.size(), 1);
-    assert_half_edge_vertex(mesh, ordered_half_edges[0], Eigen::Vector2i(0, 2));
-    // Vertex 1
-    ordered_half_edges = mesh.ordered_half_edge_from_vertex_[1];
-    EXPECT_EQ(ordered_half_edges.size(), 2);
-    assert_half_edge_vertex(mesh, ordered_half_edges[0], Eigen::Vector2i(1, 0));
-    assert_half_edge_vertex(mesh, ordered_half_edges[1], Eigen::Vector2i(1, 2));
-    // Vertex 2
-    ordered_half_edges = mesh.ordered_half_edge_from_vertex_[2];
-    EXPECT_EQ(ordered_half_edges.size(), 2);
-    assert_half_edge_vertex(mesh, ordered_half_edges[0], Eigen::Vector2i(2, 3));
-    assert_half_edge_vertex(mesh, ordered_half_edges[1], Eigen::Vector2i(2, 1));
-    // Vertex 3
-    ordered_half_edges = mesh.ordered_half_edge_from_vertex_[3];
-    EXPECT_EQ(ordered_half_edges.size(), 1);
-    assert_half_edge_vertex(mesh, ordered_half_edges[0], Eigen::Vector2i(3, 1));
+    assert_ordreded_neighbor(mesh, 0, {2});
+    assert_ordreded_neighbor(mesh, 1, {0, 2});
+    assert_ordreded_neighbor(mesh, 2, {3, 1});
+    assert_ordreded_neighbor(mesh, 3, {1});
 }
+
+// TEST(HalfEdgeTriangleMesh, OrderedHalfEdgesFromVertex_Hexagon) {
+//     HalfEdgeTriangleMesh mesh(get_mesh_hexagon());
+//     EXPECT_FALSE(mesh.IsEmpty());
+//     std::vector<int> ordered_half_edges;
+
+//     // Vertex 0
+//     ordered_half_edges = mesh.ordered_half_edge_from_vertex_[0];
+//     EXPECT_EQ(ordered_half_edges.size(), 2);
+//     assert_half_edge_vertex(mesh, ordered_half_edges[0], Eigen::Vector2i(0,
+//     2)); assert_half_edge_vertex(mesh, ordered_half_edges[0],
+//     Eigen::Vector2i(0, 3));
+//     // Vertex 1
+//     ordered_half_edges = mesh.ordered_half_edge_from_vertex_[1];
+//     EXPECT_EQ(ordered_half_edges.size(), 2);
+//     assert_half_edge_vertex(mesh, ordered_half_edges[0], Eigen::Vector2i(1,
+//     0)); assert_half_edge_vertex(mesh, ordered_half_edges[1],
+//     Eigen::Vector2i(1, 3));
+//     // Vertex 2
+//     ordered_half_edges = mesh.ordered_half_edge_from_vertex_[2];
+//     EXPECT_EQ(ordered_half_edges.size(), 2);
+//     assert_half_edge_vertex(mesh, ordered_half_edges[0], Eigen::Vector2i(2,
+//     5)); assert_half_edge_vertex(mesh, ordered_half_edges[1],
+//     Eigen::Vector2i(2, 3));
+//     // Vertex 3
+//     ordered_half_edges = mesh.ordered_half_edge_from_vertex_[6];
+//     EXPECT_EQ(ordered_half_edges.size(), 1);
+//     assert_half_edge_vertex(mesh, ordered_half_edges[0], Eigen::Vector2i(3,
+//     1));
+// }
