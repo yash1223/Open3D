@@ -54,8 +54,9 @@ public:
     /// Copy constructor to convert TriangleMesh to HalfEdgeTriangleMesh
     HalfEdgeTriangleMesh(const TriangleMesh& triangle_mesh);
 
-    /// Compute and update half edges
-    void ComputeHalfEdges();
+    /// Compute and update half edges, half edge can only be computed if the
+    /// mesh is a manifold. Returns true if half edges are computed.
+    bool ComputeHalfEdges();
 
     /// Query half edges owned by the triangle
     Eigen::Vector3i HalfEdgesInTriangle(int triangle_idx);

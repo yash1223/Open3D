@@ -40,6 +40,10 @@ HalfEdgeTriangleMesh::HalfEdgeTriangleMesh(const TriangleMesh& triangle_mesh) {
     ComputeHalfEdges();
 }
 
-void HalfEdgeTriangleMesh::ComputeHalfEdges() {}
+bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
+    // Clean up
+    // TODO: clean up all half-edge related structures
+    half_edges_.clear();
+}
 
 }  // namespace open3d
