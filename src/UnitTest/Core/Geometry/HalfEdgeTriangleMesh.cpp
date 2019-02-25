@@ -202,20 +202,6 @@ void assert_ordreded_neighbor(
     EXPECT_EQ(expected_ordered_neighbors, actual_ordered_neighbors);
 }
 
-void assert_ordreded_neighbor_with_rotation(
-        const HalfEdgeTriangleMesh& mesh,
-        int vertex_index,
-        const std::vector<int>& expected_ordered_neighbors) {
-    std::vector<int> actual_ordered_neighbors;
-    for (int half_edge_index :
-         mesh.ordered_half_edge_from_vertex_[vertex_index]) {
-        actual_ordered_neighbors.push_back(
-                mesh.half_edges_[half_edge_index].vertex_indices_[1]);
-    }
-
-    EXPECT_EQ(expected_ordered_neighbors, actual_ordered_neighbors);
-}
-
 TEST(HalfEdgeTriangleMesh, Constructor_TwoTriangles) {
     TriangleMesh mesh = get_mesh_two_triangles();
     HalfEdgeTriangleMesh he_mesh(mesh);
