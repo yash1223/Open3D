@@ -34,9 +34,77 @@
 using namespace open3d;
 using namespace unit_test;
 
-TEST(HalfEdgeTriangleMesh, ConstructFromTriangleMesh) {
+//          [0: (-1, 2)]__________[1: (1, 2)]
+//                     /\        /\
+//                    /  \  (1) /  \
+//                   / (0)\    / (2)\
+//                  /      \  /      \
+//     [2: (-2, 0)]/____[3: (O, 0)]___\[4: (2, 0)]
+//                 \        /\        /
+//                  \  (3) /  \  (5) /
+//                   \    /    \    /
+//                    \  /  (4) \  /
+//                     \/________\/
+//         [5: (-1, -2)]          [6: (1, -2)]
+TriangleMesh get_mesh_hexagon() {
+    std::vector<Eigen::Vector3d> vertices{
+            Eigen::Vector3d(-1, 2, 0), Eigen::Vector3d(1, 2, 0),
+            Eigen::Vector3d(-2, 0, 0), Eigen::Vector3d(0, 0, 0),
+            Eigen::Vector3d(2, 0, 0),  Eigen::Vector3d(-1, -2, 0),
+            Eigen::Vector3d(-1, 2, 0)};
+    std::vector<Eigen::Vector3i> triangles{
+            Eigen::Vector3i(0, 2, 3), Eigen::Vector3i(0, 3, 1),
+            Eigen::Vector3i(1, 3, 4), Eigen::Vector3i(2, 5, 3),
+            Eigen::Vector3i(3, 5, 6), Eigen::Vector3i(3, 6, 4)};
+    TriangleMesh mesh;
+    mesh.vertices_ = vertices;
+    mesh.triangles_ = triangles;
+    return mesh;
+}
+
+//          [0: (-1, 2)]__________[1: (1, 2)]
+//                     /\        /\
+//                    /  \  (1) /  \
+//                   / (0)\    / (2)\
+//                  /      \  /      \
+//     [2: (-2, 0)]/____[3: (O, 0)]___\[4: (2, 0)]
+//                 \        /\
+//                  \  (3) /  \
+//                   \    /    \
+//                    \  /  (4) \
+//                     \/________\
+//         [5: (-1, -2)]          [6: (1, -2)]
+TriangleMesh get_mesh_partial_hexagon() {
+    std::vector<Eigen::Vector3d> vertices{
+            Eigen::Vector3d(-1, 2, 0), Eigen::Vector3d(1, 2, 0),
+            Eigen::Vector3d(-2, 0, 0), Eigen::Vector3d(0, 0, 0),
+            Eigen::Vector3d(2, 0, 0),  Eigen::Vector3d(-1, -2, 0),
+            Eigen::Vector3d(-1, 2, 0)};
+    std::vector<Eigen::Vector3i> triangles{
+            Eigen::Vector3i(0, 2, 3), Eigen::Vector3i(0, 3, 1),
+            Eigen::Vector3i(1, 3, 4), Eigen::Vector3i(2, 5, 3),
+            Eigen::Vector3i(3, 5, 6)};
+    TriangleMesh mesh;
+    mesh.vertices_ = vertices;
+    mesh.triangles_ = triangles;
+    return mesh;
+}
+
+TEST(HalfEdgeTriangleMesh, ConstructFromTriangleMeshSphere) {
     TriangleMesh mesh;
     ReadTriangleMesh(std::string(TEST_DATA_DIR) + "/sphere.ply", mesh);
+    HalfEdgeTriangleMesh he_mesh(mesh);
+    std::cout << "size he_mesh: " << he_mesh.vertices_.size() << std::endl;
+}
+
+TEST(HalfEdgeTriangleMesh, ConstructorHexagon) {
+    TriangleMesh mesh = get_mesh_hexagon();
+    HalfEdgeTriangleMesh he_mesh(mesh);
+    std::cout << "size he_mesh: " << he_mesh.vertices_.size() << std::endl;
+}
+
+TEST(HalfEdgeTriangleMesh, ConstructorPartialHexagon) {
+    TriangleMesh mesh = get_mesh_partial_hexagon();
     HalfEdgeTriangleMesh he_mesh(mesh);
     std::cout << "size he_mesh: " << he_mesh.vertices_.size() << std::endl;
 }

@@ -104,8 +104,8 @@ bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
             map_end_points_to_half_edge_index.find(he_2.vertex_indices_) !=
                     map_end_points_to_half_edge_index.end()) {
             PrintError(
-                    "[ComputeHalfEdges] failed because duplicated half-edges"
-                    "are found\n");
+                    "[ComputeHalfEdges] failed because duplicated half-edges "
+                    "found\n");
             return false;
         }
 
@@ -119,17 +119,18 @@ bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
 
     // Fill twin half-edge. In the previous step, it is already guaranteed that
     // each half-edge can have at most one twin half-edge.
-    for (size_t half_edge_index = 0; half_edge_index < half_edges_.size();
-         half_edge_index++) {
-        HalfEdge& half_edge = half_edges_[half_edge_index];
-        Eigen::Vector2i twin_end_points(half_edge.vertex_indices_(1),
-                                        half_edge.vertex_indices_(0));
+    for (size_t this_he_index = 0; this_he_index < half_edges_.size();
+         this_he_index++) {
+        HalfEdge& this_he = half_edges_[this_he_index];
+        Eigen::Vector2i twin_end_points(this_he.vertex_indices_(1),
+                                        this_he.vertex_indices_(0));
         if (map_end_points_to_half_edge_index.find(twin_end_points) !=
             map_end_points_to_half_edge_index.end()) {
-            size_t twin_half_edge_index =
+            size_t twin_he_index =
                     map_end_points_to_half_edge_index[twin_end_points];
-            half_edge.twin_ = int(twin_half_edge_index);
-            half_edges_[twin_half_edge_index].twin_ = int(half_edge_index);
+            HalfEdge& twin_he = half_edges_[twin_he_index];
+            this_he.twin_ = int(twin_he_index);
+            twin_he.twin_ = int(this_he_index);
         }
     }
 
