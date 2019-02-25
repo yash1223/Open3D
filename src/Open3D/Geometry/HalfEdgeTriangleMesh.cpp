@@ -24,6 +24,8 @@
 // IN THE SOFTWARE.
 // ----------------------------------------------------------------------------
 
+#include <iostream>
+
 #include "Open3D/Geometry/HalfEdgeTriangleMesh.h"
 #include "Open3D/Utility/Helper.h"
 #include "Open3D/Utility/Console.h"
@@ -106,6 +108,9 @@ bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
             PrintError(
                     "[ComputeHalfEdges] failed because duplicated half-edges "
                     "found\n");
+            std::cout << he_0.vertex_indices_ << std::endl;
+            std::cout << he_1.vertex_indices_ << std::endl;
+            std::cout << he_2.vertex_indices_ << std::endl;
             return false;
         }
 

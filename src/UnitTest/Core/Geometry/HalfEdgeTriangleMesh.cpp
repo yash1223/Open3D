@@ -34,6 +34,43 @@
 using namespace open3d;
 using namespace unit_test;
 
+// [0: (-1, 2)]__________[1: (1, 2)]
+//             \        /\
+//              \  (0) /  \
+//               \    / (1)\
+//                \  /      \
+//      [2: (O, 0)]\/________\[3: (2, 0)]
+TriangleMesh get_mesh_two_triangles() {
+    std::vector<Eigen::Vector3d> vertices{
+            Eigen::Vector3d(-1, 2, 0), Eigen::Vector3d(1, 2, 0),
+            Eigen::Vector3d(0, 0, 0), Eigen::Vector3d(2, 0, 0)};
+    std::vector<Eigen::Vector3i> triangles{Eigen::Vector3i(0, 2, 1),
+                                           Eigen::Vector3i(1, 2, 3)};
+    TriangleMesh mesh;
+    mesh.vertices_ = vertices;
+    mesh.triangles_ = triangles;
+    return mesh;
+}
+
+// [0: (-1, 2)]__________[1: (1, 2)]
+//             \        /\
+//              \  (0) /  \
+//               \    / (1)\
+//                \  /      \
+//      [2: (O, 0)]\/________\[3: (2, 0)]
+// Where triangle (1) is flipped
+TriangleMesh get_mesh_two_triangles_flipped() {
+    std::vector<Eigen::Vector3d> vertices{
+            Eigen::Vector3d(-1, 2, 0), Eigen::Vector3d(1, 2, 0),
+            Eigen::Vector3d(0, 0, 0), Eigen::Vector3d(2, 0, 0)};
+    std::vector<Eigen::Vector3i> triangles{Eigen::Vector3i(0, 2, 1),
+                                           Eigen::Vector3i(1, 3, 2)};
+    TriangleMesh mesh;
+    mesh.vertices_ = vertices;
+    mesh.triangles_ = triangles;
+    return mesh;
+}
+
 //          [0: (-1, 2)]__________[1: (1, 2)]
 //                     /\        /\
 //                    /  \  (1) /  \
@@ -93,6 +130,18 @@ TriangleMesh get_mesh_partial_hexagon() {
 TEST(HalfEdgeTriangleMesh, ConstructFromTriangleMeshSphere) {
     TriangleMesh mesh;
     ReadTriangleMesh(std::string(TEST_DATA_DIR) + "/sphere.ply", mesh);
+    HalfEdgeTriangleMesh he_mesh(mesh);
+    std::cout << "size he_mesh: " << he_mesh.vertices_.size() << std::endl;
+}
+
+TEST(HalfEdgeTriangleMesh, ConstructorTwoTriangles) {
+    TriangleMesh mesh = get_mesh_two_triangles();
+    HalfEdgeTriangleMesh he_mesh(mesh);
+    std::cout << "size he_mesh: " << he_mesh.vertices_.size() << std::endl;
+}
+
+TEST(HalfEdgeTriangleMesh, ConstructorTwoTrianglesFlipped) {
+    TriangleMesh mesh = get_mesh_two_triangles_flipped();
     HalfEdgeTriangleMesh he_mesh(mesh);
     std::cout << "size he_mesh: " << he_mesh.vertices_.size() << std::endl;
 }
