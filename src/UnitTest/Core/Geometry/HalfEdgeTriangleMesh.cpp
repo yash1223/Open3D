@@ -177,16 +177,7 @@ void assert_ordreded_neighbor(
         // E.g. Actual 0, 1, 2, 3, 4
         //      Expect 2, 3, 4, 0, 1
         // Then left-rotate actual by 2
-        std::cout << "expected" << std::endl;
-        for (int val : expected_ordered_neighbors) {
-            std::cout << val << " ";
-        }
-        std::cout << std::endl;
-        std::cout << "actual" << std::endl;
-        for (int val : actual_ordered_neighbors) {
-            std::cout << val << " ";
-        }
-        std::cout << std::endl;
+
         auto find_it = std::find(actual_ordered_neighbors.begin(),
                                  actual_ordered_neighbors.end(),
                                  expected_ordered_neighbors[0]);
@@ -259,4 +250,5 @@ TEST(HalfEdgeTriangleMesh, OrderedHalfEdgesFromVertex_Hexagon) {
     assert_ordreded_neighbor(mesh, 1, {0, 3});
     assert_ordreded_neighbor(mesh, 2, {5, 3});
     assert_ordreded_neighbor(mesh, 3, {0, 2, 5, 6, 4, 1}, true);
+    assert_ordreded_neighbor(mesh, 3, {2, 5, 6, 4, 1, 0}, true);  // Rotate ok
 }

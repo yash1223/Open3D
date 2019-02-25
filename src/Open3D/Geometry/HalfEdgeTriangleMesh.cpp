@@ -147,12 +147,12 @@ bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
 
     // Get out-going half-edges from each vertex. This can be done during
     // half-edge construction. Done here for readability.
-    std::vector<std::unordered_set<int>> half_edges_from_vertex(
-            vertices_.size());
+    std::vector<std::vector<int>> half_edges_from_vertex(vertices_.size());
     for (size_t half_edge_index = 0; half_edge_index < half_edges_.size();
          half_edge_index++) {
         int src_vertex_index = half_edges_[half_edge_index].vertex_indices_(0);
-        half_edges_from_vertex[src_vertex_index].insert(int(half_edge_index));
+        half_edges_from_vertex[src_vertex_index].push_back(
+                int(half_edge_index));
     }
 
     // Find ordered half-edges from each vertex by traversal. To be a valid
@@ -173,9 +173,13 @@ bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
             PrintError("ComputeHalfEdges failed. Invalid vertex.\n");
             return false;
         }
+        // If there is a boundary edge, start from that; otherwise start
+        // with any half-edge (default 0) started from this vertex.
+        if (num_boundaries == 0) {
+            init_half_edge_index = half_edges_from_vertex[vertex_index][0];
+        }
 
-        // Push edges to ordered_half_edge_from_vertex_. If there is a
-        // boundary edge, start from that; otherwise start with 0
+        // Push edges to ordered_half_edge_from_vertex_.
         int curr_he_index = init_half_edge_index;
         ordered_half_edge_from_vertex_[vertex_index].push_back(curr_he_index);
         int next_next_twin_he_index = NextNextTwinHalfEdgeIndex(curr_he_index);
