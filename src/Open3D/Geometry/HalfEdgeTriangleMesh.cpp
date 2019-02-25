@@ -25,8 +25,31 @@
 // ----------------------------------------------------------------------------
 
 #include "Open3D/Geometry/HalfEdgeTriangleMesh.h"
+#include "Open3D/Utility/Helper.h"
+#include "Open3D/Utility/Console.h"
 
 namespace open3d {
+
+// class HalfEdge {
+// public:
+//     // Index of the next HalfEdge
+//     int next_ = -1;
+//     // Index of the twin HalfEdge
+//     int twin_ = -1;
+//     // Index of the ordered vertices forming this half edge
+//     Eigen::Vector2i vertex_indices = Eigen::Vector2i(-1, -1);
+//     // Index of the triangle containing this half edge
+//     int triangle_index = -1;
+// };
+
+HalfEdge::HalfEdge(int next,
+                   int twin,
+                   const Eigen::Vector2i& vertex_indices,
+                   int triangle_index)
+    : next_(next),
+      twin_(twin),
+      vertex_indices_(vertex_indices),
+      triangle_index_(triangle_index) {}
 
 HalfEdgeTriangleMesh::HalfEdgeTriangleMesh(const TriangleMesh& triangle_mesh) {
     // Copy
@@ -44,6 +67,28 @@ bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
     // Clean up
     // TODO: clean up all half-edge related structures
     half_edges_.clear();
+
+    // Collect half edges
+    // For valid manifolds, there mustn't be duplicated half-edges and each
+    // half-edge can have at most one twin half-edge
+    std::unordered_map<Eigen::Vector2i, HalfEdge,
+                       hash_eigen::hash<Eigen::Vector2i>>
+            map_end_points_to_half_edge;
+
+    for (size_t triangle_index = 0; triangle_index < triangles_.size();
+         triangle_index++) {
+        const Eigen::Vector3i& triangle = triangles_[triangle_index];
+        Eigen::Vector2i end_points;
+
+        end_points << triangle(0), triangle(1);
+        if (map_end_points_to_half_edge.count(end_points) != 0) {
+            PrintError(
+                    "[ComputeHalfEdges] failed because duplicated half-edges"
+                    "are found\n");
+            return false;
+        } else {
+        }
+    }
     return true;
 }
 
