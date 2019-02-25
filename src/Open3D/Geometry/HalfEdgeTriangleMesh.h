@@ -80,7 +80,7 @@ public:
 
 public:
     std::vector<HalfEdge> half_edges_;
-    std::vector<std::vector<int>> ordered_half_edge_indices_from_vertex_;
+    std::vector<std::vector<int>> ordered_half_edge_from_vertex_;
     std::unordered_map<int, int> map_vertex_to_triangle;
 
 protected:

@@ -59,7 +59,7 @@ HalfEdge::HalfEdge(const Eigen::Vector2i& vertex_indices,
 void HalfEdgeTriangleMesh::Clear() {
     TriangleMesh::Clear();
     half_edges_.clear();
-    ordered_half_edge_indices_from_vertex_.clear();
+    ordered_half_edge_from_vertex_.clear();
 }
 
 HalfEdgeTriangleMesh::HalfEdgeTriangleMesh(const TriangleMesh& triangle_mesh) {
@@ -97,7 +97,7 @@ int HalfEdgeTriangleMesh::NextNextTwinHalfEdgeIndex(int half_edge_index) const {
 bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
     // Clean up half-edge related data structures
     half_edges_.clear();
-    ordered_half_edge_indices_from_vertex_.clear();
+    ordered_half_edge_from_vertex_.clear();
 
     // Collect half edges
     // Check: for valid manifolds, there mustn't be duplicated half-edges
@@ -170,7 +170,7 @@ bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
 
     // Find ordered half-edges from each vertex by traversal. To be a valid
     // manifold, there can be at most 1 out-going half-edge for each vertex.
-    ordered_half_edge_indices_from_vertex_.resize(vertices_.size());
+    ordered_half_edge_from_vertex_.resize(vertices_.size());
     for (size_t vertex_index = 0; vertex_index < half_edges_from_vertex.size();
          vertex_index++) {
         size_t num_boundaries = 0;
@@ -185,15 +185,14 @@ bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
             return false;
         }
 
-        // Push edges to ordered_half_edge_indices_from_vertex_. If there is a
+        // Push edges to ordered_half_edge_from_vertex_. If there is a
         // boundary edge, start from that; otherwise start with 0
         int curr_he_index = init_half_edge_index;
-        ordered_half_edge_indices_from_vertex_[vertex_index].push_back(
-                curr_he_index);
+        ordered_half_edge_from_vertex_[vertex_index].push_back(curr_he_index);
         int next_next_twin_he_index = NextNextTwinHalfEdgeIndex(curr_he_index);
         curr_he_index = next_next_twin_he_index;
         while (curr_he_index != -1 && curr_he_index != init_half_edge_index) {
-            ordered_half_edge_indices_from_vertex_[vertex_index].push_back(
+            ordered_half_edge_from_vertex_[vertex_index].push_back(
                     curr_he_index);
             next_next_twin_he_index = NextNextTwinHalfEdgeIndex(curr_he_index);
             curr_he_index = next_next_twin_he_index;
