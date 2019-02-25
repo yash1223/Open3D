@@ -171,11 +171,11 @@ bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
 
     // Get out-going half-edge from vertex. This can be done during half-edge
     // construction. Done here for readability.
-    std::vector<std::unordered_set<int>> half_edges_from_vertex;
-    half_edges_from_vertex.reserve(vertices_.size());
+    std::vector<std::unordered_set<int>> half_edges_from_vertex(
+            vertices_.size());
     for (size_t half_edge_index = 0; half_edge_index < half_edges_.size();
          half_edge_index++) {
-        int src_vertex_index = half_edges_[half_edge_index].vertex_indices_[0];
+        int src_vertex_index = half_edges_[half_edge_index].vertex_indices_(0);
         half_edges_from_vertex[src_vertex_index].insert(int(half_edge_index));
     }
 
