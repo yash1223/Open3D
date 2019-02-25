@@ -64,6 +64,8 @@ HalfEdgeTriangleMesh::HalfEdgeTriangleMesh(const TriangleMesh& triangle_mesh) {
 }
 
 bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
+    SetVerbosityLevel(VerbosityLevel::VerboseAlways);
+
     // Clean up
     // TODO: clean up all half-edge related structures
     half_edges_.clear();
@@ -87,6 +89,7 @@ bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
                     "are found\n");
             return false;
         } else {
+            // PrintAlways("Added\n");
         }
     }
     return true;
