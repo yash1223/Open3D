@@ -177,7 +177,6 @@ void assert_ordreded_neighbor(
         // E.g. Actual 0, 1, 2, 3, 4
         //      Expect 2, 3, 4, 0, 1
         // Then left-rotate actual by 2
-
         auto find_it = std::find(actual_ordered_neighbors.begin(),
                                  actual_ordered_neighbors.end(),
                                  expected_ordered_neighbors[0]);
