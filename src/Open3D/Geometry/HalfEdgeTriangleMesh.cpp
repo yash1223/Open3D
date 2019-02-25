@@ -71,27 +71,26 @@ bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
     half_edges_.clear();
 
     // Collect half edges
-    // For valid manifolds, there mustn't be duplicated half-edges and each
-    // half-edge can have at most one twin half-edge
-    std::unordered_map<Eigen::Vector2i, HalfEdge,
+    // Check: for valid manifolds, there mustn't be duplicated half-edges. This
+    // also guarantees that each half-edge can have at most one twin half-edge
+    std::unordered_map<Eigen::Vector2i, size_t,
                        hash_eigen::hash<Eigen::Vector2i>>
-            map_end_points_to_half_edge;
+            map_end_points_to_half_edge_index;
 
     for (size_t triangle_index = 0; triangle_index < triangles_.size();
          triangle_index++) {
         const Eigen::Vector3i& triangle = triangles_[triangle_index];
-        if (map_end_points_to_half_edge.count(
+        if (map_end_points_to_half_edge_index.count(
                     Eigen::Vector2i(triangle(0), triangle(1))) != 0 ||
-            map_end_points_to_half_edge.count(
+            map_end_points_to_half_edge_index.count(
                     Eigen::Vector2i(triangle(1), triangle(2))) != 0 ||
-            map_end_points_to_half_edge.count(
+            map_end_points_to_half_edge_index.count(
                     Eigen::Vector2i(triangle(2), triangle(0))) != 0) {
             PrintError(
                     "[ComputeHalfEdges] failed because duplicated half-edges"
                     "are found\n");
             return false;
         }
-
         size_t num_half_edges = half_edges_.size();
         // Edge 0->1
         half_edges_.push_back(HalfEdge(
@@ -106,6 +105,7 @@ bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
                 num_half_edges + 0, -1,
                 Eigen::Vector2i(triangle(2), triangle(0)), triangle_index));
     }
+
     return true;
 }
 
