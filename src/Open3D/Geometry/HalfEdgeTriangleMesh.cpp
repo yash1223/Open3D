@@ -68,6 +68,8 @@ HalfEdgeTriangleMesh::HalfEdgeTriangleMesh(const TriangleMesh& triangle_mesh) {
     triangle_normals_ = triangle_mesh.triangle_normals_;
     adjacency_list_ = triangle_mesh.adjacency_list_;
     Purge();
+    std::cout << "vertices_.size(): " << vertices_.size() << std::endl;
+    std::cout << "triangles_.size(): " << triangles_.size() << std::endl;
     ComputeHalfEdges();
 }
 
