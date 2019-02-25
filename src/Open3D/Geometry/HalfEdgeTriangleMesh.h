@@ -40,6 +40,7 @@ public:
              int triangle_index,
              int next,
              int twin);
+    bool IsBoundary() const { return twin_ == -1; }
 
 public:
     // Index of the next HalfEdge
@@ -80,6 +81,9 @@ public:
 public:
     std::vector<HalfEdge> half_edges_;
     std::unordered_map<int, int> map_vertex_to_triangle;
+
+protected:
+    int NextNextTwinHalfEdgeIndex(int half_edge_index) const;
 };
 
 }  // namespace open3d
