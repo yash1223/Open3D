@@ -77,8 +77,7 @@ bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
     half_edges_.clear();
 
     // Collect half edges
-    // Check: for valid manifolds, there mustn't be duplicated half-edges. This
-    // also guarantees that each half-edge can have at most one twin half-edge
+    // Check: for valid manifolds, there mustn't be duplicated half-edges
     std::unordered_map<Eigen::Vector2i, size_t,
                        hash_eigen::hash<Eigen::Vector2i>>
             map_end_points_to_half_edge_index;
@@ -116,6 +115,22 @@ bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
         map_end_points_to_half_edge_index[he_0.vertex_indices_] = he_0_index;
         map_end_points_to_half_edge_index[he_1.vertex_indices_] = he_1_index;
         map_end_points_to_half_edge_index[he_2.vertex_indices_] = he_2_index;
+    }
+
+    // Fill twin half-edge. In the previous step, it is already guaranteed that
+    // each half-edge can have at most one twin half-edge.
+    for (size_t half_edge_index = 0; half_edge_index < half_edges_.size();
+         half_edge_index++) {
+        HalfEdge& half_edge = half_edges_[half_edge_index];
+        Eigen::Vector2i twin_end_points(half_edge.vertex_indices_(1),
+                                        half_edge.vertex_indices_(0));
+        if (map_end_points_to_half_edge_index.find(twin_end_points) !=
+            map_end_points_to_half_edge_index.end()) {
+            size_t twin_half_edge_index =
+                    map_end_points_to_half_edge_index[twin_end_points];
+            half_edge.twin_ = int(twin_half_edge_index);
+            half_edges_[twin_half_edge_index].twin_ = int(half_edge_index);
+        }
     }
 
     return true;
