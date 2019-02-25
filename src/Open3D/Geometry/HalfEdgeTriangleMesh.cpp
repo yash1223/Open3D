@@ -127,9 +127,6 @@ bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
             vertex_indices_to_half_edge_index.find(he_2.vertex_indices_) !=
                     vertex_indices_to_half_edge_index.end()) {
             PrintError("ComputeHalfEdges failed. Duplicated half-edges.\n");
-            // std::cout << he_0.vertex_indices_ << std::endl;
-            // std::cout << he_1.vertex_indices_ << std::endl;
-            // std::cout << he_2.vertex_indices_ << std::endl;
             return false;
         }
 
