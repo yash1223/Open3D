@@ -159,13 +159,60 @@ TriangleMesh get_mesh_partial_hexagon() {
 void assert_ordreded_neighbor(
         const HalfEdgeTriangleMesh& mesh,
         int vertex_index,
-        const std::vector<int> expected_ordered_neighbors) {
+        const std::vector<int>& expected_ordered_neighbors,
+        bool allow_rotation = false) {
     std::vector<int> actual_ordered_neighbors;
     for (int half_edge_index :
          mesh.ordered_half_edge_from_vertex_[vertex_index]) {
         actual_ordered_neighbors.push_back(
                 mesh.half_edges_[half_edge_index].vertex_indices_[1]);
     }
+
+    if (expected_ordered_neighbors.size() == 0) {
+        EXPECT_EQ(actual_ordered_neighbors.size(), 0);
+        return;
+    }
+
+    if (allow_rotation) {
+        // E.g. Actual 0, 1, 2, 3, 4
+        //      Expect 2, 3, 4, 0, 1
+        // Then left-rotate actual by 2
+        std::cout << "expected" << std::endl;
+        for (int val : expected_ordered_neighbors) {
+            std::cout << val << " ";
+        }
+        std::cout << std::endl;
+        std::cout << "actual" << std::endl;
+        for (int val : actual_ordered_neighbors) {
+            std::cout << val << " ";
+        }
+        std::cout << std::endl;
+        auto find_it = std::find(actual_ordered_neighbors.begin(),
+                                 actual_ordered_neighbors.end(),
+                                 expected_ordered_neighbors[0]);
+        if (find_it == actual_ordered_neighbors.end()) {
+            FAIL();
+        } else {
+            size_t offset = find_it - actual_ordered_neighbors.begin();
+            std::rotate(actual_ordered_neighbors.begin(),
+                        actual_ordered_neighbors.begin() + offset,
+                        actual_ordered_neighbors.end());
+        }
+    }
+    EXPECT_EQ(expected_ordered_neighbors, actual_ordered_neighbors);
+}
+
+void assert_ordreded_neighbor_with_rotation(
+        const HalfEdgeTriangleMesh& mesh,
+        int vertex_index,
+        const std::vector<int>& expected_ordered_neighbors) {
+    std::vector<int> actual_ordered_neighbors;
+    for (int half_edge_index :
+         mesh.ordered_half_edge_from_vertex_[vertex_index]) {
+        actual_ordered_neighbors.push_back(
+                mesh.half_edges_[half_edge_index].vertex_indices_[1]);
+    }
+
     EXPECT_EQ(expected_ordered_neighbors, actual_ordered_neighbors);
 }
 
@@ -217,32 +264,13 @@ TEST(HalfEdgeTriangleMesh, OrderedHalfEdgesFromVertex_TwoTriangles) {
     assert_ordreded_neighbor(mesh, 3, {1});
 }
 
-// TEST(HalfEdgeTriangleMesh, OrderedHalfEdgesFromVertex_Hexagon) {
-//     HalfEdgeTriangleMesh mesh(get_mesh_hexagon());
-//     EXPECT_FALSE(mesh.IsEmpty());
-//     std::vector<int> ordered_half_edges;
+TEST(HalfEdgeTriangleMesh, OrderedHalfEdgesFromVertex_Hexagon) {
+    HalfEdgeTriangleMesh mesh(get_mesh_hexagon());
+    EXPECT_FALSE(mesh.IsEmpty());
+    std::vector<int> ordered_half_edges;
 
-//     // Vertex 0
-//     ordered_half_edges = mesh.ordered_half_edge_from_vertex_[0];
-//     EXPECT_EQ(ordered_half_edges.size(), 2);
-//     assert_half_edge_vertex(mesh, ordered_half_edges[0], Eigen::Vector2i(0,
-//     2)); assert_half_edge_vertex(mesh, ordered_half_edges[0],
-//     Eigen::Vector2i(0, 3));
-//     // Vertex 1
-//     ordered_half_edges = mesh.ordered_half_edge_from_vertex_[1];
-//     EXPECT_EQ(ordered_half_edges.size(), 2);
-//     assert_half_edge_vertex(mesh, ordered_half_edges[0], Eigen::Vector2i(1,
-//     0)); assert_half_edge_vertex(mesh, ordered_half_edges[1],
-//     Eigen::Vector2i(1, 3));
-//     // Vertex 2
-//     ordered_half_edges = mesh.ordered_half_edge_from_vertex_[2];
-//     EXPECT_EQ(ordered_half_edges.size(), 2);
-//     assert_half_edge_vertex(mesh, ordered_half_edges[0], Eigen::Vector2i(2,
-//     5)); assert_half_edge_vertex(mesh, ordered_half_edges[1],
-//     Eigen::Vector2i(2, 3));
-//     // Vertex 3
-//     ordered_half_edges = mesh.ordered_half_edge_from_vertex_[6];
-//     EXPECT_EQ(ordered_half_edges.size(), 1);
-//     assert_half_edge_vertex(mesh, ordered_half_edges[0], Eigen::Vector2i(3,
-//     1));
-// }
+    assert_ordreded_neighbor(mesh, 0, {2, 3});
+    assert_ordreded_neighbor(mesh, 1, {0, 3});
+    assert_ordreded_neighbor(mesh, 2, {5, 3});
+    assert_ordreded_neighbor(mesh, 3, {0, 2, 5, 6, 4, 1}, true);
+}
