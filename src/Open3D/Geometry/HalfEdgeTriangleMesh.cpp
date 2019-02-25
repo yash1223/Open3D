@@ -60,6 +60,7 @@ HalfEdge::HalfEdge(const Eigen::Vector2i& vertex_indices,
       twin_(twin) {}
 
 HalfEdgeTriangleMesh::HalfEdgeTriangleMesh(const TriangleMesh& triangle_mesh) {
+    SetVerbosityLevel(VerbosityLevel::VerboseAlways);
     // Copy
     vertices_ = triangle_mesh.vertices_;
     vertex_normals_ = triangle_mesh.vertex_normals_;
@@ -74,8 +75,6 @@ HalfEdgeTriangleMesh::HalfEdgeTriangleMesh(const TriangleMesh& triangle_mesh) {
 }
 
 bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
-    SetVerbosityLevel(VerbosityLevel::VerboseAlways);
-
     // Clean up
     // TODO: clean up all half-edge related structures
     half_edges_.clear();
