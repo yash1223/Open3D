@@ -284,9 +284,33 @@ TEST(HalfEdgeTriangleMesh, OrderedHalfEdgesFromVertex_PartialHexagon) {
 TEST(HalfEdgeTriangleMesh, BoundaryHalfEdgesFromVertex_TwoTriangles) {
     HalfEdgeTriangleMesh mesh(get_mesh_two_triangles());
     EXPECT_FALSE(mesh.IsEmpty());
-    std::vector<int> boundary_half_edges;
 
-    boundary_half_edges = mesh.BoundaryHalfEdgesFromVertex(0);
-    assert_ordreded_edges(mesh, boundary_half_edges,
+    assert_ordreded_edges(mesh, mesh.BoundaryHalfEdgesFromVertex(0),
                           {{0, 2}, {2, 3}, {3, 1}, {1, 0}});
+    assert_ordreded_edges(mesh, mesh.BoundaryHalfEdgesFromVertex(1),
+                          {{1, 0}, {0, 2}, {2, 3}, {3, 1}});
+    assert_ordreded_edges(mesh, mesh.BoundaryHalfEdgesFromVertex(2),
+                          {{2, 3}, {3, 1}, {1, 0}, {0, 2}});
+    assert_ordreded_edges(mesh, mesh.BoundaryHalfEdgesFromVertex(3),
+                          {{3, 1}, {1, 0}, {0, 2}, {2, 3}});
+}
+
+TEST(HalfEdgeTriangleMesh, BoundaryHalfEdgesFromVertex_Hexagon) {
+    HalfEdgeTriangleMesh mesh(get_mesh_hexagon());
+    EXPECT_FALSE(mesh.IsEmpty());
+
+    assert_ordreded_edges(mesh, mesh.BoundaryHalfEdgesFromVertex(0),
+                          {{0, 2}, {2, 5}, {5, 6}, {6, 4}, {4, 1}, {1, 0}});
+    assert_ordreded_edges(mesh, mesh.BoundaryHalfEdgesFromVertex(1),
+                          {{1, 0}, {0, 2}, {2, 5}, {5, 6}, {6, 4}, {4, 1}});
+    assert_ordreded_edges(mesh, mesh.BoundaryHalfEdgesFromVertex(2),
+                          {{2, 5}, {5, 6}, {6, 4}, {4, 1}, {1, 0}, {0, 2}});
+    assert_ordreded_edges(mesh, mesh.BoundaryHalfEdgesFromVertex(3),
+                          {});  // Vertex 3 is not a boundary, thus empty
+    assert_ordreded_edges(mesh, mesh.BoundaryHalfEdgesFromVertex(4),
+                          {{4, 1}, {1, 0}, {0, 2}, {2, 5}, {5, 6}, {6, 4}});
+    assert_ordreded_edges(mesh, mesh.BoundaryHalfEdgesFromVertex(5),
+                          {{5, 6}, {6, 4}, {4, 1}, {1, 0}, {0, 2}, {2, 5}});
+    assert_ordreded_edges(mesh, mesh.BoundaryHalfEdgesFromVertex(6),
+                          {{6, 4}, {4, 1}, {1, 0}, {0, 2}, {2, 5}, {5, 6}});
 }
