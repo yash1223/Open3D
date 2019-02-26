@@ -246,4 +246,16 @@ std::shared_ptr<TriangleMesh> CreateMeshCoordinateFrame(
     return mesh_frame;
 }
 
+std::shared_ptr<TriangleMesh> FilterTriangleMesh(
+        const TriangleMesh &input,
+        TriangleMesh::FilterOperandType filter_operand_type,
+        TriangleMesh::FilterType filter_type) {
+    if (filter_operand_type != TriangleMesh::FilterOperandType::Color) {
+        throw std::runtime_error("TODO");
+    }
+    if (filter_type != TriangleMesh::FilterType::Sharpen) {
+        throw std::runtime_error("TODO");
+    }
+}
+
 }  // namespace open3d
