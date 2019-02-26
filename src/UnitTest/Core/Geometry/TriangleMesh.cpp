@@ -33,6 +33,9 @@ using namespace open3d;
 using namespace std;
 using namespace unit_test;
 
+// ----------------------------------------------------------------------------
+//
+// ----------------------------------------------------------------------------
 TEST(TriangleMesh, Constructor) {
     TriangleMesh tm;
 
@@ -60,8 +63,14 @@ TEST(TriangleMesh, Constructor) {
     EXPECT_FALSE(tm.HasTriangleNormals());
 }
 
+// ----------------------------------------------------------------------------
+//
+// ----------------------------------------------------------------------------
 TEST(TriangleMesh, DISABLED_MemberData) { unit_test::NotImplemented(); }
 
+// ----------------------------------------------------------------------------
+//
+// ----------------------------------------------------------------------------
 TEST(TriangleMesh, Clear) {
     int size = 100;
 
@@ -111,6 +120,9 @@ TEST(TriangleMesh, Clear) {
     EXPECT_FALSE(tm.HasTriangleNormals());
 }
 
+// ----------------------------------------------------------------------------
+//
+// ----------------------------------------------------------------------------
 TEST(TriangleMesh, IsEmpty) {
     int size = 100;
 
@@ -123,6 +135,9 @@ TEST(TriangleMesh, IsEmpty) {
     EXPECT_FALSE(tm.IsEmpty());
 }
 
+// ----------------------------------------------------------------------------
+//
+// ----------------------------------------------------------------------------
 TEST(TriangleMesh, GetMinBound) {
     int size = 100;
 
@@ -139,6 +154,9 @@ TEST(TriangleMesh, GetMinBound) {
     ExpectEQ(Vector3d(19.607843, 0.0, 0.0), tm.GetMinBound());
 }
 
+// ----------------------------------------------------------------------------
+//
+// ----------------------------------------------------------------------------
 TEST(TriangleMesh, GetMaxBound) {
     int size = 100;
 
@@ -155,6 +173,9 @@ TEST(TriangleMesh, GetMaxBound) {
     ExpectEQ(Vector3d(996.078431, 996.078431, 996.078431), tm.GetMaxBound());
 }
 
+// ----------------------------------------------------------------------------
+//
+// ----------------------------------------------------------------------------
 TEST(TriangleMesh, Transform) {
     vector<Vector3d> ref_vertices = {{396.870588, 1201.976471, 880.472941},
                                      {320.792157, 1081.976471, 829.139608},
@@ -217,6 +238,9 @@ TEST(TriangleMesh, Transform) {
     ExpectEQ(ref_triangle_normals, tm.triangle_normals_);
 }
 
+// ----------------------------------------------------------------------------
+//
+// ----------------------------------------------------------------------------
 TEST(TriangleMesh, OperatorAppend) {
     int size = 100;
 
@@ -291,6 +315,9 @@ TEST(TriangleMesh, OperatorAppend) {
     }
 }
 
+// ----------------------------------------------------------------------------
+//
+// ----------------------------------------------------------------------------
 TEST(TriangleMesh, OperatorADD) {
     int size = 100;
 
@@ -364,6 +391,9 @@ TEST(TriangleMesh, OperatorADD) {
     }
 }
 
+// ----------------------------------------------------------------------------
+//
+// ----------------------------------------------------------------------------
 TEST(TriangleMesh, ComputeTriangleNormals) {
     vector<Vector3d> ref = {{-0.119231, 0.738792, 0.663303},
                             {-0.115181, 0.730934, 0.672658},
@@ -412,6 +442,9 @@ TEST(TriangleMesh, ComputeTriangleNormals) {
     ExpectEQ(ref, tm.triangle_normals_);
 }
 
+// ----------------------------------------------------------------------------
+//
+// ----------------------------------------------------------------------------
 TEST(TriangleMesh, ComputeVertexNormals) {
     vector<Vector3d> ref = {
             {0.635868, 0.698804, 0.327636},    {0.327685, 0.717012, 0.615237},
@@ -449,6 +482,9 @@ TEST(TriangleMesh, ComputeVertexNormals) {
     ExpectEQ(ref, tm.vertex_normals_);
 }
 
+// ----------------------------------------------------------------------------
+//
+// ----------------------------------------------------------------------------
 TEST(TriangleMesh, ComputeAdjacencyList) {
     // 4-sided pyramid with A as top vertex, bottom has two triangles
     Eigen::Vector3d A(0, 0, 1);    // 0
@@ -480,6 +516,9 @@ TEST(TriangleMesh, ComputeAdjacencyList) {
     EXPECT_TRUE(tm.adjacency_list_[4] == std::unordered_set<int>({0, 1, 2, 3}));
 }
 
+// ----------------------------------------------------------------------------
+//
+// ----------------------------------------------------------------------------
 TEST(TriangleMesh, Purge) {
     vector<Vector3d> ref_vertices = {{839.215686, 392.156863, 780.392157},
                                      {796.078431, 909.803922, 196.078431},
@@ -633,6 +672,9 @@ TEST(TriangleMesh, Purge) {
     ExpectEQ(ref_triangle_normals, tm.triangle_normals_);
 }
 
+// ----------------------------------------------------------------------------
+//
+// ----------------------------------------------------------------------------
 TEST(TriangleMesh, HasVertices) {
     int size = 100;
 
@@ -645,6 +687,9 @@ TEST(TriangleMesh, HasVertices) {
     EXPECT_TRUE(tm.HasVertices());
 }
 
+// ----------------------------------------------------------------------------
+//
+// ----------------------------------------------------------------------------
 TEST(TriangleMesh, HasTriangles) {
     int size = 100;
 
@@ -658,6 +703,9 @@ TEST(TriangleMesh, HasTriangles) {
     EXPECT_TRUE(tm.HasTriangles());
 }
 
+// ----------------------------------------------------------------------------
+//
+// ----------------------------------------------------------------------------
 TEST(TriangleMesh, HasVertexNormals) {
     int size = 100;
 
@@ -671,6 +719,9 @@ TEST(TriangleMesh, HasVertexNormals) {
     EXPECT_TRUE(tm.HasVertexNormals());
 }
 
+// ----------------------------------------------------------------------------
+//
+// ----------------------------------------------------------------------------
 TEST(TriangleMesh, HasVertexColors) {
     int size = 100;
 
@@ -684,6 +735,9 @@ TEST(TriangleMesh, HasVertexColors) {
     EXPECT_TRUE(tm.HasVertexColors());
 }
 
+// ----------------------------------------------------------------------------
+//
+// ----------------------------------------------------------------------------
 TEST(TriangleMesh, HasTriangleNormals) {
     int size = 100;
 
@@ -698,6 +752,9 @@ TEST(TriangleMesh, HasTriangleNormals) {
     EXPECT_TRUE(tm.HasTriangleNormals());
 }
 
+// ----------------------------------------------------------------------------
+//
+// ----------------------------------------------------------------------------
 TEST(TriangleMesh, NormalizeNormals) {
     vector<Vector3d> ref_vertex_normals = {
             {0.692861, 0.323767, 0.644296}, {0.650010, 0.742869, 0.160101},
@@ -747,6 +804,9 @@ TEST(TriangleMesh, NormalizeNormals) {
     ExpectEQ(ref_triangle_normals, tm.triangle_normals_);
 }
 
+// ----------------------------------------------------------------------------
+//
+// ----------------------------------------------------------------------------
 TEST(TriangleMesh, PaintUniformColor) {
     int size = 25;
 
@@ -764,6 +824,9 @@ TEST(TriangleMesh, PaintUniformColor) {
         ExpectEQ(Vector3d(31.0, 120.0, 205.0), tm.vertex_colors_[i]);
 }
 
+// ----------------------------------------------------------------------------
+//
+// ----------------------------------------------------------------------------
 TEST(TriangleMesh, SelectDownSample) {
     vector<Vector3d> ref_vertices = {{349.019608, 803.921569, 917.647059},
                                      {439.215686, 117.647059, 588.235294},
@@ -907,6 +970,9 @@ TEST(TriangleMesh, SelectDownSample) {
     ExpectEQ(ref_triangle_normals, output_tm->triangle_normals_);
 }
 
+// ----------------------------------------------------------------------------
+//
+// ----------------------------------------------------------------------------
 TEST(TriangleMesh, CropTriangleMesh) {
     vector<Vector3d> ref_vertices = {{615.686275, 639.215686, 517.647059},
                                      {615.686275, 760.784314, 772.549020},
@@ -970,6 +1036,9 @@ TEST(TriangleMesh, CropTriangleMesh) {
     ExpectEQ(ref_triangle_normals, output_tm->triangle_normals_);
 }
 
+// ----------------------------------------------------------------------------
+//
+// ----------------------------------------------------------------------------
 TEST(TriangleMesh, CreateMeshSphere) {
     vector<Vector3d> ref_vertices = {{0.000000, 0.000000, 1.000000},
                                      {0.000000, 0.000000, -1.000000},
@@ -1042,6 +1111,9 @@ TEST(TriangleMesh, CreateMeshSphere) {
     ExpectEQ(ref_triangles, output_tm->triangles_);
 }
 
+// ----------------------------------------------------------------------------
+//
+// ----------------------------------------------------------------------------
 TEST(TriangleMesh, CreateMeshCylinder) {
     vector<Vector3d> ref_vertices = {{0.000000, 0.000000, 1.000000},
                                      {0.000000, 0.000000, -1.000000},
@@ -1092,6 +1164,9 @@ TEST(TriangleMesh, CreateMeshCylinder) {
     ExpectEQ(ref_triangles, output_tm->triangles_);
 }
 
+// ----------------------------------------------------------------------------
+//
+// ----------------------------------------------------------------------------
 TEST(TriangleMesh, CreateMeshCone) {
     vector<Vector3d> ref_vertices = {
             {0.000000, 0.000000, 0.000000},  {0.000000, 0.000000, 2.000000},
@@ -1109,6 +1184,9 @@ TEST(TriangleMesh, CreateMeshCone) {
     ExpectEQ(ref_triangles, output_tm->triangles_);
 }
 
+// ----------------------------------------------------------------------------
+//
+// ----------------------------------------------------------------------------
 TEST(TriangleMesh, CreateMeshArrow) {
     vector<Vector3d> ref_vertices = {
             {0.000000, 0.000000, 2.000000},   {0.000000, 0.000000, 0.000000},
@@ -1152,6 +1230,9 @@ TEST(TriangleMesh, CreateMeshArrow) {
     ExpectEQ(ref_triangles, output_tm->triangles_);
 }
 
+// ----------------------------------------------------------------------------
+//
+// ----------------------------------------------------------------------------
 TEST(TriangleMesh, CreateMeshCoordinateFrame) {
     vector<Vector3d> ref_vertices = {
             {0.000000, 0.000000, 0.006000},   {0.000939, 0.000000, 0.005926},
