@@ -76,9 +76,9 @@ public:
         throw std::runtime_error("TODO: not implemented");
     };
 
-    /// Query manifold boundary, the query edge must be a boundary (no twin)
-    /// TODO: Change this: start from vertex index
-    std::vector<int> BoundaryFromHalfEdge(int half_edge_idx) const;
+    /// Query manifold boundary
+    /// If query vertex is not on boundary, empty vector will be returned
+    std::vector<int> BoundaryHalfEdgesFromVertex(int vertex_index) const;
 
 public:
     std::vector<HalfEdge> half_edges_;

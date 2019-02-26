@@ -192,6 +192,24 @@ void assert_ordreded_neighbor(
     EXPECT_EQ(expected_ordered_neighbors, actual_ordered_neighbors);
 }
 
+void assert_ordreded_edges(
+        const HalfEdgeTriangleMesh& mesh,
+        const std::vector<int>& half_edge_indices,
+        const std::vector<std::vector<int>>& expected_half_edge_vertices) {
+    if (half_edge_indices.size() != expected_half_edge_vertices.size()) {
+        FAIL();
+    }
+    std::vector<std::vector<int>> actual_half_edge_vertices;
+    for (int half_edge_index : half_edge_indices) {
+        const HalfEdge& he = mesh.half_edges_[half_edge_index];
+        actual_half_edge_vertices.push_back(std::vector<int>(
+                {he.vertex_indices_[0], he.vertex_indices_[1]}));
+    }
+    for (size_t i = 0; i < actual_half_edge_vertices.size(); ++i) {
+        EXPECT_EQ(actual_half_edge_vertices[i], expected_half_edge_vertices[i]);
+    }
+}
+
 TEST(HalfEdgeTriangleMesh, Constructor_TwoTriangles) {
     TriangleMesh mesh = get_mesh_two_triangles();
     HalfEdgeTriangleMesh he_mesh(mesh);
@@ -232,8 +250,6 @@ TEST(HalfEdgeTriangleMesh, Constructor_Sphere) {
 TEST(HalfEdgeTriangleMesh, OrderedHalfEdgesFromVertex_TwoTriangles) {
     HalfEdgeTriangleMesh mesh(get_mesh_two_triangles());
     EXPECT_FALSE(mesh.IsEmpty());
-    std::vector<int> ordered_half_edges;
-
     assert_ordreded_neighbor(mesh, 0, {2});
     assert_ordreded_neighbor(mesh, 1, {0, 2});
     assert_ordreded_neighbor(mesh, 2, {3, 1});
@@ -243,8 +259,6 @@ TEST(HalfEdgeTriangleMesh, OrderedHalfEdgesFromVertex_TwoTriangles) {
 TEST(HalfEdgeTriangleMesh, OrderedHalfEdgesFromVertex_Hexagon) {
     HalfEdgeTriangleMesh mesh(get_mesh_hexagon());
     EXPECT_FALSE(mesh.IsEmpty());
-    std::vector<int> ordered_half_edges;
-
     assert_ordreded_neighbor(mesh, 0, {2, 3});
     assert_ordreded_neighbor(mesh, 1, {0, 3});
     assert_ordreded_neighbor(mesh, 2, {5, 3});
@@ -255,12 +269,9 @@ TEST(HalfEdgeTriangleMesh, OrderedHalfEdgesFromVertex_Hexagon) {
     assert_ordreded_neighbor(mesh, 6, {4, 3});
 }
 
-TEST(HalfEdgeTriangleMesh,
-     OrderedHalfEdgesFromVertex_get_mesh_partial_hexagon) {
+TEST(HalfEdgeTriangleMesh, OrderedHalfEdgesFromVertex_PartialHexagon) {
     HalfEdgeTriangleMesh mesh(get_mesh_partial_hexagon());
     EXPECT_FALSE(mesh.IsEmpty());
-    std::vector<int> ordered_half_edges;
-
     assert_ordreded_neighbor(mesh, 0, {2, 3});
     assert_ordreded_neighbor(mesh, 1, {0, 3});
     assert_ordreded_neighbor(mesh, 2, {5, 3});
@@ -268,4 +279,14 @@ TEST(HalfEdgeTriangleMesh,
     assert_ordreded_neighbor(mesh, 4, {1});
     assert_ordreded_neighbor(mesh, 5, {6, 3});
     assert_ordreded_neighbor(mesh, 6, {3});
+}
+
+TEST(HalfEdgeTriangleMesh, BoundaryHalfEdgesFromVertex_TwoTriangles) {
+    HalfEdgeTriangleMesh mesh(get_mesh_two_triangles());
+    EXPECT_FALSE(mesh.IsEmpty());
+    std::vector<int> boundary_half_edges;
+
+    boundary_half_edges = mesh.BoundaryHalfEdgesFromVertex(0);
+    assert_ordreded_edges(mesh, boundary_half_edges,
+                          {{0, 2}, {2, 3}, {3, 1}, {1, 0}});
 }

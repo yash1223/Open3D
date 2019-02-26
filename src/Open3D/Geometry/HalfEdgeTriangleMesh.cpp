@@ -195,24 +195,21 @@ int HalfEdgeTriangleMesh::NextNextTwinHalfEdgeIndex(int half_edge_index) const {
     return next_next_twin_he_index;
 }
 
-std::vector<int> HalfEdgeTriangleMesh::BoundaryFromHalfEdge(
-        int init_half_edge_index) const {
-    if (!HasHalfEdges() || init_half_edge_index >= half_edges_.size()) {
-        PrintError("edge index %d out of range or half-edges not available.\n",
-                   init_half_edge_index);
+std::vector<int> HalfEdgeTriangleMesh::BoundaryHalfEdgesFromVertex(
+        int vertex_index) const {
+    int init_he_index = ordered_half_edge_from_vertex_[vertex_index][0];
+    const HalfEdge& init_he = half_edges_[init_he_index];
+
+    if (!init_he.IsBoundary()) {
+        PrintWarning("The vertex %d is not on boundary.\n", vertex_index);
         return {};
     }
-    if (!half_edges_[init_half_edge_index].IsBoundary()) {
-        PrintError("The currented half-edge index %d is on boundary.\n",
-                   init_half_edge_index);
-        return {};
-    }
+
     std::vector<int> boundary_half_edge_indices;
-    int curr_he_index = init_half_edge_index;
+    int curr_he_index = init_he_index;
     boundary_half_edge_indices.push_back(curr_he_index);
     curr_he_index = NextHalfEdgeOnBoundary(curr_he_index);
-    while (curr_he_index != init_half_edge_index &&
-           init_half_edge_index != -1) {
+    while (curr_he_index != init_he_index && curr_he_index != -1) {
         boundary_half_edge_indices.push_back(curr_he_index);
         curr_he_index = NextHalfEdgeOnBoundary(curr_he_index);
     }
