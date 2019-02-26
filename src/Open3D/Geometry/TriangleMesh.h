@@ -37,6 +37,11 @@ namespace open3d {
 
 class TriangleMesh : public Geometry3D {
 public:
+    enum class FilterOperandType { Color, Normal, Vertex };
+
+    enum class FilterType { Sharpen, Smooth, TaubinSmooth };
+
+public:
     TriangleMesh() : Geometry3D(Geometry::GeometryType::TriangleMesh){};
     ~TriangleMesh() override{};
 
