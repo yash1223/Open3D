@@ -80,7 +80,6 @@ public:
     // Counter-clockwise ordered half-edges started from each vertex
     // If the vertex is on boundary, the starting edge must be on boundary too
     std::vector<std::vector<int>> ordered_half_edge_from_vertex_;
-    std::unordered_map<int, int> map_vertex_to_triangle;
 
 protected:
     int NextNextTwinHalfEdgeIndex(int init_half_edge_index) const;
