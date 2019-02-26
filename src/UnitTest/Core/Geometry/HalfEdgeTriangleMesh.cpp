@@ -314,3 +314,30 @@ TEST(HalfEdgeTriangleMesh, BoundaryHalfEdgesFromVertex_Hexagon) {
     assert_ordreded_edges(mesh, mesh.BoundaryHalfEdgesFromVertex(6),
                           {{6, 4}, {4, 1}, {1, 0}, {0, 2}, {2, 5}, {5, 6}});
 }
+
+TEST(HalfEdgeTriangleMesh, BoundaryHalfEdgesFromVertex_PartialHexagon) {
+    HalfEdgeTriangleMesh mesh(get_mesh_partial_hexagon());
+    EXPECT_FALSE(mesh.IsEmpty());
+
+    assert_ordreded_edges(
+            mesh, mesh.BoundaryHalfEdgesFromVertex(0),
+            {{0, 2}, {2, 5}, {5, 6}, {6, 3}, {3, 4}, {4, 1}, {1, 0}});
+    assert_ordreded_edges(
+            mesh, mesh.BoundaryHalfEdgesFromVertex(1),
+            {{1, 0}, {0, 2}, {2, 5}, {5, 6}, {6, 3}, {3, 4}, {4, 1}});
+    assert_ordreded_edges(
+            mesh, mesh.BoundaryHalfEdgesFromVertex(2),
+            {{2, 5}, {5, 6}, {6, 3}, {3, 4}, {4, 1}, {1, 0}, {0, 2}});
+    assert_ordreded_edges(
+            mesh, mesh.BoundaryHalfEdgesFromVertex(3),
+            {{3, 4}, {4, 1}, {1, 0}, {0, 2}, {2, 5}, {5, 6}, {6, 3}});
+    assert_ordreded_edges(
+            mesh, mesh.BoundaryHalfEdgesFromVertex(4),
+            {{4, 1}, {1, 0}, {0, 2}, {2, 5}, {5, 6}, {6, 3}, {3, 4}});
+    assert_ordreded_edges(
+            mesh, mesh.BoundaryHalfEdgesFromVertex(5),
+            {{5, 6}, {6, 3}, {3, 4}, {4, 1}, {1, 0}, {0, 2}, {2, 5}});
+    assert_ordreded_edges(
+            mesh, mesh.BoundaryHalfEdgesFromVertex(6),
+            {{6, 3}, {3, 4}, {4, 1}, {1, 0}, {0, 2}, {2, 5}, {5, 6}});
+}
