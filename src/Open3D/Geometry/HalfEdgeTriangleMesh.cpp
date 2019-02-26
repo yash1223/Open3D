@@ -176,7 +176,6 @@ bool HalfEdgeTriangleMesh::ComputeHalfEdges() {
             curr_he_index = next_next_twin_he_index;
         }
     }
-
     return true;
 }
 

@@ -71,11 +71,6 @@ public:
     /// Clear all data in HalfEdgeTriangleMesh
     void Clear() override;
 
-    /// Query half edges owned by the triangle
-    Eigen::Vector3i HalfEdgesInTriangle(int triangle_idx) const {
-        throw std::runtime_error("TODO: not implemented");
-    };
-
     /// Query manifold boundary
     /// If query vertex is not on boundary, empty vector will be returned
     std::vector<int> BoundaryHalfEdgesFromVertex(int vertex_index) const;
