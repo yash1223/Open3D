@@ -100,11 +100,12 @@ struct hash : std::unary_function<T, size_t> {
 
 }  // namespace hash_eigen
 
+namespace utility {
 /// Function to split a string, mimics boost::split
 /// http://stackoverflow.com/questions/236129/split-a-string-in-c
 void SplitString(std::vector<std::string>& tokens,
                  const std::string& str,
                  const std::string& delimiters = " ",
                  bool trim_empty_str = true);
-
+}  // namespace utility
 }  // namespace open3d

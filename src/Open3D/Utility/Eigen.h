@@ -45,6 +45,7 @@ typedef Eigen::Matrix<double, 4, 4, Eigen::DontAlign> Matrix4d_u;
 }  // namespace Eigen
 
 namespace open3d {
+
 using Matrix4d_allocator = Eigen::aligned_allocator<Eigen::Matrix4d>;
 using Matrix6d_allocator = Eigen::aligned_allocator<Eigen::Matrix6d>;
 using Vector2d_allocator = Eigen::aligned_allocator<Eigen::Vector2d>;
@@ -52,6 +53,7 @@ using Vector4i_allocator = Eigen::aligned_allocator<Eigen::Vector4i>;
 using Vector4d_allocator = Eigen::aligned_allocator<Eigen::Vector4d>;
 using Vector6d_allocator = Eigen::aligned_allocator<Eigen::Vector6d>;
 
+namespace utility {
 /// Function to transform 6D motion vector to 4D motion matrix
 /// Reference:
 /// https://eigen.tuxfamily.org/dox/group__TutorialGeometry.html#TutorialGeoTransform
@@ -110,5 +112,5 @@ std::tuple<MatType, VecType, double> ComputeJTJandJTr(
                      std::vector<double> &)> f,
         int iteration_num,
         bool verbose = true);
-
+}  // namespace utility
 }  // namespace open3d
