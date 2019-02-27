@@ -31,11 +31,12 @@
 
 namespace open3d {
 
-PinholeCameraParameters::PinholeCameraParameters() {}
+camera::PinholeCameraParameters::PinholeCameraParameters() {}
 
-PinholeCameraParameters::~PinholeCameraParameters() {}
+camera::PinholeCameraParameters::~PinholeCameraParameters() {}
 
-bool PinholeCameraParameters::ConvertToJsonValue(Json::Value &value) const {
+bool camera::PinholeCameraParameters::ConvertToJsonValue(
+        Json::Value &value) const {
     Json::Value trajectory_array;
     value["class_name"] = "PinholeCameraParameters";
     value["version_major"] = 1;
@@ -49,10 +50,12 @@ bool PinholeCameraParameters::ConvertToJsonValue(Json::Value &value) const {
     return true;
 }
 
-bool PinholeCameraParameters::ConvertFromJsonValue(const Json::Value &value) {
+bool camera::PinholeCameraParameters::ConvertFromJsonValue(
+        const Json::Value &value) {
     if (value.isObject() == false) {
         PrintWarning(
-                "PinholeCameraParameters read JSON failed: unsupported json "
+                "camera::PinholeCameraParameters read JSON failed: unsupported "
+                "json "
                 "format.\n");
         return false;
     }
@@ -60,7 +63,8 @@ bool PinholeCameraParameters::ConvertFromJsonValue(const Json::Value &value) {
         value.get("version_major", 1).asInt() != 1 ||
         value.get("version_minor", 0).asInt() != 0) {
         PrintWarning(
-                "PinholeCameraParameters read JSON failed: unsupported json "
+                "camera::PinholeCameraParameters read JSON failed: unsupported "
+                "json "
                 "format.\n");
         return false;
     }
