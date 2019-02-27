@@ -111,13 +111,13 @@ void OptimizeImageCoorNonrigid(
 
             bool success;
             Eigen::VectorXd result;
-            std::tie(success, result) = SolveLinearSystemPSD(
+            std::tie(success, result) = utility::SolveLinearSystemPSD(
                     JTJ, -JTr, /*prefer_sparse=*/false,
                     /*check_symmetric=*/false,
                     /*check_det=*/false, /*check_psd=*/false);
             Eigen::Vector6d result_pose;
             result_pose << result.block(0, 0, 6, 1);
-            auto delta = TransformVector6dToMatrix4d(result_pose);
+            auto delta = utility::TransformVector6dToMatrix4d(result_pose);
             pose = delta * pose;
 
             for (int j = 0; j < nonrigidval; j++) {
@@ -185,14 +185,15 @@ void OptimizeImageCoorRigid(
             Eigen::Vector6d JTr;
             double r2;
             std::tie(JTJ, JTr, r2) =
-                    ComputeJTJandJTr<Eigen::Matrix6d, Eigen::Vector6d>(
+                    utility::ComputeJTJandJTr<Eigen::Matrix6d, Eigen::Vector6d>(
                             f_lambda, visiblity_image_to_vertex[c].size(),
                             false);
 
             bool is_success;
             Eigen::Matrix4d delta;
             std::tie(is_success, delta) =
-                    SolveJacobianSystemAndObtainExtrinsicMatrix(JTJ, JTr);
+                    utility::SolveJacobianSystemAndObtainExtrinsicMatrix(JTJ,
+                                                                         JTr);
             pose = delta * pose;
             camera.parameters_[c].extrinsic_ = pose;
 #ifdef _OPENMP

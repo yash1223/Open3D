@@ -30,7 +30,7 @@
 
 namespace open3d {
 
-class ImageWarpingField : public IJsonConvertible {
+class ImageWarpingField : public utility::IJsonConvertible {
 public:
     ImageWarpingField();
     ImageWarpingField(int width, int height, int number_of_vertical_anchors);

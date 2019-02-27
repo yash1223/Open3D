@@ -33,7 +33,7 @@
 namespace open3d {
 
 /// Function to solve Ax=b
-std::tuple<bool, Eigen::VectorXd> SolveLinearSystemPSD(
+std::tuple<bool, Eigen::VectorXd> utility::SolveLinearSystemPSD(
         const Eigen::MatrixXd &A,
         const Eigen::VectorXd &b,
         bool prefer_sparse /* = false */,
@@ -88,7 +88,8 @@ std::tuple<bool, Eigen::VectorXd> SolveLinearSystemPSD(
     return std::make_tuple(true, std::move(x));
 }
 
-Eigen::Matrix4d TransformVector6dToMatrix4d(const Eigen::Vector6d &input) {
+Eigen::Matrix4d utility::TransformVector6dToMatrix4d(
+        const Eigen::Vector6d &input) {
     Eigen::Matrix4d output;
     output.setIdentity();
     output.block<3, 3>(0, 0) =
@@ -100,7 +101,8 @@ Eigen::Matrix4d TransformVector6dToMatrix4d(const Eigen::Vector6d &input) {
     return output;
 }
 
-Eigen::Vector6d TransformMatrix4dToVector6d(const Eigen::Matrix4d &input) {
+Eigen::Vector6d utility::TransformMatrix4dToVector6d(
+        const Eigen::Matrix4d &input) {
     Eigen::Vector6d output;
     Eigen::Matrix3d R = input.block<3, 3>(0, 0);
     double sy = sqrt(R(0, 0) * R(0, 0) + R(1, 0) * R(1, 0));
@@ -117,17 +119,18 @@ Eigen::Vector6d TransformMatrix4dToVector6d(const Eigen::Matrix4d &input) {
     return output;
 }
 
-std::tuple<bool, Eigen::Matrix4d> SolveJacobianSystemAndObtainExtrinsicMatrix(
+std::tuple<bool, Eigen::Matrix4d>
+utility::SolveJacobianSystemAndObtainExtrinsicMatrix(
         const Eigen::Matrix6d &JTJ, const Eigen::Vector6d &JTr) {
     std::vector<Eigen::Matrix4d, Matrix4d_allocator> output_matrix_array;
     output_matrix_array.clear();
 
     bool solution_exist;
     Eigen::Vector6d x;
-    std::tie(solution_exist, x) = SolveLinearSystemPSD(JTJ, -JTr);
+    std::tie(solution_exist, x) = utility::SolveLinearSystemPSD(JTJ, -JTr);
 
     if (solution_exist) {
-        Eigen::Matrix4d extrinsic = TransformVector6dToMatrix4d(x);
+        Eigen::Matrix4d extrinsic = utility::TransformVector6dToMatrix4d(x);
         return std::make_tuple(solution_exist, std::move(extrinsic));
     } else {
         return std::make_tuple(false, Eigen::Matrix4d::Identity());
@@ -135,26 +138,26 @@ std::tuple<bool, Eigen::Matrix4d> SolveJacobianSystemAndObtainExtrinsicMatrix(
 }
 
 std::tuple<bool, std::vector<Eigen::Matrix4d, Matrix4d_allocator>>
-SolveJacobianSystemAndObtainExtrinsicMatrixArray(const Eigen::MatrixXd &JTJ,
-                                                 const Eigen::VectorXd &JTr) {
+utility::SolveJacobianSystemAndObtainExtrinsicMatrixArray(
+        const Eigen::MatrixXd &JTJ, const Eigen::VectorXd &JTr) {
     std::vector<Eigen::Matrix4d, Matrix4d_allocator> output_matrix_array;
     output_matrix_array.clear();
     if (JTJ.rows() != JTr.rows() || JTJ.cols() % 6 != 0) {
         PrintWarning(
-                "[SolveJacobianSystemAndObtainExtrinsicMatrixArray] "
+                "[utility::SolveJacobianSystemAndObtainExtrinsicMatrixArray] "
                 "Unsupported matrix format.\n");
         return std::make_tuple(false, std::move(output_matrix_array));
     }
 
     bool solution_exist;
     Eigen::VectorXd x;
-    std::tie(solution_exist, x) = SolveLinearSystemPSD(JTJ, -JTr);
+    std::tie(solution_exist, x) = utility::SolveLinearSystemPSD(JTJ, -JTr);
 
     if (solution_exist) {
         int nposes = (int)x.rows() / 6;
         for (int i = 0; i < nposes; i++) {
-            Eigen::Matrix4d extrinsic =
-                    TransformVector6dToMatrix4d(x.block<6, 1>(i * 6, 0));
+            Eigen::Matrix4d extrinsic = utility::TransformVector6dToMatrix4d(
+                    x.block<6, 1>(i * 6, 0));
             output_matrix_array.push_back(extrinsic);
         }
         return std::make_tuple(solution_exist, std::move(output_matrix_array));
@@ -164,7 +167,7 @@ SolveJacobianSystemAndObtainExtrinsicMatrixArray(const Eigen::MatrixXd &JTJ,
 }
 
 template <typename MatType, typename VecType>
-std::tuple<MatType, VecType, double> ComputeJTJandJTr(
+std::tuple<MatType, VecType, double> utility::ComputeJTJandJTr(
         std::function<void(int, VecType &, double &)> f,
         int iteration_num,
         bool verbose /*=true*/) {
@@ -212,7 +215,7 @@ std::tuple<MatType, VecType, double> ComputeJTJandJTr(
 }
 
 template <typename MatType, typename VecType>
-std::tuple<MatType, VecType, double> ComputeJTJandJTr(
+std::tuple<MatType, VecType, double> utility::ComputeJTJandJTr(
         std::function<
                 void(int,
                      std::vector<VecType, Eigen::aligned_allocator<VecType>> &,
@@ -265,11 +268,11 @@ std::tuple<MatType, VecType, double> ComputeJTJandJTr(
 }
 
 // clang-format off
-template std::tuple<Eigen::Matrix6d, Eigen::Vector6d, double> ComputeJTJandJTr(
+template std::tuple<Eigen::Matrix6d, Eigen::Vector6d, double> utility::ComputeJTJandJTr(
         std::function<void(int, Eigen::Vector6d &, double &)> f,
         int iteration_num, bool verbose);
 
-template std::tuple<Eigen::Matrix6d, Eigen::Vector6d, double> ComputeJTJandJTr(
+template std::tuple<Eigen::Matrix6d, Eigen::Vector6d, double> utility::ComputeJTJandJTr(
         std::function<void(int,
                            std::vector<Eigen::Vector6d, Vector6d_allocator> &,
                            std::vector<double> &)> f,

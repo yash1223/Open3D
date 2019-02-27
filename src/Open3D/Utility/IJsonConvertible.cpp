@@ -30,8 +30,8 @@
 
 namespace open3d {
 
-bool IJsonConvertible::EigenVector3dFromJsonArray(Eigen::Vector3d &vec,
-                                                  const Json::Value &value) {
+bool utility::IJsonConvertible::EigenVector3dFromJsonArray(
+        Eigen::Vector3d &vec, const Json::Value &value) {
     if (value.size() != 3) {
         return false;
     } else {
@@ -42,8 +42,8 @@ bool IJsonConvertible::EigenVector3dFromJsonArray(Eigen::Vector3d &vec,
     }
 }
 
-bool IJsonConvertible::EigenVector3dToJsonArray(const Eigen::Vector3d &vec,
-                                                Json::Value &value) {
+bool utility::IJsonConvertible::EigenVector3dToJsonArray(
+        const Eigen::Vector3d &vec, Json::Value &value) {
     value.clear();
     value.append(vec(0));
     value.append(vec(1));
@@ -51,8 +51,8 @@ bool IJsonConvertible::EigenVector3dToJsonArray(const Eigen::Vector3d &vec,
     return true;
 }
 
-bool IJsonConvertible::EigenVector4dFromJsonArray(Eigen::Vector4d &vec,
-                                                  const Json::Value &value) {
+bool utility::IJsonConvertible::EigenVector4dFromJsonArray(
+        Eigen::Vector4d &vec, const Json::Value &value) {
     if (value.size() != 4) {
         return false;
     } else {
@@ -64,8 +64,8 @@ bool IJsonConvertible::EigenVector4dFromJsonArray(Eigen::Vector4d &vec,
     }
 }
 
-bool IJsonConvertible::EigenVector4dToJsonArray(const Eigen::Vector4d &vec,
-                                                Json::Value &value) {
+bool utility::IJsonConvertible::EigenVector4dToJsonArray(
+        const Eigen::Vector4d &vec, Json::Value &value) {
     value.clear();
     value.append(vec(0));
     value.append(vec(1));
@@ -74,8 +74,8 @@ bool IJsonConvertible::EigenVector4dToJsonArray(const Eigen::Vector4d &vec,
     return true;
 }
 
-bool IJsonConvertible::EigenMatrix3dFromJsonArray(Eigen::Matrix3d &mat,
-                                                  const Json::Value &value) {
+bool utility::IJsonConvertible::EigenMatrix3dFromJsonArray(
+        Eigen::Matrix3d &mat, const Json::Value &value) {
     if (value.size() != 9) {
         return false;
     } else {
@@ -86,8 +86,8 @@ bool IJsonConvertible::EigenMatrix3dFromJsonArray(Eigen::Matrix3d &mat,
     }
 }
 
-bool IJsonConvertible::EigenMatrix3dToJsonArray(const Eigen::Matrix3d &mat,
-                                                Json::Value &value) {
+bool utility::IJsonConvertible::EigenMatrix3dToJsonArray(
+        const Eigen::Matrix3d &mat, Json::Value &value) {
     value.clear();
     for (int i = 0; i < 9; i++) {
         value.append(mat.coeffRef(i));
@@ -95,8 +95,8 @@ bool IJsonConvertible::EigenMatrix3dToJsonArray(const Eigen::Matrix3d &mat,
     return true;
 }
 
-bool IJsonConvertible::EigenMatrix4dFromJsonArray(Eigen::Matrix4d &mat,
-                                                  const Json::Value &value) {
+bool utility::IJsonConvertible::EigenMatrix4dFromJsonArray(
+        Eigen::Matrix4d &mat, const Json::Value &value) {
     if (value.size() != 16) {
         return false;
     } else {
@@ -107,8 +107,8 @@ bool IJsonConvertible::EigenMatrix4dFromJsonArray(Eigen::Matrix4d &mat,
     }
 }
 
-bool IJsonConvertible::EigenMatrix4dToJsonArray(const Eigen::Matrix4d &mat,
-                                                Json::Value &value) {
+bool utility::IJsonConvertible::EigenMatrix4dToJsonArray(
+        const Eigen::Matrix4d &mat, Json::Value &value) {
     value.clear();
     for (int i = 0; i < 16; i++) {
         value.append(mat.coeffRef(i));
@@ -116,8 +116,8 @@ bool IJsonConvertible::EigenMatrix4dToJsonArray(const Eigen::Matrix4d &mat,
     return true;
 }
 
-bool IJsonConvertible::EigenMatrix4dFromJsonArray(Eigen::Matrix4d_u &mat,
-                                                  const Json::Value &value) {
+bool utility::IJsonConvertible::EigenMatrix4dFromJsonArray(
+        Eigen::Matrix4d_u &mat, const Json::Value &value) {
     if (value.size() != 16) {
         return false;
     } else {
@@ -128,8 +128,8 @@ bool IJsonConvertible::EigenMatrix4dFromJsonArray(Eigen::Matrix4d_u &mat,
     }
 }
 
-bool IJsonConvertible::EigenMatrix4dToJsonArray(const Eigen::Matrix4d_u &mat,
-                                                Json::Value &value) {
+bool utility::IJsonConvertible::EigenMatrix4dToJsonArray(
+        const Eigen::Matrix4d_u &mat, Json::Value &value) {
     value.clear();
     for (int i = 0; i < 16; i++) {
         value.append(mat.coeffRef(i));
@@ -137,8 +137,8 @@ bool IJsonConvertible::EigenMatrix4dToJsonArray(const Eigen::Matrix4d_u &mat,
     return true;
 }
 
-bool IJsonConvertible::EigenMatrix6dFromJsonArray(Eigen::Matrix6d &mat,
-                                                  const Json::Value &value) {
+bool utility::IJsonConvertible::EigenMatrix6dFromJsonArray(
+        Eigen::Matrix6d &mat, const Json::Value &value) {
     if (value.size() != 36) {
         return false;
     } else {
@@ -149,8 +149,8 @@ bool IJsonConvertible::EigenMatrix6dFromJsonArray(Eigen::Matrix6d &mat,
     }
 }
 
-bool IJsonConvertible::EigenMatrix6dToJsonArray(const Eigen::Matrix6d &mat,
-                                                Json::Value &value) {
+bool utility::IJsonConvertible::EigenMatrix6dToJsonArray(
+        const Eigen::Matrix6d &mat, Json::Value &value) {
     value.clear();
     for (int i = 0; i < 36; i++) {
         value.append(mat.coeffRef(i));
@@ -158,8 +158,8 @@ bool IJsonConvertible::EigenMatrix6dToJsonArray(const Eigen::Matrix6d &mat,
     return true;
 }
 
-bool IJsonConvertible::EigenMatrix6dFromJsonArray(Eigen::Matrix6d_u &mat,
-                                                  const Json::Value &value) {
+bool utility::IJsonConvertible::EigenMatrix6dFromJsonArray(
+        Eigen::Matrix6d_u &mat, const Json::Value &value) {
     if (value.size() != 36) {
         return false;
     } else {
@@ -170,8 +170,8 @@ bool IJsonConvertible::EigenMatrix6dFromJsonArray(Eigen::Matrix6d_u &mat,
     }
 }
 
-bool IJsonConvertible::EigenMatrix6dToJsonArray(const Eigen::Matrix6d_u &mat,
-                                                Json::Value &value) {
+bool utility::IJsonConvertible::EigenMatrix6dToJsonArray(
+        const Eigen::Matrix6d_u &mat, Json::Value &value) {
     value.clear();
     for (int i = 0; i < 36; i++) {
         value.append(mat.coeffRef(i));

@@ -59,7 +59,7 @@ int main(int argc, char **args) {
     depth_image_ptr->PrepareImage(640, 480, 1, 2);
     auto color_image_ptr = std::make_shared<Image>();
     color_image_ptr->PrepareImage(1920, 1080, 3, 1);
-    FPSTimer timer("Realsense stream");
+    utility::FPSTimer timer("Realsense stream");
 
     rs::extrinsics extrinsics =
             dev->get_extrinsics(rs::stream::depth, rs::stream::rectified_color);

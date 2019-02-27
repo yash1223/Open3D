@@ -135,7 +135,7 @@ bool ReadPCDHeader(FILE *file, PCDHeader &header) {
             continue;
         }
         std::vector<std::string> st;
-        SplitString(st, line, "\t\r\n ");
+        utility::SplitString(st, line, "\t\r\n ");
         std::stringstream sstream(line);
         sstream.imbue(std::locale::classic());
         std::string line_type;
@@ -350,7 +350,7 @@ bool ReadPCDData(FILE *file, const PCDHeader &header, PointCloud &pointcloud) {
                idx < header.points) {
             std::string line(line_buffer);
             std::vector<std::string> strs;
-            SplitString(strs, line, "\t\r\n ");
+            utility::SplitString(strs, line, "\t\r\n ");
             if ((int)strs.size() < header.elementnum) {
                 continue;
             }

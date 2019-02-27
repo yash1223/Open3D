@@ -92,12 +92,12 @@ int main(int argc, char *argv[]) {
     ScalableTSDFVolume volume(length / (double)resolution,
                               length * sdf_trunc_percentage,
                               TSDFVolumeColorType::RGB8);
-    FPSTimer timer("Process RGBD stream",
-                   (int)camera_trajectory->parameters_.size());
+    utility::FPSTimer timer("Process RGBD stream",
+                            (int)camera_trajectory->parameters_.size());
     Image depth, color;
     while (fgets(buffer, DEFAULT_IO_BUFFER_SIZE, file)) {
         std::vector<std::string> st;
-        SplitString(st, buffer, "\t\r\n ");
+        utility::SplitString(st, buffer, "\t\r\n ");
         if (st.size() >= 2) {
             PrintDebug("Processing frame %d ...\n", index);
             ReadImage(dir_name + st[0], depth);

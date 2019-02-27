@@ -32,48 +32,48 @@
 
 namespace open3d {
 
-Timer::Timer()
+utility::Timer::Timer()
     : start_time_in_milliseconds_(0.0), end_time_in_milliseconds_(0.0) {}
 
-Timer::~Timer() {}
+utility::Timer::~Timer() {}
 
-double Timer::GetSystemTimeInMilliseconds() {
+double utility::Timer::GetSystemTimeInMilliseconds() {
     std::chrono::duration<double, std::milli> current_time =
             std::chrono::high_resolution_clock::now().time_since_epoch();
     return current_time.count();
 }
 
-void Timer::Start() {
+void utility::Timer::Start() {
     start_time_in_milliseconds_ = GetSystemTimeInMilliseconds();
 }
 
-void Timer::Stop() {
+void utility::Timer::Stop() {
     end_time_in_milliseconds_ = GetSystemTimeInMilliseconds();
 }
 
-double Timer::GetDuration() const {
+double utility::Timer::GetDuration() const {
     return end_time_in_milliseconds_ - start_time_in_milliseconds_;
 }
 
-void Timer::Print(const std::string &timer_info) const {
+void utility::Timer::Print(const std::string &timer_info) const {
     PrintInfo("%s %.2f ms.\n", timer_info.c_str(),
               end_time_in_milliseconds_ - start_time_in_milliseconds_);
 }
 
-ScopeTimer::ScopeTimer(const std::string &scope_timer_info /* = ""*/)
+utility::ScopeTimer::ScopeTimer(const std::string &scope_timer_info /* = ""*/)
     : scope_timer_info_(scope_timer_info) {
-    Timer::Start();
+    utility::Timer::Start();
 }
 
-ScopeTimer::~ScopeTimer() {
-    Timer::Stop();
-    Timer::Print(scope_timer_info_ + " took");
+utility::ScopeTimer::~ScopeTimer() {
+    utility::Timer::Stop();
+    utility::Timer::Print(scope_timer_info_ + " took");
 }
 
-FPSTimer::FPSTimer(const std::string &fps_timer_info /* = ""*/,
-                   int expectation /* = -1*/,
-                   double time_to_print /* = 3000.0*/,
-                   int events_to_print /* = 100*/)
+utility::FPSTimer::FPSTimer(const std::string &fps_timer_info /* = ""*/,
+                            int expectation /* = -1*/,
+                            double time_to_print /* = 3000.0*/,
+                            int events_to_print /* = 100*/)
     : fps_timer_info_(fps_timer_info),
       expectation_(expectation),
       time_to_print_(time_to_print),
@@ -83,7 +83,7 @@ FPSTimer::FPSTimer(const std::string &fps_timer_info /* = ""*/,
     Start();
 }
 
-void FPSTimer::Signal() {
+void utility::FPSTimer::Signal() {
     event_fragment_count_++;
     event_total_count_++;
     Stop();

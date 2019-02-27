@@ -38,7 +38,7 @@ class Geometry;
 class PointCloud;
 class TriangleMesh;
 
-class SelectionPolygonVolume : public IJsonConvertible {
+class SelectionPolygonVolume : public utility::IJsonConvertible {
 public:
     ~SelectionPolygonVolume() override {}
 

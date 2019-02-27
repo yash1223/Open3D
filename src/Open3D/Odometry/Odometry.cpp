@@ -416,13 +416,14 @@ std::tuple<bool, Eigen::Matrix4d> DoSingleIteration(
     Eigen::Matrix6d JTJ;
     Eigen::Vector6d JTr;
     double r2;
-    std::tie(JTJ, JTr, r2) = ComputeJTJandJTr<Eigen::Matrix6d, Eigen::Vector6d>(
-            f_lambda, corresps_count);
+    std::tie(JTJ, JTr, r2) =
+            utility::ComputeJTJandJTr<Eigen::Matrix6d, Eigen::Vector6d>(
+                    f_lambda, corresps_count);
 
     bool is_success;
     Eigen::Matrix4d extrinsic;
     std::tie(is_success, extrinsic) =
-            SolveJacobianSystemAndObtainExtrinsicMatrix(JTJ, JTr);
+            utility::SolveJacobianSystemAndObtainExtrinsicMatrix(JTJ, JTr);
     if (!is_success) {
         PrintWarning("[ComputeOdometry] no solution!\n");
         return std::make_tuple(false, Eigen::Matrix4d::Identity());

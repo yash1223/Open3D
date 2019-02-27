@@ -232,8 +232,8 @@ Eigen::VectorXd UpdatePoseVector(const PoseGraph &pose_graph) {
     int n_nodes = (int)pose_graph.nodes_.size();
     Eigen::VectorXd output(n_nodes * 6);
     for (int iter_node = 0; iter_node < n_nodes; iter_node++) {
-        Eigen::Vector6d output_iter =
-                TransformMatrix4dToVector6d(pose_graph.nodes_[iter_node].pose_);
+        Eigen::Vector6d output_iter = utility::TransformMatrix4dToVector6d(
+                pose_graph.nodes_[iter_node].pose_);
         output.block<6, 1>(iter_node * 6, 0) = output_iter;
     }
     return std::move(output);
@@ -248,7 +248,7 @@ std::shared_ptr<PoseGraph> UpdatePoseGraph(const PoseGraph &pose_graph,
     for (int iter_node = 0; iter_node < n_nodes; iter_node++) {
         Eigen::Vector6d delta_iter = delta.block<6, 1>(iter_node * 6, 0);
         pose_graph_updated->nodes_[iter_node].pose_ =
-                TransformVector6dToMatrix4d(delta_iter) *
+                utility::TransformVector6dToMatrix4d(delta_iter) *
                 pose_graph_updated->nodes_[iter_node].pose_;
     }
     return pose_graph_updated;
@@ -501,18 +501,18 @@ void GlobalOptimizationGaussNewton::OptimizePoseGraph(
     bool stop = false;
     if (stop || CheckRightTerm(b, criteria)) return;
 
-    Timer timer_overall;
+    utility::Timer timer_overall;
     timer_overall.Start();
     int iter;
     for (iter = 0; !stop; iter++) {
-        Timer timer_iter;
+        utility::Timer timer_iter;
         timer_iter.Start();
 
         Eigen::VectorXd delta(H.cols());
         bool solver_success = false;
 
         // Solve H_LM @ delta == b using a sparse solver
-        std::tie(solver_success, delta) = SolveLinearSystemPSD(
+        std::tie(solver_success, delta) = utility::SolveLinearSystemPSD(
                 H, b, /*prefer_sparse=*/true, /*check_symmetric=*/false,
                 /*check_det=*/false, /*check_psd=*/false);
 
@@ -599,10 +599,10 @@ void GlobalOptimizationLevenbergMarquardt::OptimizePoseGraph(
     stop = stop || CheckRightTerm(b, criteria);
     if (stop) return;
 
-    Timer timer_overall;
+    utility::Timer timer_overall;
     timer_overall.Start();
     for (int iter = 0; !stop; iter++) {
-        Timer timer_iter;
+        utility::Timer timer_iter;
         timer_iter.Start();
         int lm_count = 0;
         do {
@@ -611,7 +611,7 @@ void GlobalOptimizationLevenbergMarquardt::OptimizePoseGraph(
             bool solver_success = false;
 
             // Solve H_LM @ delta == b using a sparse solver
-            std::tie(solver_success, delta) = SolveLinearSystemPSD(
+            std::tie(solver_success, delta) = utility::SolveLinearSystemPSD(
                     H_LM, b, /*prefer_sparse=*/true, /*check_symmetric=*/false,
                     /*check_det=*/false, /*check_psd=*/false);
 

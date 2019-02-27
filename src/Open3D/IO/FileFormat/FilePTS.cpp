@@ -55,7 +55,7 @@ bool ReadPointCloudFromPTS(const std::string &filename,
            fgets(line_buffer, DEFAULT_IO_BUFFER_SIZE, file)) {
         if (num_of_fields == 0) {
             std::vector<std::string> st;
-            SplitString(st, line_buffer, " ");
+            utility::SplitString(st, line_buffer, " ");
             num_of_fields = (int)st.size();
             if (num_of_fields < 3) {
                 PrintWarning("Read PTS failed: insufficient data fields.\n");

@@ -36,7 +36,7 @@ namespace open3d {
 namespace {
 
 bool ReadIJsonConvertibleFromJSONStream(std::istream &json_stream,
-                                        IJsonConvertible &object) {
+                                        utility::IJsonConvertible &object) {
     Json::Value root_object;
     Json::CharReaderBuilder builder;
     builder["collectComments"] = false;
@@ -50,8 +50,8 @@ bool ReadIJsonConvertibleFromJSONStream(std::istream &json_stream,
     return object.ConvertFromJsonValue(root_object);
 }
 
-bool WriteIJsonConvertibleToJSONStream(std::ostream &json_stream,
-                                       const IJsonConvertible &object) {
+bool WriteIJsonConvertibleToJSONStream(
+        std::ostream &json_stream, const utility::IJsonConvertible &object) {
     Json::Value root_object;
     if (object.ConvertToJsonValue(root_object) == false) {
         return false;
@@ -67,7 +67,7 @@ bool WriteIJsonConvertibleToJSONStream(std::ostream &json_stream,
 }  // unnamed namespace
 
 bool ReadIJsonConvertibleFromJSON(const std::string &filename,
-                                  IJsonConvertible &object) {
+                                  utility::IJsonConvertible &object) {
     std::ifstream file_in(filename);
     if (file_in.is_open() == false) {
         PrintWarning("Read JSON failed: unable to open file: %s\n",
@@ -80,7 +80,7 @@ bool ReadIJsonConvertibleFromJSON(const std::string &filename,
 }
 
 bool WriteIJsonConvertibleToJSON(const std::string &filename,
-                                 const IJsonConvertible &object) {
+                                 const utility::IJsonConvertible &object) {
     std::ofstream file_out(filename);
     if (file_out.is_open() == false) {
         PrintWarning("Write JSON failed: unable to open file: %s\n",
@@ -93,13 +93,13 @@ bool WriteIJsonConvertibleToJSON(const std::string &filename,
 }
 
 bool ReadIJsonConvertibleFromJSONString(const std::string &json_string,
-                                        IJsonConvertible &object) {
+                                        utility::IJsonConvertible &object) {
     std::istringstream iss(json_string);
     return ReadIJsonConvertibleFromJSONStream(iss, object);
 }
 
-bool WriteIJsonConvertibleToJSONString(std::string &json_string,
-                                       const IJsonConvertible &object) {
+bool WriteIJsonConvertibleToJSONString(
+        std::string &json_string, const utility::IJsonConvertible &object) {
     std::ostringstream oss;
     bool success = WriteIJsonConvertibleToJSONStream(oss, object);
     json_string = oss.str();

@@ -283,7 +283,7 @@ Eigen::VectorXd GetProgramOptionAsEigenVectorXd(
         return default_value;
     }
     std::vector<std::string> tokens;
-    SplitString(tokens, str.substr(1, str.length() - 2), ",");
+    utility::SplitString(tokens, str.substr(1, str.length() - 2), ",");
     Eigen::VectorXd vec(tokens.size());
     for (auto i = 0; i < tokens.size(); i++) {
         char *end;
