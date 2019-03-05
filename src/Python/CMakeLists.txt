@@ -32,7 +32,7 @@ execute_process(
 )
 message(STATUS "Using Python version: ${PYTHON_VERSION}")
 
-set(PACKAGE_NAME open3d_internal)
+set(PACKAGE_NAME _open3d_internal)
 
 file(GLOB_RECURSE PY_ALL_HEADER_FILES "*.h")
 file(GLOB_RECURSE PY_ALL_SOURCE_FILES "*.cpp")
