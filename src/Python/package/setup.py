@@ -46,7 +46,7 @@ data_files = [
     ('etc/jupyter/nbconfig/notebook.d', [
         'enable_jupyter_extension.json'
     ]),
-    ('', glob.glob('open3d/_open3d_internal*'))
+    ('', glob.glob('open3d/@PACKAGE_NAME@*')) # The name of the compiled pybind module
 ]
 
 setup(
