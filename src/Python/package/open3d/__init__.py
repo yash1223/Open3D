@@ -25,26 +25,26 @@
 # ----------------------------------------------------------------------------
 
 import importlib
-from ._open3d import * # py2 py3 compatible
-from ._open3d.camera import *
-from ._open3d.color_map import *
-from ._open3d.geometry import *
-from ._open3d.io import *
-from ._open3d.integration import *
-from ._open3d.odometry import *
-from ._open3d.registration import *
-from ._open3d.utility import *
-from ._open3d.visualization import *
+from .open3d_internal import * # py2 py3 compatible
+from .open3d_internal.camera import *
+from .open3d_internal.color_map import *
+from .open3d_internal.geometry import *
+from .open3d_internal.io import *
+from .open3d_internal.integration import *
+from .open3d_internal.odometry import *
+from .open3d_internal.registration import *
+from .open3d_internal.utility import *
+from .open3d_internal.visualization import *
 
-globals().update(importlib.import_module('open3d._open3d.camera').__dict__)
-globals().update(importlib.import_module('open3d._open3d.color_map').__dict__)
-globals().update(importlib.import_module('open3d._open3d.geometry').__dict__)
-globals().update(importlib.import_module('open3d._open3d.io').__dict__)
-globals().update(importlib.import_module('open3d._open3d.integration').__dict__)
-globals().update(importlib.import_module('open3d._open3d.odometry').__dict__)
-globals().update(importlib.import_module('open3d._open3d.registration').__dict__)
-globals().update(importlib.import_module('open3d._open3d.utility').__dict__)
-globals().update(importlib.import_module('open3d._open3d.visualization').__dict__)
+globals().update(importlib.import_module('open3d.open3d_internal.camera').__dict__)
+globals().update(importlib.import_module('open3d.open3d_internal.color_map').__dict__)
+globals().update(importlib.import_module('open3d.open3d_internal.geometry').__dict__)
+globals().update(importlib.import_module('open3d.open3d_internal.io').__dict__)
+globals().update(importlib.import_module('open3d.open3d_internal.integration').__dict__)
+globals().update(importlib.import_module('open3d.open3d_internal.odometry').__dict__)
+globals().update(importlib.import_module('open3d.open3d_internal.registration').__dict__)
+globals().update(importlib.import_module('open3d.open3d_internal.utility').__dict__)
+globals().update(importlib.import_module('open3d.open3d_internal.visualization').__dict__)
 
 __version__ = '@PROJECT_VERSION@'
 
