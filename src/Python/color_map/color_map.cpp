@@ -106,6 +106,11 @@ void pybind_color_map_methods(py::module &m) {
           "Function for color mapping of reconstructed scenes via optimization",
           "mesh"_a, "imgs_rgbd"_a, "camera"_a,
           "option"_a = color_map::ColorMapOptimizationOption());
+
+    // PyObject *module = m.ptr();
+    // PyCFunctionObject *func = (PyCFunctionObject *)PyObject_GetAttrString(
+    //         module, "color_map_optimization");
+    // func->m_ml->ml_doc = "This is my custom doc";
 }
 
 void pybind_color_map(py::module &m) {
