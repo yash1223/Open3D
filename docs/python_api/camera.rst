@@ -1,11 +1,11 @@
 open3d.camera
 -------------
 
-.. currentmodule:: open3d
+.. currentmodule:: _open3d_internal
 
 .. autosummary::
-    open3d.camera
+    _open3d_internal.camera
 
-.. automodule:: open3d.camera
+.. automodule:: _open3d_internal.camera
     :members:
     :undoc-members:
