@@ -1,11 +1,11 @@
 open3d.odometry
 ---------------
 
-.. currentmodule:: open3d
+.. currentmodule:: _open3d_internal
 
 .. autosummary::
-    open3d.odometry
+    _open3d_internal.odometry
 
-.. automodule:: open3d.odometry
+.. automodule:: _open3d_internal.odometry
     :members:
     :undoc-members:

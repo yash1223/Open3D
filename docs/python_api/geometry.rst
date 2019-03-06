@@ -1,11 +1,11 @@
 open3d.geometry
 ---------------
 
-.. currentmodule:: open3d
+.. currentmodule:: _open3d_internal
 
 .. autosummary::
-    open3d.geometry
+    _open3d_internal.geometry
 
-.. automodule:: open3d.geometry
+.. automodule:: _open3d_internal.geometry
     :members:
     :undoc-members:

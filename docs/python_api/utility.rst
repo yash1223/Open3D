@@ -1,11 +1,11 @@
 open3d.utility
 --------------
 
-.. currentmodule:: open3d
+.. currentmodule:: _open3d_internal
 
 .. autosummary::
-    open3d.utility
+    _open3d_internal.utility
 
-.. automodule:: open3d.utility
+.. automodule:: _open3d_internal.utility
     :members:
     :undoc-members:

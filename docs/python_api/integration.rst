@@ -1,11 +1,11 @@
 open3d.integration
 ------------------
 
-.. currentmodule:: open3d
+.. currentmodule:: _open3d_internal
 
 .. autosummary::
-    open3d.integration
+    _open3d_internal.integration
 
-.. automodule:: open3d.integration
+.. automodule:: _open3d_internal.integration
     :members:
     :undoc-members:

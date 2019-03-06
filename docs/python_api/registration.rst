@@ -1,11 +1,11 @@
 open3d.registration
 -------------------
 
-.. currentmodule:: open3d
+.. currentmodule:: _open3d_internal
 
 .. autosummary::
-    open3d.registration
+    _open3d_internal.registration
 
-.. automodule:: open3d.registration
+.. automodule:: _open3d_internal.registration
     :members:
     :undoc-members:

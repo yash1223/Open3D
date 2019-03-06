@@ -1,11 +1,11 @@
 open3d.visualization
 --------------------
 
-.. currentmodule:: open3d
+.. currentmodule:: _open3d_internal
 
 .. autosummary::
-    open3d.visualization
+    _open3d_internal.visualization
 
-.. automodule:: open3d.visualization
+.. automodule:: _open3d_internal.visualization
     :members:
     :undoc-members:

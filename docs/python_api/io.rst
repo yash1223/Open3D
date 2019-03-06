@@ -1,11 +1,11 @@
 open3d.io
 ---------
 
-.. currentmodule:: open3d
+.. currentmodule:: _open3d_internal
 
 .. autosummary::
-    open3d.io
+    _open3d_internal.io
 
-.. automodule:: open3d.io
+.. automodule:: _open3d_internal.io
     :members:
     :undoc-members:

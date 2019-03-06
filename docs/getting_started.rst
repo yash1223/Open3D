@@ -96,7 +96,7 @@ cloud using Open3D visualizer.
 The Python code is quite straightforward, and the detailed explanation can be
 found in :ref:`rgbd_redwood`.
 You may further experiment with different tutorials or check out the complete
-tutorial list in the :ref:`tutorial_index` page.
+tutorial list in the :ref:`index` page.
 
 .. note:: Open3D's Python tutorial utilizes some external packages: ``numpy``,
     ``matplotlib``, ``opencv-python``. OpenCV is only used for reconstruction
